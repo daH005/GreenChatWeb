@@ -8,6 +8,11 @@ def home() -> str:
     return 'Hello World!'
 
 
+@app.route('/about_us', methods=['GET'])
+def about_us() -> str:
+    return 'We are programmers!'
+
+
 if __name__ == '__main__':
     app.run(
         host='0.0.0.0',
