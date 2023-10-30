@@ -2,9 +2,37 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>GreenChat</title>
+    <style>
+        .message {
+            display: flex;
+        }
+
+        .message .message__name {
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+    </style>
 </head>
 <body>
 
+<!-- Элементы для коммуникации. -->
+<input type="text" id="js-message-name-input" value="User">
+<input type="text" id="js-message-color-input" value="black">
+<input type="text" id="js-message-text-input">
+<button id="js-message-button">Отправить</button>
+
+<!-- Контейнер, в котором будем отрисовывать сообщения. -->
+<div id="js-messages"></div>
+
+<!-- Шаблон элемента-сообщения. -->
+<template id="js-message-temp">
+    <div class="message">
+        <div class="message__name"></div>
+        <div class="message__text"></div>
+    </div>
+</template>
+
+<script src="script.js"></script>
 </body>
 </html>
