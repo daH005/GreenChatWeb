@@ -1,4 +1,4 @@
-// Работа с WebSocket:
+// Работа с WebSocket.
 const SOCKET_URL = "ws://localhost:80";
 let socket = new WebSocket(SOCKET_URL);
 
