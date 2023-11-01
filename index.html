@@ -3,35 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <title>GreenChat</title>
-    <style>
-        .message {
-            display: flex;
-        }
-
-        .message .message__name {
-            margin-right: 10px;
-            margin-bottom: 10px;
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<!-- Элементы для коммуникации. -->
-<input type="text" id="js-message-name-input" value="User">
-<input type="text" id="js-message-color-input" value="black">
-<input type="text" id="js-message-text-input">
-<button id="js-message-button">Отправить</button>
+<div class="chat">
 
-<!-- Контейнер, в котором будем отрисовывать сообщения. -->
-<div id="js-messages"></div>
-
-<!-- Шаблон элемента-сообщения. -->
-<template id="js-message-temp">
-    <div class="message">
-        <div class="message__name"></div>
-        <div class="message__text"></div>
+    <div class="chat__config">
+        <!-- Имя и цвет. -->
+        <input type="text" id="js-message-name-input" placeholder="Введите ваше имя">
+        <!--
+        <input type="text" id="js-message-color-input" value="black">
+        -->
     </div>
-</template>
+
+    <!-- Контейнер с сообщениями. -->
+    <div class="chat__messages" id="js-messages"></div>
+
+    <!-- Ввод и отправка сообщения. -->
+    <div class="chat__message-text-input">
+        <input type="text" id="js-message-text-input" placeholder="Что же написать...">
+        <button id="js-message-button">Отправить</button>
+    </div>
+
+    <!-- Шаблон элемента-сообщения. -->
+    <template id="js-message-temp">
+        <div class="chat__message">
+            <div class="chat__message__name"></div>
+            <div class="chat__message__text"></div>
+        </div>
+    </template>
+
+</div>
 
 <script src="script.js"></script>
 </body>
