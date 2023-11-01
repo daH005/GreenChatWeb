@@ -17,20 +17,38 @@ const buttonEl = document.getElementById("js-message-button");
 const messagesEl = document.getElementById("js-messages");
 const messageTempEl = document.getElementById("js-message-temp");
 
+function sendMessage() {
+    if (textInputEl.value && nameInputEl.value) {
+        socket.send(JSON.stringify({
+            name: nameInputEl.value,
+            // color: colorInputEl.value,
+            text: textInputEl.value,
+        }));
+        textInputEl.value = "";
+    }
+}
+
+document.addEventListener("keypress", function(event) {
+    if (event.keyCode == 13) {
+        sendMessage();
+    }
+});
+
 buttonEl.onclick = () => {
-    socket.send(JSON.stringify({
-        name: nameInputEl.value,
-        color: colorInputEl.value,
-        text: textInputEl.value,
-    }));
-    textInputEl.value = "";
+    sendMessage();
 }
 
 function addMessageEl(message) {
-    let clonedMessageEl = messageTempEl.content.cloneNode(true);
-    let nameEl = clonedMessageEl.querySelector(".message__name");
-    nameEl.textContent = message.name + ":";
-    nameEl.style = "color: " + (message.color || "gray") + ";";
-    clonedMessageEl.querySelector(".message__text").textContent = message.text;
-    messagesEl.append(clonedMessageEl);
+    let clonedMessageNode = messageTempEl.content.cloneNode(true);
+    let nameEl = clonedMessageNode.querySelector(".chat__message__name");
+    if (message.name != nameInputEl.value) {
+        nameEl.textContent = message.name;
+        // nameEl.style = "background: " + (message.color || "gray") + ";";
+    }
+    clonedMessageNode.querySelector(".chat__message__text").textContent = message.text;
+    messagesEl.append(clonedMessageNode);
+    if (message.name == nameInputEl.value) {
+        messagesEl.lastElementChild.classList.add("chat__message--self");
+        messagesEl.scrollTop = messagesEl.scrollHeight;
+    }
 }
