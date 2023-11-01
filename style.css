@@ -1,0 +1,99 @@
+:root {
+    --dark-green-color: #4F904C;
+    --light-green-color: #91D77F;
+    --gray-color: #3B3C3E;
+
+    --main-color: var(--dark-green-color);
+    --main-2-color: var(--light-green-color);
+    --text-color: var(--gray-color);
+}
+
+@font-face {
+    /* Основной шрифт. */
+    font-family: main;
+    src: url('NaturalMonoAlt.ttf');
+}
+
+body {
+    margin: 0;
+}
+
+body, input, button {
+    font-family: main;
+}
+
+button, input {
+    outline: none;
+    border: none;
+}
+
+.chat {
+    width: fit-content;
+}
+
+.chat .chat__messages {
+    height: 700px;
+    overflow-y: auto;
+    width: 700px;
+    padding: 20px 100px;
+    background: var(--main-2-color);
+}
+
+.chat .chat__message {
+    max-width: fit-content;
+    margin-bottom: 20px;
+}
+
+.chat .chat__message.chat__message--self {
+    margin-left: auto;
+}
+
+.chat .chat__message .chat__message__name {
+    background: var(--text-color);
+    color: white;
+    padding: 10px 20px;
+    width: fit-content;
+    border-top-right-radius: 10px;
+}
+
+.chat .chat__message.chat__message--self .chat__message__name {
+    display: none;
+}
+
+.chat .chat__message .chat__message__text {
+    background: white;
+    padding: 20px;
+    width: fit-content;
+    min-width: 100px;
+    border-radius: 0 10px 10px 10px;
+    color: var(--text-color);
+}
+
+.chat .chat__message.chat__message--self .chat__message__text {
+    background: var(--main-color);
+    color: white;
+    border-top-left-radius: 10px;
+}
+
+.chat .chat__message-text-input {
+    padding: 30px;
+    background: var(--main-color);
+    display: flex;
+}
+
+.chat .chat__message-text-input input {
+    flex: 70%;
+    margin-right: 20px;
+}
+
+.chat .chat__message-text-input button {
+    flex: 30%;
+    background: white;
+    color: var(--text-color);
+}
+
+.chat .chat__message-text-input button, input {
+    font-size: 19px;
+    padding: 15px;
+    border-radius: 10px;
+}
