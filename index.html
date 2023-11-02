@@ -9,25 +9,17 @@
 
 <div class="chat">
 
-    <div class="chat__config">
-        <!-- Имя и цвет. -->
-        <input type="text" id="js-message-name-input" placeholder="Введите ваше имя">
-        <!--
-        <input type="text" id="js-message-color-input" value="black">
-        -->
-    </div>
-
     <!-- Контейнер с сообщениями. -->
-    <div class="chat__messages" id="js-messages"></div>
+    <div class="chat__messages" id="js-chat-messages"></div>
 
     <!-- Ввод и отправка сообщения. -->
     <div class="chat__message-text-input">
-        <input type="text" id="js-message-text-input" placeholder="Что же написать...">
-        <button id="js-message-button">Отправить</button>
+        <input type="text" id="js-chat-message-text-input" placeholder="Что же написать...">
+        <button id="js-chat-message-button">Отправить</button>
     </div>
 
     <!-- Шаблон элемента-сообщения. -->
-    <template id="js-message-temp">
+    <template id="js-chat-message-temp">
         <div class="chat__message">
             <div class="chat__message__name"></div>
             <div class="chat__message__text"></div>
