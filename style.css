@@ -64,7 +64,7 @@ button, input {
     background: white;
     padding: 20px;
     width: fit-content;
-    min-width: 100px;
+    min-width: 200px;
     border-radius: 0 10px 10px 10px;
     color: var(--text-color);
 }
