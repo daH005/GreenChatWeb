@@ -1,12 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>GreenChat</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
+{% extends '_wrapper.html' %}
 
+{% block title %}
+GreenChat
+{% endblock %}
+
+{% block css %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/chat.css') }}">
+{% endblock %}
+
+{% block main %}
 <div class="chat">
 
     <!-- Контейнер с сообщениями. -->
@@ -27,7 +30,18 @@
     </template>
 
 </div>
+{% endblock %}
 
-<script src="script.js"></script>
-</body>
-</html>
+{% block js %}
+<script>
+    // Данные пользователя.
+    var email = "{{ user.email }}";
+    var password = "{{ user.password }}";
+    var userId = "{{ user.id }}";
+    var chatId = "1";
+    // URL-адреса серверов.
+    const HTTP_CHAT_HISTORY_URL = "{{ http_url }}" + "/chat_history"
+    const SOCKET_URL = "{{ websocket_url }}";
+</script>
+<script src="{{ url_for('static', filename='js/chat.js') }}"></script>
+{% endblock %}

@@ -1,32 +1,3 @@
-:root {
-    --dark-green-color: #4F904C;
-    --light-green-color: #91D77F;
-    --gray-color: #3B3C3E;
-
-    --main-color: var(--dark-green-color);
-    --main-2-color: var(--light-green-color);
-    --text-color: var(--gray-color);
-}
-
-@font-face {
-    /* Основной шрифт. */
-    font-family: main;
-    src: url('NaturalMonoAlt.ttf');
-}
-
-body {
-    margin: 0;
-}
-
-body, input, button {
-    font-family: main;
-}
-
-button, input {
-    outline: none;
-    border: none;
-}
-
 .chat {
     width: fit-content;
 }

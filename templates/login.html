@@ -1,0 +1,18 @@
+{% extends '_wrapper.html' %}
+
+{% block title %}
+Вход
+{% endblock %}
+
+{% block css %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+{% endblock %}
+
+{% block main %}
+<form method="post">
+    <input name="email" type="email" placeholder="Почта">
+    <input name="password" type="password" placeholder="Пароль">
+    <button>Войти</button>
+</form>
+{% endblock %}

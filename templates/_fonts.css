@@ -1,0 +1,10 @@
+/* По поводу данного файла было принято следующее решение:
+   - Шрифты не объявляем в scss / других css;
+   - Файл используется в соседнем '_common_wrapper.html' через {# {% include '_fonts.css' %} #}.
+ */
+
+@font-face {
+    /* Основной шрифт. */
+    font-family: main;
+    src: url('{{ url_for("static", filename="fonts/NaturalMonoAlt.ttf") }}');
+}

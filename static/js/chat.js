@@ -1,17 +1,6 @@
 // Работа с Http + WebSocket.
 
-// FixMe: Убрать, после перехода на Flask.
-const urlParams = new URLSearchParams(window.location.search);
-var email = urlParams.get("email") || "danil.shevelev.2004@mail.ru";
-var password = urlParams.get("password") || "901239-18fsdgd0sf7g===23421341";
-var userId = urlParams.get("userId") || "1";
-var chatId = urlParams.get("chatId") || "1";
-
-// FixMe: Сделать установку URL'ов через Flask.
-const SOCKET_URL = "ws://localhost:80";
-const HTTP_URL = "http://localhost:81/chat_history"
-
-fetch(HTTP_URL + "?" + new URLSearchParams({email, password, chatId})).then((response) => {
+fetch(HTTP_CHAT_HISTORY_URL + "?" + new URLSearchParams({email, password, chatId})).then((response) => {
     response.json().then((chat) => {
         for (let index in chat.messages) {
             addChatMessageEl(chat.messages[index]);
