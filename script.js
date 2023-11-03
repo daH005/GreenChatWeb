@@ -2,17 +2,19 @@
 
 // FixMe: Убрать, после перехода на Flask.
 const urlParams = new URLSearchParams(window.location.search);
-var userId = Number(urlParams.get("userId") || 0);
-var chatId = Number(urlParams.get("chatId") || 0);
+var email = urlParams.get("email") || "danil.shevelev.2004@mail.ru";
+var password = urlParams.get("password") || "901239-18fsdgd0sf7g===23421341";
+var userId = urlParams.get("userId") || "1";
+var chatId = urlParams.get("chatId") || "1";
 
 // FixMe: Сделать установку URL'ов через Flask.
 const SOCKET_URL = "ws://localhost:80";
 const HTTP_URL = "http://localhost:81/chat_history"
 
-fetch(HTTP_URL + "?" + new URLSearchParams({userId, chatId})).then((response) => {
-    response.json().then((chatMessages) => {
-        for (let index in chatMessages) {
-            addChatMessageEl(chatMessages[index]);
+fetch(HTTP_URL + "?" + new URLSearchParams({email, password, chatId})).then((response) => {
+    response.json().then((chat) => {
+        for (let index in chat.messages) {
+            addChatMessageEl(chat.messages[index]);
         }
     });
 });
@@ -22,16 +24,14 @@ let socket = new WebSocket(SOCKET_URL);
 socket.onopen = (event) => {
     // Отправляем авторизующее сообщение.
     socket.send(JSON.stringify({
-        userId,
+        email, password,
     }));
 }
 
 socket.onmessage = (event) => {
     // Обрабатываем рядовое сообщение, полученное от сервера.
-    let chatMessages = JSON.parse(event.data);
-    for (let index in chatMessages) {
-        addChatMessageEl(chatMessages[index])
-    }
+    let chatMessage = JSON.parse(event.data);
+    addChatMessageEl(chatMessage);
 }
 
 // Работа с HTML:
@@ -47,7 +47,6 @@ function sendChatMessage() {
     if (textInputEl.value) {
         // Отправляем рядовое сообщение в заданный чат.
         socket.send(JSON.stringify({
-            userId,
             chatId,
             text: textInputEl.value,
         }));
@@ -75,7 +74,7 @@ function addChatMessageEl(chatMessage) {
     let nameEl = clonedChatMessageNode.querySelector(".chat__message__name");
     // Добавляем к сообщению имя, если оно не от нас.
     if (chatMessage.userId != userId) {
-        nameEl.textContent = chatMessage.name;
+        nameEl.textContent = chatMessage.firstName + " " + chatMessage.lastName;
     }
     // Добавляем к сообщению текст.
     clonedChatMessageNode.querySelector(".chat__message__text").textContent = chatMessage.text;
