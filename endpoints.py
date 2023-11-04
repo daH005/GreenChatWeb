@@ -7,10 +7,10 @@ __all__ = (
 
 
 class EndpointName(StrEnum):
-    CHAT = 'chat'
+    MAIN = 'main'
     LOGIN = 'login'
 
 
 class Url(StrEnum):
-    CHAT = '/'
+    MAIN = '/'
     LOGIN = '/login'
