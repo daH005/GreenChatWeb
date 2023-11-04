@@ -35,8 +35,7 @@ GreenChat
 {% block js %}
 <script>
     // Данные пользователя.
-    var email = "{{ user.email }}";
-    var password = "{{ user.password }}";
+    var authTokenCookieKey = "{{ auth_token_cookie_key }}";
     var userId = "{{ user.id }}";
     var chatId = "1";
     // URL-адреса серверов.

@@ -1,6 +1,17 @@
 // Работа с Http + WebSocket.
 
-fetch(HTTP_CHAT_HISTORY_URL + "?" + new URLSearchParams({email, password, chatId})).then((response) => {
+// Возвращает куки с указанным `name`,
+// или undefined, если ничего не найдено.
+function getCookie(name) {
+  let matches = document.cookie.match(new RegExp(
+    "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+  ));
+  return matches ? decodeURIComponent(matches[1]) : undefined;
+}
+
+const AUTH_TOKEN = getCookie(authTokenCookieKey);
+
+fetch(HTTP_CHAT_HISTORY_URL + "?" + new URLSearchParams({[authTokenCookieKey]: AUTH_TOKEN, chatId})).then((response) => {
     response.json().then((chat) => {
         for (let index in chat.messages) {
             addChatMessageEl(chat.messages[index]);
@@ -8,12 +19,12 @@ fetch(HTTP_CHAT_HISTORY_URL + "?" + new URLSearchParams({email, password, chatId
     });
 });
 
-let socket = new WebSocket(SOCKET_URL);
+const socket = new WebSocket(SOCKET_URL);
 
 socket.onopen = (event) => {
     // Отправляем авторизующее сообщение.
     socket.send(JSON.stringify({
-        email, password,
+        [authTokenCookieKey]: AUTH_TOKEN,
     }));
 }
 
