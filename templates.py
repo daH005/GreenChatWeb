@@ -6,5 +6,5 @@ __all__ = (
 
 
 class TemplateName:  # Enum вызывает ошибку...
-    CHAT = 'chat.html'
+    MAIN = 'main.html'
     LOGIN = 'login.html'
