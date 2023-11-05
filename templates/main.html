@@ -1,0 +1,72 @@
+{% extends '_base.html' %}
+
+{% block title %}
+GreenChat
+{% endblock %}
+
+{% block css %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+{% endblock %}
+
+{% block main %}
+<div class="messenger">
+
+    <!-- Боковая панель со ссылками на все чаты. -->
+    <div class="all-chats-links" id="js-all-chats-links"></div>
+
+    <!-- Контейнер с полем ввода сообщения и всеми чатами (отображается только один, открытый). -->
+    <div class="cur-chat-container">
+
+        <!-- Контейнер со всеми загруженными чатами. -->
+        <div class="loaded-chats" id="js-loaded-chats"></div>
+
+        <!-- Ввод и отправка сообщения. При старте страницы элемент скрыт. -->
+        <div class="chat-message-input-container">
+            <input type="text" id="js-chat-message-text-input" placeholder="Что же написать...">
+            <button id="js-chat-message-button">Отправить</button>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Шаблон ссылки на чат для боковой панели. -->
+<template id="js-chat-link-temp">
+    <div class="chat-link">
+        <div class="chat-link__chat-name"></div>
+        <div class="chat-link__last-message"></div>
+    </div>
+</template>
+
+<template id="js-chat-temp">
+    <div class="chat chat--hidden">
+        <div class="chat__name"></div>
+        <div class="chat__messages"></div>
+    </div>
+</template>
+
+<!-- Шаблон сообщения для чата. -->
+<template id="js-chat-message-temp">
+    <div class="chat__message">
+        <div class="chat__message__name"></div>
+        <div class="chat__message__text"></div>
+    </div>
+</template>
+
+{% endblock %}
+
+{% block js %}
+<script>
+    // Данные пользователя.
+    var authTokenCookieKey = "{{ auth_token_cookie_key }}";
+    var userId = "{{ user.id }}";
+    var chatId = null;
+    // URL-адреса серверов.
+    const HTTP_URL = "{{ http_url }}";
+    const HTTP_CHAT_HISTORY_URL = HTTP_URL + "/chatHistory";
+    const HTTP_ALL_CHATS_URL = HTTP_URL + "/allChats";
+    const SOCKET_URL = "{{ websocket_url }}";
+</script>
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+{% endblock %}
