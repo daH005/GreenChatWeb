@@ -45,6 +45,7 @@ const chatMessageTempEl = document.getElementById("js-chat-message-temp");
 const chatTempEl = document.getElementById("js-chat-temp");
 const chatLinkTempEl = document.getElementById("js-chat-link-temp");
 var chatsElementsObj = {}
+var commonLastMessageCreatingTime = 0;
 
 function addChat(chat) {
     chatsElementsObj[chat.chatId] = {fullyLoaded: false, messagesElsObj: {}, lastMessageCreatingTime: 0}
@@ -106,6 +107,9 @@ function addChatMessage(chatMessage, prepend=false) {
     if (creatingTime > chatsElementsObj[chatMessage.chatId].lastMessageCreatingTime) {
         chatsElementsObj[chatMessage.chatId].lastMessageCreatingTime = creatingTime;
         chatsElementsObj[chatMessage.chatId].chatLinkLastMessageEl.textContent = chatMessage.text;
+    }
+    if (creatingTime > commonLastMessageCreatingTime) {
+        commonLastMessageCreatingTime = creatingTime;
         allChatsLinksEl.prepend(chatsElementsObj[chatMessage.chatId].chatLinkEl);
     }
 
@@ -135,7 +139,7 @@ function addChatMessage(chatMessage, prepend=false) {
     // а также выполняем прокрутку в самый низ чата.
     if (chatMessage.userId == userId) {
         chatMessageEl.classList.add("chat__message--self");
-        // chatMessagesEl.scrollTop = chatMessagesEl.scrollHeight;
+        chatsElementsObj[chatMessage.chatId].chatMessagesEl.scrollTop = chatsElementsObj[chatMessage.chatId].chatMessagesEl.scrollHeight;
     }
 }
 
