@@ -1,4 +1,4 @@
-import {HTTP_AUTH_URL, AUTH_COOKIE_MAX_AGE, AUTH_TOKEN_COOKIE_KEY} from "./config.js";
+import {HTTP_AUTH_URL, AUTH_COOKIE_MAX_AGE, AUTH_TOKEN_COOKIE_KEY, BASE_HEADERS} from "./config.js";
 import {setCookie} from "./cookie.js";
 
 const usernameInputEl = document.getElementById("js-username-input");
@@ -13,9 +13,7 @@ async function auth(username, password) {
     let response = await fetch(HTTP_AUTH_URL, {
         method: "POST",
         body: JSON.stringify({username, password}),
-        headers: {
-            "Content-Type": "application/json",
-        },
+        headers: BASE_HEADERS,
     });
     if (response.ok) {
         let data = await response.json();
