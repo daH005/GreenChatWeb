@@ -10,9 +10,10 @@
 {% endblock %}
 
 {% block main %}
-<form method="post">
-    <input name="username" type="text" placeholder="Логин">
-    <input name="password" type="password" placeholder="Пароль">
-    <button>Войти</button>
-</form>
+<div>
+    <input id="js-username-input" name="username" type="text" placeholder="Логин">
+    <input id="js-password-input" name="password" type="password" placeholder="Пароль">
+    <button id="js-button">Войти</button>
+</div>
+<script src="{{ url_for('static', filename='js/login.js') }}" type="module"></script>
 {% endblock %}
