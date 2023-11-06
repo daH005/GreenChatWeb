@@ -12,7 +12,7 @@
 @font-face {
     /* Основной шрифт. */
     font-family: main;
-    src: url('NaturalMonoAlt.ttf');
+    src: url('../fonts/NaturalMonoAlt.ttf');
 }
 
 body {
