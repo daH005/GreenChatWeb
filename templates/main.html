@@ -57,16 +57,5 @@ GreenChat
 {% endblock %}
 
 {% block js %}
-<script>
-    // Данные пользователя.
-    var authTokenCookieKey = "{{ auth_token_cookie_key }}";
-    var userId = "{{ user.id }}";
-    var chatId = null;
-    // URL-адреса серверов.
-    const HTTP_URL = "{{ http_url }}";
-    const HTTP_CHAT_HISTORY_URL = HTTP_URL + "/chatHistory";
-    const HTTP_ALL_CHATS_URL = HTTP_URL + "/allChats";
-    const SOCKET_URL = "{{ websocket_url }}";
-</script>
-<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+<script src="{{ url_for('static', filename='js/main/init.js') }}" type="module"></script>
 {% endblock %}
