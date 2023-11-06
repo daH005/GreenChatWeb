@@ -1,7 +1,6 @@
 from flask import (  # pip install flask
     Flask,
     render_template,
-    Response,
 )
 from http import HTTPMethod
 
@@ -22,7 +21,7 @@ def login() -> str:
 
 
 @app.route(Url.MAIN, endpoint=EndpointName.MAIN, methods=[HTTPMethod.GET])
-def main() -> str | Response:
+def main() -> str:
     """Страница мессенджера."""
     return render_template(TemplateName.MAIN)
 
