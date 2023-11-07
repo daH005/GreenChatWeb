@@ -3,10 +3,14 @@ import { startWebSocket } from "./_websocket.js";
 import { displayUserInfo, displayUserChats, displayChatMessage } from "./_html.js";
 
 console.log("Загружаем пользователя...");
-displayUserInfo(await requestUserInfo());
+requestUserInfo().then((data) => {
+    displayUserInfo(data);
+});
 
 console.log("Загружаем чаты...");
-displayUserChats(await requestUserChats());
+requestUserChats().then((data) => {
+    displayUserChats(data);
+});
 
 console.log("Запускаем веб-сокет...");
 startWebSocket(displayChatMessage);
