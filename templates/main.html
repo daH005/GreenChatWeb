@@ -12,8 +12,11 @@ GreenChat
 {% block main %}
 <div class="messenger">
 
-    <!-- Боковая панель со ссылками на все чаты. -->
-    <div class="all-chats-links" id="js-all-chats-links"></div>
+    <div class="sidebar">
+        <div class="user-info" id="js-user-info"></div>
+        <!-- Боковая панель со ссылками на все чаты. -->
+        <div class="all-chats-links" id="js-all-chats-links"></div>
+    </div>
 
     <!-- Контейнер с полем ввода сообщения и всеми чатами (отображается только один, открытый). -->
     <div class="cur-chat-container">
@@ -39,6 +42,7 @@ GreenChat
     </div>
 </template>
 
+<!-- Шаблон чата. -->
 <template id="js-chat-temp">
     <div class="chat chat--hidden">
         <div class="chat__name"></div>

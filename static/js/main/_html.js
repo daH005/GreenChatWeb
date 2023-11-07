@@ -2,6 +2,7 @@ import { requestChatHistory } from "./_http.js";
 import { websocket } from "./_websocket.js";
 
 // Ключевые элементы страницы:
+const userInfoEl = document.getElementById("js-user-info");
 const allChatsLinksEl = document.getElementById("js-all-chats-links");
 const loadedChatsEl = document.getElementById("js-loaded-chats");
 const textInputEl = document.getElementById("js-chat-message-text-input");
@@ -27,7 +28,7 @@ var commonLastMessageCreatingDatetime = 0;
 // Отображает на странице информацию об авторизированном пользователе.
 export function displayUserInfo(user_) {
     user = user_;
-    // FixMe: Добавить полноценное отображение в HTML.
+    userInfoEl.textContent = user.firstName;
 }
 
 // Отображает на странице чаты (но они изначально скрыты) и 'ссылки' на эти чаты в боковой панели.
