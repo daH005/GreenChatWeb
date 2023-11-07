@@ -61,10 +61,12 @@ export function displayChat(chat) {
         if (openedChatId != null) {
             // Скрываем последний открытый чат.
             loadedChats[openedChatId].chatEl.classList.add("chat--hidden");
+            loadedChats[openedChatId].chatLinkEl.classList.remove("chat-link--active");
         }
         // Открываем текущий чат.
         openedChatId = chat.id;
         loadedChats[chat.id].chatEl.classList.remove("chat--hidden");
+        loadedChats[chat.id].chatLinkEl.classList.add("chat-link--active");
         if (!(loadedChats[chat.id].fullyLoaded)) {
             loadedChats[chat.id].fullyLoaded = true;
             let skipFromEndCount = Object.keys(loadedChats[chat.id].messages).length;
