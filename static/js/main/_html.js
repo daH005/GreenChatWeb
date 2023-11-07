@@ -25,6 +25,8 @@ var openedChatId = null;
 // Дата и время самого позднего сообщения из всех чатов.
 // Требуется для сортировки ссылок на чаты в боковой панели.
 var commonLastMessageCreatingDatetime = 0;
+// Максимальная длина текста сообщения в боковой панели.
+const MAX_CHAT_LINK_TEXT_LENGTH = 20;
 
 // Отображает на странице информацию об авторизированном пользователе.
 export function displayUserInfo(user_) {
@@ -114,7 +116,11 @@ export function displayChatMessage(chatMessage, prepend=false) {
     chatMessage.creatingDatetime = new Date(chatMessage.creatingDatetime);
     if (!prepend) {
         // Обновляет текст в 'ссылке' на чат.
-        loadedChats[chatMessage.chatId].chatLinkLastMessageEl.textContent = chatMessage.text;
+        let text = chatMessage.text;
+        if (text.length > MAX_CHAT_LINK_TEXT_LENGTH) {
+            text = text.slice(0, MAX_CHAT_LINK_TEXT_LENGTH) + "...";
+        }
+        loadedChats[chatMessage.chatId].chatLinkLastMessageEl.textContent = text;
     }
     // Если текущее обрабатываемое сообщение самое позднее, то переносим кнопку чата
     // на самый верх.
