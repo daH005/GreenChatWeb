@@ -2,6 +2,7 @@ import { requestChatHistory } from "./_http.js";
 import { websocket } from "./_websocket.js";
 
 // Ключевые элементы страницы:
+const closerEl = document.getElementById("js-closer");
 const userInfoEl = document.getElementById("js-user-info");
 const allChatsLinksEl = document.getElementById("js-all-chats-links");
 const loadedChatsEl = document.getElementById("js-loaded-chats");
@@ -57,7 +58,6 @@ export function displayChat(chat) {
     allChatsLinksEl.append(chatLinkNode);
     let chatLinkEl = allChatsLinksEl.lastElementChild;
     chatLinkEl.onclick = async function() {
-
         if (openedChatId != null) {
             // Скрываем последний открытый чат.
             loadedChats[openedChatId].chatEl.classList.add("chat--hidden");
@@ -72,6 +72,7 @@ export function displayChat(chat) {
             let skipFromEndCount = Object.keys(loadedChats[chat.id].messages).length;
             displayChatHistory(await requestChatHistory(chat.id, skipFromEndCount));
         }
+        closerEl.style = "display: none;";
 
     }
     loadedChats[chat.id].chatLinkEl = chatLinkEl;
@@ -82,7 +83,7 @@ export function displayChat(chat) {
     loadedChats[chat.id].chatLinkNameEl = chatLinkNameEl;
 
     // Элемент последнего сообщения в 'ссылке'.
-    // Содежимое сообщения устанавливается в `displayChatMessage`.
+    // Содержимое сообщения устанавливается в `displayChatMessage`.
     let chatLinkLastMessageEl = chatLinkEl.querySelector(".chat-link__last-message");
     loadedChats[chat.id].chatLinkLastMessageEl = chatLinkLastMessageEl;
 
