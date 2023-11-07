@@ -1,6 +1,6 @@
-import { requestUserInfo, requestUserChats } from "./http.js";
-import { startWebSocket } from "./websocket.js";
-import { displayUserInfo, displayUserChats, displayChatMessage } from "./html.js";
+import { requestUserInfo, requestUserChats } from "./_http.js";
+import { startWebSocket } from "./_websocket.js";
+import { displayUserInfo, displayUserChats, displayChatMessage } from "./_html.js";
 
 console.log("Загружаем пользователя...");
 displayUserInfo(await requestUserInfo());
