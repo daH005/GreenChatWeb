@@ -1,5 +1,5 @@
-import {HTTP_AUTH_URL, AUTH_COOKIE_MAX_AGE, AUTH_TOKEN_COOKIE_KEY, BASE_HEADERS} from "./config.js";
-import {setCookie} from "./cookie.js";
+import { HTTP_AUTH_URL, AUTH_COOKIE_MAX_AGE, AUTH_TOKEN_COOKIE_KEY, BASE_HEADERS } from "./config.js";
+import { setCookie } from "./cookie.js";
 
 const usernameInputEl = document.getElementById("js-username-input");
 const passwordInputEl = document.getElementById("js-password-input");
