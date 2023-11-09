@@ -69,12 +69,12 @@ export function displayChat(chat) {
         openedChatId = chat.id;
         loadedChats[chat.id].chatEl.classList.remove("chat--hidden");
         loadedChats[chat.id].chatLinkEl.classList.add("chat-link--active");
+        closerEl.style = "display: none;";
         if (!(loadedChats[chat.id].fullyLoaded)) {
             loadedChats[chat.id].fullyLoaded = true;
             let skipFromEndCount = Object.keys(loadedChats[chat.id].messages).length;
             displayChatHistory(await requestChatHistory(chat.id, skipFromEndCount));
         }
-        closerEl.style = "display: none;";
 
     }
     loadedChats[chat.id].chatLinkEl = chatLinkEl;
