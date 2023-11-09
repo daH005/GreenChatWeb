@@ -81,7 +81,7 @@ export function displayChat(chat) {
 
     // Название чата в 'ссылке'.
     let chatLinkNameEl = chatLinkEl.querySelector(".chat-link__chat-name");
-    chatLinkNameEl.textContent = chat.chatName;
+    chatLinkNameEl.textContent = chat.name;
     loadedChats[chat.id].chatLinkNameEl = chatLinkNameEl;
 
     // Элемент последнего сообщения в 'ссылке'.
