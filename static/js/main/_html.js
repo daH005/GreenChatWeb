@@ -97,7 +97,7 @@ export function displayChat(chat) {
 
     // Название чата.
     let chatNameEl = chatEl.querySelector(".chat__name");
-    chatNameEl.textContent = chat.chatName;
+    chatNameEl.textContent = chat.name;
     loadedChats[chat.id].chatNameEl = chatNameEl;
 
     // Контейнер с историей чата.
