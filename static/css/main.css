@@ -88,6 +88,9 @@
     background: var(--main-2-color);
     box-sizing: border-box;
     height: calc(100vh - 60px - 50px - 110px);
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
 }
 
 .chat .chat__message {
