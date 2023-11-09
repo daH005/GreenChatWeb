@@ -149,7 +149,7 @@ export function displayChatMessage(chatMessage, prepend=false) {
     }
     // Текст сообщения.
     let textEl = chatMessageEl.querySelector(".chat__message__text");
-    textEl.textContent = chatMessage.user.text;
+    textEl.textContent = chatMessage.text;
 
     // Фиксируем элементы и данные сообщения в хранилище.
     loadedChats[chatMessage.chatId].messages[chatMessage.id] = {
