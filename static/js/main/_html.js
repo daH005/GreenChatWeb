@@ -144,12 +144,12 @@ export function displayChatMessage(chatMessage, prepend=false) {
 
     // Имя отправителя сообщения.
     let nameEl = chatMessageEl.querySelector(".chat__message__name");
-    if (chatMessage.userId != user.id) {
-        nameEl.textContent = chatMessage.firstName;
+    if (chatMessage.user.id != user.id) {
+        nameEl.textContent = chatMessage.user.firstName;
     }
     // Текст сообщения.
     let textEl = chatMessageEl.querySelector(".chat__message__text");
-    textEl.textContent = chatMessage.text;
+    textEl.textContent = chatMessage.user.text;
 
     // Фиксируем элементы и данные сообщения в хранилище.
     loadedChats[chatMessage.chatId].messages[chatMessage.id] = {
@@ -158,7 +158,7 @@ export function displayChatMessage(chatMessage, prepend=false) {
 
     // Если сообщение от нас, то устанавливаем на элемент специальный CSS-класс,
     // а также выполняем прокрутку в самый низ чата.
-    if (chatMessage.userId == user.id) {
+    if (chatMessage.user.id == user.id) {
         chatMessageEl.classList.add("chat__message--self");
         loadedChats[chatMessage.chatId].chatMessagesEl.scrollTop = loadedChats[chatMessage.chatId].chatMessagesEl.scrollHeight;
     }
