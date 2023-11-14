@@ -14,7 +14,7 @@ export async function requestUserInfo() {
     });
     if (response.ok) {
         return await response.json();
-    } else if (response.status == 403) {
+    } else if (response.status == 401) {
         redirectToLoginPage();
     } else {
         loadUserInfo();
@@ -31,7 +31,7 @@ export async function requestUserChats() {
     });
     if (response.ok) {
         return await response.json();
-    } else if (response.status == 403) {
+    } else if (response.status == 401) {
         redirectToLoginPage();
     } else {
         loadUserChats();
@@ -52,7 +52,7 @@ export async function requestChatHistory(chatId, skipFromEndCount=null) {
     });
     if (response.ok) {
         return await response.json();
-    } else if (response.status == 403) {
+    } else if (response.status == 401) {
         redirectToLoginPage();
     } else {
         loadChatHistory();
