@@ -104,7 +104,9 @@ export function displayChat(chat) {
     let chatMessagesEl = chatEl.querySelector(".chat__messages");
     loadedChats[chat.id].chatMessagesEl = chatMessagesEl;
 
-    displayChatMessage(chat.lastMessage);
+    if (chat.lastMessage) {
+        displayChatMessage(chat.lastMessage);
+    }
 }
 
 // Отображает сообщение в элементе чата.
