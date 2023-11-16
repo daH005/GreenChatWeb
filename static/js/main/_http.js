@@ -3,7 +3,7 @@ import { BASE_AUTH_HEADERS } from "./_auth_cookie.js";
 
 // FixMe: Возможно, стоит вынести функцию в независимый модуль.
 export function redirectToLoginPage() {
-    window.location.href = '/login';
+    window.location.href = "/login";
 }
 
 // Запрашивает у сервера информацию о пользователе.
