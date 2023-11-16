@@ -168,7 +168,7 @@ export function displayChatMessage(chatMessage, prepend=false) {
 
 // Отправляет рядовое сообщение на сервер в текущий открытый чат.
 export function sendChatMessage() {
-    if (text) {
+    if (textInputEl.value) {
         websocket.sendMessage({chatId: openedChatId, text: textInputEl.value});
         // Очищаем поле ввода, после отправки сообщения.
         textInputEl.value = "";
