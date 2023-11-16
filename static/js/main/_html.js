@@ -69,19 +69,19 @@ export function displayChat(chat) {
         openedChatId = chat.id;
         loadedChats[chat.id].chatEl.classList.remove("chat--hidden");
         loadedChats[chat.id].chatLinkEl.classList.add("chat-link--active");
+        closerEl.style = "display: none;";
         if (!(loadedChats[chat.id].fullyLoaded)) {
             loadedChats[chat.id].fullyLoaded = true;
             let skipFromEndCount = Object.keys(loadedChats[chat.id].messages).length;
             displayChatHistory(await requestChatHistory(chat.id, skipFromEndCount));
         }
-        closerEl.style = "display: none;";
 
     }
     loadedChats[chat.id].chatLinkEl = chatLinkEl;
 
     // Название чата в 'ссылке'.
     let chatLinkNameEl = chatLinkEl.querySelector(".chat-link__chat-name");
-    chatLinkNameEl.textContent = chat.chatName;
+    chatLinkNameEl.textContent = chat.name;
     loadedChats[chat.id].chatLinkNameEl = chatLinkNameEl;
 
     // Элемент последнего сообщения в 'ссылке'.
@@ -97,14 +97,16 @@ export function displayChat(chat) {
 
     // Название чата.
     let chatNameEl = chatEl.querySelector(".chat__name");
-    chatNameEl.textContent = chat.chatName;
+    chatNameEl.textContent = chat.name;
     loadedChats[chat.id].chatNameEl = chatNameEl;
 
     // Контейнер с историей чата.
     let chatMessagesEl = chatEl.querySelector(".chat__messages");
     loadedChats[chat.id].chatMessagesEl = chatMessagesEl;
 
-    displayChatMessage(chat.lastChatMessage);
+    if (chat.lastMessage) {
+        displayChatMessage(chat.lastMessage);
+    }
 }
 
 // Отображает сообщение в элементе чата.
@@ -144,8 +146,8 @@ export function displayChatMessage(chatMessage, prepend=false) {
 
     // Имя отправителя сообщения.
     let nameEl = chatMessageEl.querySelector(".chat__message__name");
-    if (chatMessage.userId != user.id) {
-        nameEl.textContent = chatMessage.firstName;
+    if (chatMessage.user.id != user.id) {
+        nameEl.textContent = chatMessage.user.firstName;
     }
     // Текст сообщения.
     let textEl = chatMessageEl.querySelector(".chat__message__text");
@@ -158,7 +160,7 @@ export function displayChatMessage(chatMessage, prepend=false) {
 
     // Если сообщение от нас, то устанавливаем на элемент специальный CSS-класс,
     // а также выполняем прокрутку в самый низ чата.
-    if (chatMessage.userId == user.id) {
+    if (chatMessage.user.id == user.id) {
         chatMessageEl.classList.add("chat__message--self");
         loadedChats[chatMessage.chatId].chatMessagesEl.scrollTop = loadedChats[chatMessage.chatId].chatMessagesEl.scrollHeight;
     }
@@ -166,9 +168,11 @@ export function displayChatMessage(chatMessage, prepend=false) {
 
 // Отправляет рядовое сообщение на сервер в текущий открытый чат.
 export function sendChatMessage() {
-    websocket.sendMessage({chatId: openedChatId, text: textInputEl.value});
-    // Очищаем поле ввода, после отправки сообщения.
-    textInputEl.value = "";
+    if (textInputEl.value) {
+        websocket.sendMessage({chatId: openedChatId, text: textInputEl.value});
+        // Очищаем поле ввода, после отправки сообщения.
+        textInputEl.value = "";
+    }
 }
 
 // Отправка сообщения при нажатии Enter.

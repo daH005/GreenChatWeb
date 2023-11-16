@@ -1,5 +1,5 @@
 import { WEBSOCKET_URL } from "../_config.js";
-import { AUTH_TOKEN } from "./_config.js";
+import { AUTH_TOKEN } from "./_auth_cookie.js";
 
 // Объект веб-сокета. Инициализируется в `startWebSocket(...)`.
 export var websocket;

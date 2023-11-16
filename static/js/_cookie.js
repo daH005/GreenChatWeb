@@ -6,5 +6,5 @@ export function getCookie(name) {
 }
 
 export function setCookie(name, value, max_age=0) {
-    document.cookie = name + "=" + value + ";" + "max_age=" + String(max_age);
+    document.cookie = name + "=" + value + "; " + "max-age=" + String(max_age);
 }

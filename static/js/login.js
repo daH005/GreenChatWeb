@@ -21,7 +21,7 @@ async function auth(username, password) {
     if (response.ok) {
         let data = await response.json();
         setCookie(AUTH_TOKEN_COOKIE_KEY, data.authToken, AUTH_COOKIE_MAX_AGE);
-        window.location.href = '/';
+        window.location.href = "/";
     } else {
         alert("Неверный логин или пароль!");
     }

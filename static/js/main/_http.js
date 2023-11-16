@@ -1,8 +1,9 @@
 import { HTTP_USER_INFO_URL, HTTP_USER_CHATS_URL, HTTP_CHAT_HISTORY_URL} from "../_config.js";
-import { BASE_AUTH_HEADERS } from "./_config.js";
+import { BASE_AUTH_HEADERS } from "./_auth_cookie.js";
 
-function redirectToLoginPage() {
-    window.location.href = '/login';
+// FixMe: Возможно, стоит вынести функцию в независимый модуль.
+export function redirectToLoginPage() {
+    window.location.href = "/login";
 }
 
 // Запрашивает у сервера информацию о пользователе.
@@ -14,7 +15,7 @@ export async function requestUserInfo() {
     });
     if (response.ok) {
         return await response.json();
-    } else if (response.status == 403) {
+    } else if (response.status == 401) {
         redirectToLoginPage();
     } else {
         loadUserInfo();
@@ -31,7 +32,7 @@ export async function requestUserChats() {
     });
     if (response.ok) {
         return await response.json();
-    } else if (response.status == 403) {
+    } else if (response.status == 401) {
         redirectToLoginPage();
     } else {
         loadUserChats();
@@ -44,15 +45,15 @@ export async function requestUserChats() {
 // {messages: [{id, userId, chatId, username, firstName, lastName, text, creatingDatetime}, ...]}.
 export async function requestChatHistory(chatId, skipFromEndCount=null) {
     let queryParamsStr = "?" + new URLSearchParams({
-        chatId, skipFromEndCount
+        skipFromEndCount
     }).toString();
-    let response = await fetch(HTTP_CHAT_HISTORY_URL + queryParamsStr, {
+    let response = await fetch(HTTP_CHAT_HISTORY_URL.replace("{}", String(chatId)) + queryParamsStr, {
         method: "GET",
         headers: BASE_AUTH_HEADERS,
     });
     if (response.ok) {
         return await response.json();
-    } else if (response.status == 403) {
+    } else if (response.status == 401) {
         redirectToLoginPage();
     } else {
         loadChatHistory();

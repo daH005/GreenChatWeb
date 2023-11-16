@@ -1,9 +1,9 @@
 // URL-адреса для работы с HTTP частью api:
 export const HTTP_BASE_URL = "http://localhost:81";
-export const HTTP_AUTH_URL = HTTP_BASE_URL + "/auth";
-export const HTTP_USER_INFO_URL = HTTP_BASE_URL + "/userInfo";
-export const HTTP_USER_CHATS_URL = HTTP_BASE_URL + "/userChats";
-export const HTTP_CHAT_HISTORY_URL = HTTP_BASE_URL + "/chatHistory";
+export const HTTP_AUTH_URL = HTTP_BASE_URL + "/user/auth";
+export const HTTP_USER_INFO_URL = HTTP_BASE_URL + "/user/info";
+export const HTTP_USER_CHATS_URL = HTTP_BASE_URL + "/user/chats";
+export const HTTP_CHAT_HISTORY_URL = HTTP_BASE_URL + "/chats/{}/history";
 
 // URL-адрес для работы по веб-сокету.
 export const WEBSOCKET_URL = "ws://localhost:80";
