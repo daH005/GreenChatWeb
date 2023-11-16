@@ -47,7 +47,7 @@ export async function requestChatHistory(chatId, skipFromEndCount=null) {
     let queryParamsStr = "?" + new URLSearchParams({
         chatId, skipFromEndCount
     }).toString();
-    let response = await fetch(HTTP_CHAT_HISTORY_URL + queryParamsStr, {
+    let response = await fetch(HTTP_CHAT_HISTORY_URL.replace("{}", String(chatId)) + queryParamsStr, {
         method: "GET",
         headers: BASE_AUTH_HEADERS,
     });
