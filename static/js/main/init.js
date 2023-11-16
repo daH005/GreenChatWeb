@@ -8,14 +8,10 @@ if (!AUTH_TOKEN) {
 }
 
 console.log("Загружаем пользователя...");
-requestUserInfo().then((data) => {
-    displayUserInfo(data);
-});
+displayUserInfo(await requestUserInfo());
 
 console.log("Загружаем чаты...");
-requestUserChats().then((data) => {
-    displayUserChats(data);
-});
+displayUserChats(await requestUserChats());
 
 console.log("Запускаем веб-сокет...");
 startWebSocket(displayChatMessage);
