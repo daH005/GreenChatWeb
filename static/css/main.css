@@ -157,7 +157,7 @@
 }
 
 .chat-message-input-container button {
-    flex: 20%;
+    flex: 5%;
     background: white;
     color: var(--main-2-color);
 }
