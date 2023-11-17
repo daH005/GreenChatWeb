@@ -8,6 +8,8 @@ const allChatsLinksEl = document.getElementById("js-all-chats-links");
 const loadedChatsEl = document.getElementById("js-loaded-chats");
 const textInputEl = document.getElementById("js-chat-message-text-input");
 const buttonEl = document.getElementById("js-chat-message-button");
+const inputContainerEl = document.getElementById("js-chat-message-input-container");
+inputContainerEl.style = "display: none";
 
 // Шаблон 'ссылки' на чат.
 const chatLinkTempEl = document.getElementById("js-chat-link-temp");
@@ -193,6 +195,7 @@ function switchToChat(chatId) {
     loadedChats[chatId].chatEl.classList.remove("chat--hidden");
     loadedChats[chatId].chatLinkEl.classList.add("chat-link--active");
     closerEl.style = "display: none;";
+    inputContainerEl.style = "";
 }
 
 // Скрывает чат с указанным `chatId` и ставит серую перегородку.
@@ -203,4 +206,5 @@ function hideChat(chatId) {
         openedChatId = null;
     }
     closerEl.style = "";
+    inputContainerEl.style = "display: none";
 }
