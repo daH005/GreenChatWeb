@@ -75,11 +75,20 @@
     display: none;
 }
 
-.chat .chat__name {
+.chat .chat__header {
+    display: flex;
+    justify-content: space-between;
     padding: 20px;
     background: var(--main-color);
     color: white;
     box-sizing: border-box;
+}
+
+.chat .chat__back-link {
+    cursor: pointer;
+}
+
+.chat .chat__name {
 }
 
 .chat .chat__messages {

@@ -60,16 +60,7 @@ export function displayChat(chat) {
     allChatsLinksEl.append(chatLinkNode);
     let chatLinkEl = allChatsLinksEl.lastElementChild;
     chatLinkEl.onclick = async function() {
-        if (openedChatId != null) {
-            // Скрываем последний открытый чат.
-            loadedChats[openedChatId].chatEl.classList.add("chat--hidden");
-            loadedChats[openedChatId].chatLinkEl.classList.remove("chat-link--active");
-        }
-        // Открываем текущий чат.
-        openedChatId = chat.id;
-        loadedChats[chat.id].chatEl.classList.remove("chat--hidden");
-        loadedChats[chat.id].chatLinkEl.classList.add("chat-link--active");
-        closerEl.style = "display: none;";
+        switchToChat(chat.id);
         if (!(loadedChats[chat.id].fullyLoaded)) {
             loadedChats[chat.id].fullyLoaded = true;
             let skipFromEndCount = Object.keys(loadedChats[chat.id].messages).length;
@@ -99,6 +90,13 @@ export function displayChat(chat) {
     let chatNameEl = chatEl.querySelector(".chat__name");
     chatNameEl.textContent = chat.name;
     loadedChats[chat.id].chatNameEl = chatNameEl;
+
+    // Кнопка выхода из чата.
+    let chatBackLinkEl = chatEl.querySelector(".chat__back-link");
+    chatBackLinkEl.onclick = function() {
+        hideChat(chat.id);
+    }
+    loadedChats[chat.id].chatBackLinkEl = chatBackLinkEl;
 
     // Контейнер с историей чата.
     let chatMessagesEl = chatEl.querySelector(".chat__messages");
@@ -185,4 +183,24 @@ document.addEventListener("keypress", function(event) {
 // Отправка сообщения при клике на кнопку.
 buttonEl.onclick = () => {
     sendChatMessage();
+}
+
+// Скрывает открытый чат и открывает новый чат, соответствующий указанному `chatId`.
+// Также убирает серую перегородку.
+function switchToChat(chatId) {
+    hideChat(openedChatId);
+    openedChatId = chatId;
+    loadedChats[chatId].chatEl.classList.remove("chat--hidden");
+    loadedChats[chatId].chatLinkEl.classList.add("chat-link--active");
+    closerEl.style = "display: none;";
+}
+
+// Скрывает чат с указанным `chatId` и ставит серую перегородку.
+function hideChat(chatId) {
+    if (openedChatId != null) {
+        loadedChats[openedChatId].chatEl.classList.add("chat--hidden");
+        loadedChats[openedChatId].chatLinkEl.classList.remove("chat-link--active");
+        openedChatId = null;
+    }
+    closerEl.style = "";
 }
