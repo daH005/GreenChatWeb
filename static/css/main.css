@@ -209,4 +209,8 @@
         z-index: 1002;
     }
 
+    .closer {
+        background: var(--main-color);
+    }
+
 }
