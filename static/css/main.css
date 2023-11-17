@@ -94,10 +94,10 @@
 
 .chat .chat__messages {
     overflow-y: auto;
-    padding: 20px 100px;
+    padding: 20px 5vw;
     background: var(--main-2-color);
     box-sizing: border-box;
-    height: calc(100vh - 60px - 50px - 110px);
+    height: calc(100vh - 60px - 50px - 125px);
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -135,6 +135,7 @@
     min-width: 200px;
     border-radius: 0 10px 10px 10px;
     color: var(--text-color);
+    font-size: 0.9em;
 }
 
 .chat .chat__message.chat__message--self .chat__message__text {
@@ -144,21 +145,21 @@
 }
 
 .chat-message-input-container {
-    margin: 20px;
-    padding: 10px 50px;
+    padding: 2vw;
     display: flex;
     box-sizing: border-box;
+    width: 100%;
 }
 
 .chat-message-input-container input {
     flex: 80%;
-    margin-right: 20px;
+    margin-right: 2vw;
 }
 
 .chat-message-input-container button {
     flex: 20%;
     background: white;
-    color: var(--text-color);
+    color: var(--main-2-color);
 }
 
 .chat-message-input-container button, input {
@@ -192,15 +193,13 @@
     }
 
     .chat .chat__messages {
-        height: calc(100vh - 60px - 110px);
-        padding: 20px 50px;
+        height: calc(100vh - 120px);
     }
 
     .chat-message-input-container {
         position: absolute;
         bottom: 0;
         z-index: 1002;
-        padding: 10px 20px;
     }
 
 }
