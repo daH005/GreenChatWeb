@@ -6,9 +6,10 @@ import { displayUserInfo, displayUserChats, displayChatMessage } from "./_html.j
 // FixMe: Ещё важнее: после запуска nginx код перестал работать, как задумывалось.
 // Важно: запрещает переход вперёд-назад по истории браузера (а точнее вкладки).
 // Работает, как на ПК, так и на телефоне.
-window.addEventListener("popstate", () => {
-    window.history.pushState({}, null, null);
-});
+window.history.pushState(null, "", window.location.href);
+window.onpopstate = function() {
+    window.history.pushState(null, "", window.location.href);
+}
 
 if (!AUTH_TOKEN) {
     redirectToLoginPage();
