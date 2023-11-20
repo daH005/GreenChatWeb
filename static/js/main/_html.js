@@ -65,8 +65,8 @@ export function displayChat(chat) {
         switchToChat(chat.id);
         if (!(loadedChats[chat.id].fullyLoaded)) {
             loadedChats[chat.id].fullyLoaded = true;
-            let skipFromEndCount = Object.keys(loadedChats[chat.id].messages).length;
-            displayChatHistory(await requestChatHistory(chat.id, skipFromEndCount));
+            let offsetFromEnd = Object.keys(loadedChats[chat.id].messages).length;
+            displayChatHistory(await requestChatHistory(chat.id, offsetFromEnd));
         }
 
     }
