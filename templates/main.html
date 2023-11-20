@@ -25,12 +25,16 @@ GreenChat
         <div class="loaded-chats" id="js-loaded-chats"></div>
 
         <!-- Ввод и отправка сообщения. При старте страницы элемент скрыт. -->
-        <div class="chat-message-input-container">
+        <div class="chat-message-input-container" id="js-chat-message-input-container">
             <input type="text" id="js-chat-message-text-input" placeholder="Что же написать...">
-            <button id="js-chat-message-button">Отправить</button>
+            <button id="js-chat-message-button">
+                <i class="fa fa-play"></i>
+            </button>
         </div>
 
-        <div class="closer" id="js-closer"><- Выберите чат</div>
+        <div class="closer" id="js-closer">
+            <i class="fa fa-caret-left"></i> <span style="margin-left: 5px;">Выберите чат</span>
+        </div>
 
     </div>
 
@@ -47,7 +51,12 @@ GreenChat
 <!-- Шаблон чата. -->
 <template id="js-chat-temp">
     <div class="chat chat--hidden">
-        <div class="chat__name"></div>
+        <div class="chat__header">
+            <div class="chat__back-link">
+                <i class="fa fa-caret-left"></i>
+            </div>
+            <div class="chat__name"></div>
+        </div>
         <div class="chat__messages"></div>
     </div>
 </template>

@@ -40,12 +40,12 @@ export async function requestUserChats() {
 }
 
 // Запрашивает у сервера историю конкретного чата (пользователь обязательно должен в нём состоять!).
-// Поскольку часть сообщений может быть уже загружена по веб-сокету, то был определён параметр `skipFromEndCount`.
+// Поскольку часть сообщений может быть уже загружена по веб-сокету, то был определён параметр `offsetFromEnd`.
 // Ожидаемое возвращаемое значение - `Object` формата:
 // {messages: [{id, userId, chatId, username, firstName, lastName, text, creatingDatetime}, ...]}.
-export async function requestChatHistory(chatId, skipFromEndCount=null) {
+export async function requestChatHistory(chatId, offsetFromEnd=null) {
     let queryParamsStr = "?" + new URLSearchParams({
-        skipFromEndCount
+        offsetFromEnd
     }).toString();
     let response = await fetch(HTTP_CHAT_HISTORY_URL.replace("{}", String(chatId)) + queryParamsStr, {
         method: "GET",

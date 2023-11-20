@@ -27,3 +27,7 @@ button, input {
     outline: none;
     border: none;
 }
+
+button {
+    cursor: pointer;
+}
