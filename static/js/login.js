@@ -1,5 +1,4 @@
-import { HTTP_AUTH_URL, AUTH_COOKIE_MAX_AGE, AUTH_TOKEN_COOKIE_KEY, BASE_HEADERS } from "./_config.js";
-import { setCookie } from "./_cookie.js";
+import { HTTP_AUTH_URL, JWT_TOKEN_LOCAL_STORAGE_KEY, BASE_HEADERS } from "./_config.js";
 
 const usernameInputEl = document.getElementById("js-username-input");
 const passwordInputEl = document.getElementById("js-password-input");
@@ -20,7 +19,7 @@ async function auth(username, password) {
     });
     if (response.ok) {
         let data = await response.json();
-        setCookie(AUTH_TOKEN_COOKIE_KEY, data.authToken, AUTH_COOKIE_MAX_AGE);
+        localStorage.setItem(JWT_TOKEN_LOCAL_STORAGE_KEY, data.JWTToken);
         window.location.href = "/";
     } else {
         alert("Неверный логин или пароль!");

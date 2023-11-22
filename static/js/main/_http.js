@@ -1,5 +1,5 @@
 import { HTTP_USER_INFO_URL, HTTP_USER_CHATS_URL, HTTP_CHAT_HISTORY_URL} from "../_config.js";
-import { BASE_AUTH_HEADERS } from "./_auth_cookie.js";
+import { BASE_AUTH_HEADERS } from "./_auth_constants.js";
 
 // FixMe: Возможно, стоит вынести функцию в независимый модуль.
 export function redirectToLoginPage() {

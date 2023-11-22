@@ -1,5 +1,5 @@
 import { WEBSOCKET_URL } from "../_config.js";
-import { AUTH_TOKEN } from "./_auth_cookie.js";
+import { JWT_TOKEN } from "./_auth_constants.js";
 
 // Объект веб-сокета. Инициализируется в `startWebSocket(...)`.
 export var websocket;
@@ -16,7 +16,7 @@ export function startWebSocket(handleMessageFunc) {
 
     websocket.onopen = (event) => {
         // Отправляем авторизующее сообщение.
-        websocket.sendMessage({authToken: AUTH_TOKEN})
+        websocket.sendMessage({JWTToken: JWT_TOKEN})
     }
 
     websocket.onmessage = (event) => {

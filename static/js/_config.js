@@ -8,10 +8,8 @@ export const HTTP_CHAT_HISTORY_URL = HTTP_BASE_URL + "/chats/{}/history";
 // URL-адрес для работы по веб-сокету.
 export const WEBSOCKET_URL = "ws://localhost:80";
 
-// Время в секундах, определяющее сколько токен авторизации должен храниться в cookie.
-export const AUTH_COOKIE_MAX_AGE = 3600 * 24 * 365;
-// Ключ, под которым мы храним токен авторизации в cookie.
-export const AUTH_TOKEN_COOKIE_KEY = "authToken";
+// Ключ, под которым мы храним JWT-токен в `localStorage`.
+export const JWT_TOKEN_LOCAL_STORAGE_KEY = "JWTToken";
 // Базовые заголовки для HTTP-запросов.
 // Поскольку мы работаем с REST-api, то мы должны явно указать формат передаваемых данных - JSON.
 export const BASE_HEADERS = {
