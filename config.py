@@ -8,5 +8,5 @@ __all__ = (
 )
 
 load_dotenv()
-HOST: Final[str] = environ.get('HOST', 'localhost')
-PORT: Final[int] = int(environ.get('PORT', 82))
+HOST: Final[str] = environ['HOST']
+PORT: Final[int] = int(environ['PORT'])
