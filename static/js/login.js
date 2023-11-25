@@ -1,5 +1,6 @@
-import { HTTP_AUTH_URL, AUTH_COOKIE_MAX_AGE, AUTH_TOKEN_COOKIE_KEY, BASE_HEADERS } from "./_config.js";
-import { setCookie } from "./_cookie.js";
+import { HTTP_AUTH_URL, JWT_TOKEN_LOCAL_STORAGE_KEY, BASE_HEADERS } from "./_config.js";
+import { redirectToMainPage } from "./_redirects.js";
+import { saveJWTToken } from "./_local_storage.js";
 
 const usernameInputEl = document.getElementById("js-username-input");
 const passwordInputEl = document.getElementById("js-password-input");
@@ -10,8 +11,8 @@ buttonEl.onclick = () => {
 }
 
 // Проводит попытку авторизовать пользователя.
-// При статус-коде 200 фиксирует токен авторизации в cookie и
-// производит редирект на главную страницу мессенджера.
+// При статус-коде 200 фиксирует JWT-токен в `localStorage` и
+// производит перенаправление на главную страницу мессенджера.
 async function auth(username, password) {
     let response = await fetch(HTTP_AUTH_URL, {
         method: "POST",
@@ -20,8 +21,9 @@ async function auth(username, password) {
     });
     if (response.ok) {
         let data = await response.json();
-        setCookie(AUTH_TOKEN_COOKIE_KEY, data.authToken, AUTH_COOKIE_MAX_AGE);
-        window.location.href = "/";
+        // Сохраняем JWT-токен в `localStorage` и перенаправляемся на главную страницу мессенджера.
+        saveJWTToken(data.JWTToken);
+        redirectToMainPage();
     } else {
         alert("Неверный логин или пароль!");
     }

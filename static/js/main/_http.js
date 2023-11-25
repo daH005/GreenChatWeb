@@ -1,24 +1,20 @@
-import { HTTP_USER_INFO_URL, HTTP_USER_CHATS_URL, HTTP_CHAT_HISTORY_URL} from "../_config.js";
-import { BASE_AUTH_HEADERS } from "./_auth_cookie.js";
-
-// FixMe: Возможно, стоит вынести функцию в независимый модуль.
-export function redirectToLoginPage() {
-    window.location.href = "/login";
-}
+import { HTTP_USER_INFO_URL, HTTP_USER_CHATS_URL, HTTP_CHAT_HISTORY_URL, HTTP_REFRESH_TOKEN_URL } from "../_config.js";
+import { redirectToLoginPage } from "../_redirects.js";
+import { makeAuthHeaders } from "./_auth_tools.js";
 
 // Запрашивает у сервера информацию о пользователе.
 // Ожидаемое возвращаемое значение - `Object` формата {id, username, firstName, lastName, email}.
 export async function requestUserInfo() {
     let response = await fetch(HTTP_USER_INFO_URL, {
         method: "GET",
-        headers: BASE_AUTH_HEADERS,
+        headers: makeAuthHeaders(),
     });
     if (response.ok) {
         return await response.json();
     } else if (response.status == 401) {
         redirectToLoginPage();
     } else {
-        loadUserInfo();
+        throw Error();
     }
 }
 
@@ -28,14 +24,14 @@ export async function requestUserInfo() {
 export async function requestUserChats() {
     let response = await fetch(HTTP_USER_CHATS_URL, {
         method: "GET",
-        headers: BASE_AUTH_HEADERS,
+        headers: makeAuthHeaders(),
     });
     if (response.ok) {
         return await response.json();
     } else if (response.status == 401) {
         redirectToLoginPage();
     } else {
-        loadUserChats();
+        throw Error();
     }
 }
 
@@ -49,13 +45,29 @@ export async function requestChatHistory(chatId, offsetFromEnd=null) {
     }).toString();
     let response = await fetch(HTTP_CHAT_HISTORY_URL.replace("{}", String(chatId)) + queryParamsStr, {
         method: "GET",
-        headers: BASE_AUTH_HEADERS,
+        headers: makeAuthHeaders(),
     });
     if (response.ok) {
         return await response.json();
     } else if (response.status == 401) {
         redirectToLoginPage();
     } else {
-        loadChatHistory();
+        throw Error();
+    }
+}
+
+// Запрашивает у сервера новый JWT-токен для продления срока доступа.
+// Ожидаемое возвращаемое значение - `Object` формата {JWTToken}.
+export async function requestNewJWTToken() {
+    let response = await fetch(HTTP_REFRESH_TOKEN_URL, {
+        method: "POST",
+        headers: makeAuthHeaders(),
+    });
+    if (response.ok) {
+        return await response.json();
+    } else if (response.status == 401) {
+        redirectToLoginPage();
+    } else {
+        throw Error();
     }
 }
