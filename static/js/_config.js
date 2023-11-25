@@ -11,8 +11,8 @@ export const WEBSOCKET_URL = "ws://localhost:80";
 
 // Ключ, под которым мы храним JWT-токен в `localStorage`.
 export const JWT_TOKEN_LOCAL_STORAGE_KEY = "JWTToken";
-// Время ожидания перед отправкой нового HTTP-запроса на обновление JWT-токена.
-export const JWT_TOKEN_REFRESH_INTERVAL_DELAY = 60 * 60;
+// Время ожидания (в секундах!) перед отправкой нового HTTP-запроса на обновление JWT-токена.
+export const JWT_TOKEN_REFRESH_INTERVAL_DELAY = 1000 * 60 * 15;
 // Базовые заголовки для HTTP-запросов.
 // Поскольку мы работаем с REST-api, то мы должны явно указать формат передаваемых данных - JSON.
 export const BASE_HEADERS = {

@@ -1,6 +1,7 @@
-import { getJWTToken } from "../_local_storage.js";
+import { getJWTToken, saveJWTToken } from "../_local_storage.js";
 import { redirectToLoginPage } from "../_redirects.js";
-import { requestUserInfo, requestUserChats } from "./_http.js";
+import { JWT_TOKEN_REFRESH_INTERVAL_DELAY } from "../_config.js";
+import { requestUserInfo, requestUserChats, requestNewJWTToken } from "./_http.js";
 import { startWebSocket } from "./_websocket.js";
 import { displayUserInfo, displayUserChats, displayChatMessage } from "./_html.js";
 
@@ -12,9 +13,17 @@ window.onpopstate = function() {
     window.history.pushState(null, "", window.location.href);
 }
 
-if (!getJWTToken()) {
+// Если в `localStorage` совсем нет токена, то сразу же перенаправляемся на страницу авторизации.
+if (getJWTToken() == "undefined") {  // Не опечатка. Из `localStorage` возвращается именно строка, а не обычный undefined.
     redirectToLoginPage();
 }
+
+// Периодическое обновление JWT-токена.
+setInterval(async () => {
+    let data = await requestNewJWTToken();
+    saveJWTToken(data.JWTToken);
+    console.log("Токен обновлён!");
+}, JWT_TOKEN_REFRESH_INTERVAL_DELAY);
 
 console.log("Загружаем пользователя...");
 displayUserInfo(await requestUserInfo());
