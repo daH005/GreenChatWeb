@@ -1,4 +1,4 @@
-import { JWT_TOKEN } from "./_auth_constants.js";
+import { getJWTToken } from "../_local_storage.js";
 import { requestUserInfo, requestUserChats, redirectToLoginPage } from "./_http.js";
 import { startWebSocket } from "./_websocket.js";
 import { displayUserInfo, displayUserChats, displayChatMessage } from "./_html.js";
@@ -11,7 +11,7 @@ window.onpopstate = function() {
     window.history.pushState(null, "", window.location.href);
 }
 
-if (!JWT_TOKEN) {
+if (!getJWTToken()) {
     redirectToLoginPage();
 }
 
