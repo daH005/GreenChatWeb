@@ -14,7 +14,7 @@ export async function requestUserInfo() {
     } else if (response.status == 401) {
         redirectToLoginPage();
     } else {
-        return requestUserInfo();
+        throw Error();
     }
 }
 
@@ -31,7 +31,7 @@ export async function requestUserChats() {
     } else if (response.status == 401) {
         redirectToLoginPage();
     } else {
-        return requestUserChats();
+        throw Error();
     }
 }
 
@@ -52,7 +52,7 @@ export async function requestChatHistory(chatId, offsetFromEnd=null) {
     } else if (response.status == 401) {
         redirectToLoginPage();
     } else {
-        return requestChatHistory();
+        throw Error();
     }
 }
 
@@ -68,6 +68,6 @@ export async function requestNewJWTToken() {
     } else if (response.status == 401) {
         redirectToLoginPage();
     } else {
-        return requestNewJWTToken();
+        throw Error();
     }
 }
