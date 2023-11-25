@@ -5,6 +5,7 @@ from flask import (  # pip install flask
 from http import HTTPMethod
 
 from config import (
+    DEBUG,
     HOST,
     PORT,
 )
@@ -27,4 +28,4 @@ def main() -> str:
 
 
 if __name__ == '__main__':
-    app.run(HOST, PORT, debug=True)
+    app.run(HOST, PORT, debug=DEBUG)
