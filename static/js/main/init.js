@@ -1,5 +1,6 @@
 import { getJWTToken } from "../_local_storage.js";
-import { requestUserInfo, requestUserChats, redirectToLoginPage } from "./_http.js";
+import { redirectToLoginPage } from "../redirects.js";
+import { requestUserInfo, requestUserChats } from "./_http.js";
 import { startWebSocket } from "./_websocket.js";
 import { displayUserInfo, displayUserChats, displayChatMessage } from "./_html.js";
 
