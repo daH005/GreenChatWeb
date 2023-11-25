@@ -1,4 +1,6 @@
 import { HTTP_AUTH_URL, JWT_TOKEN_LOCAL_STORAGE_KEY, BASE_HEADERS } from "./_config.js";
+import { redirectToMainPage } from "./_redirects.js";
+import { saveJWTToken } from "./_local_storage.js";
 
 const usernameInputEl = document.getElementById("js-username-input");
 const passwordInputEl = document.getElementById("js-password-input");
@@ -19,8 +21,9 @@ async function auth(username, password) {
     });
     if (response.ok) {
         let data = await response.json();
-        localStorage.setItem(JWT_TOKEN_LOCAL_STORAGE_KEY, data.JWTToken);
-        window.location.href = "/";
+        // Сохраняем JWT-токен в `localStorage` и перенаправляемся на главную страницу мессенджера.
+        saveJWTToken(data.JWTToken);
+        redirectToMainPage();
     } else {
         alert("Неверный логин или пароль!");
     }
