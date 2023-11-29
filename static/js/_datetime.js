@@ -16,12 +16,18 @@ const MONTHS_LABELS = {
 // Формирует из объекта `Date` строку формата '<часы>:<минуты>'.
 // Если час < 10, то в его начало добавляется 0.
 export function dateToTimeStr(date) {
+    console.log(date);
     let hours = date.getHours();
     let hoursStr = String(hours);
     if (hours < 10) {
-        hoursString = "0" + hoursStr;
+        hoursStr = "0" + hoursStr;
     }
-    return hoursStr + ":" + String(date.getMinutes());
+    let minutes = date.getMinutes()
+    let minutesStr = String(minutes);
+    if (minutes < 10) {
+        minutesStr = "0" + minutesStr;
+    }
+    return hoursStr + ":" + String(minutesStr);
 }
 
 // Формирует из объекта `Date` строку формата '<день> <месяц на русском и в родительном падеже>'. 
