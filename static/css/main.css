@@ -30,6 +30,7 @@
     padding: 20px;
     border-bottom: 2px solid var(--main-2-color);
     background: var(--main-color);
+    position: relative;
 }
 
 .chat-link.chat-link--active {
@@ -42,6 +43,13 @@
 
 .chat-link__last-message {
     padding: 5px;
+}
+
+.chat-link .chat-link__time {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    font-size: small;
 }
 
 .cur-chat-container {
@@ -143,6 +151,21 @@
     background: var(--main-color);
     color: white;
     border-top-left-radius: 10px;
+}
+
+.chat .chat__message .chat__message__text-wrapper {
+    position: relative;
+}
+
+.chat .chat__message .chat__message__time {
+    position: absolute;
+    right: 5px;
+    bottom: 3px;
+    font-size: 0.7rem;
+}
+
+.chat .chat__message.chat__message--self .chat__message__time {
+    color: white;
 }
 
 .chat-message-input-container {
