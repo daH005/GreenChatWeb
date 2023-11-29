@@ -14,7 +14,7 @@ window.onpopstate = function() {
 }
 
 // Если в `localStorage` совсем нет токена, то сразу же перенаправляемся на страницу авторизации.
-if (getJWTToken() == "undefined") {  // Не опечатка. Из `localStorage` возвращается именно строка, а не обычный undefined.
+if (["undefined", "null", undefined, null].includes(getJWTToken())) {  // Не опечатка. Из `localStorage`, как показал опыт, может вернуться именно строка, а не обычный undefined.
     redirectToLoginPage();
 }
 
