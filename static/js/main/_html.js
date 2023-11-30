@@ -1,4 +1,4 @@
-import { dateToTimeStr }  from "../_datetime.js";
+import { dateToTimeStr, dateToDateStr }  from "../_datetime.js";
 import { requestChatHistory } from "./_http.js";
 import { websocket } from "./_websocket.js";
 
@@ -85,8 +85,8 @@ export function displayChat(chat) {
 
     // Элемент с временем последнего сообщения в 'ссылке'.
     // Время устанавливается в `displayChatMessage`.
-    let chatLinkLastMessageTimeEl = chatLinkEl.querySelector(".chat-link__time");
-    loadedChats[chat.id].chatLinkLastMessageTimeEl = chatLinkLastMessageTimeEl;
+    let chatLinkLastMessageDateEl = chatLinkEl.querySelector(".chat-link__date");
+    loadedChats[chat.id].chatLinkLastMessageDateEl = chatLinkLastMessageDateEl;
 
     // Создаём сам чат.
     let chatNode = chatTempEl.content.cloneNode(true);
@@ -122,7 +122,9 @@ export function displayChat(chat) {
 // на верхнюю позицию в случае если сообщение позднее `commonLastMessageCreatingDatetime`.
 export function displayChatMessage(chatMessage, prepend=false) {
     chatMessage.creatingDatetime = new Date(chatMessage.creatingDatetime);
+    // chatMessage.creatingDatetime.setUTCHours();
     let timeStr = dateToTimeStr(chatMessage.creatingDatetime);
+    let dateStr = dateToDateStr(chatMessage.creatingDatetime);
     if (!prepend) {
         // Обновляет текст, а также время отправки последнего сообщения в 'ссылке' на чат.
         let text = chatMessage.text;
@@ -130,7 +132,7 @@ export function displayChatMessage(chatMessage, prepend=false) {
             text = text.slice(0, MAX_CHAT_LINK_TEXT_LENGTH) + "...";
         }
         loadedChats[chatMessage.chatId].chatLinkLastMessageEl.textContent = text;
-        loadedChats[chatMessage.chatId].chatLinkLastMessageTimeEl.textContent = timeStr;
+        loadedChats[chatMessage.chatId].chatLinkLastMessageDateEl.textContent = dateStr;
     }
     // Если текущее обрабатываемое сообщение самое позднее, то переносим кнопку чата
     // на самый верх.
