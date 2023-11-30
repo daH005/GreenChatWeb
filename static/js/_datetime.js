@@ -13,6 +13,10 @@ const MONTHS_LABELS = {
     12: "дек",
 }
 
+export function normalizeDateTimezone(date) {
+    date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
+}
+
 // Формирует из объекта `Date` строку формата '<часы>:<минуты>'.
 // Если час < 10, то в его начало добавляется 0.
 export function dateToTimeStr(date) {
@@ -32,7 +36,7 @@ export function dateToTimeStr(date) {
 // Формирует из объекта `Date` строку формата '<день> <месяц на русском и в родительном падеже>'. 
 // Если год переданной даты != текущему, то к вышеописанному результату конкатенируется ' <год>'.
 export function dateToDateStr(date) {
-    let dateStr = String(date.getDay()) + " " + MONTHS_LABELS[date.getMonth()];
+    let dateStr = String(date.getDate()) + " " + MONTHS_LABELS[date.getMonth() + 1];
     let nowDate = new Date();
     if (nowDate.getFullYear() != date.getFullYear()) {
         dateStr += " " + String(date.getFullYear());

@@ -1,4 +1,4 @@
-import { dateToTimeStr, dateToDateStr }  from "../_datetime.js";
+import { dateToTimeStr, dateToDateStr, normalizeDateTimezone }  from "../_datetime.js";
 import { requestChatHistory } from "./_http.js";
 import { websocket } from "./_websocket.js";
 
@@ -121,8 +121,9 @@ export function displayChat(chat) {
 // обновляется и содержимое 'ссылки' на чат, а также переход этой 'ссылки'
 // на верхнюю позицию в случае если сообщение позднее `commonLastMessageCreatingDatetime`.
 export function displayChatMessage(chatMessage, prepend=false) {
+    // Создаём объект `Date`, а также устанавливаем часовой пояс клиента (от api даты всегда в UTC).
     chatMessage.creatingDatetime = new Date(chatMessage.creatingDatetime);
-    // chatMessage.creatingDatetime.setUTCHours();
+    normalizeDateTimezone(chatMessage.creatingDatetime);
     let timeStr = dateToTimeStr(chatMessage.creatingDatetime);
     let dateStr = dateToDateStr(chatMessage.creatingDatetime);
     if (!prepend) {
