@@ -126,6 +126,8 @@ export function displayChatMessage(chatMessage, prepend=false) {
     normalizeDateTimezone(chatMessage.creatingDatetime);
     let timeStr = dateToTimeStr(chatMessage.creatingDatetime);
     let dateStr = dateToDateStr(chatMessage.creatingDatetime);
+
+    // Работа с боковой панелью:
     if (!prepend) {
         // Обновляет текст, а также время отправки последнего сообщения в 'ссылке' на чат.
         let text = chatMessage.text;
