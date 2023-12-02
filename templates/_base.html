@@ -11,10 +11,11 @@
 {# Место заголовка страницы. #}
 <title>{% block title %}{% endblock %}</title>
 
-{# Подключение иконки и общих стилей. #}
+{# Подключение иконок и общих стилей. #}
 <link rel="shortcut icon" href="{{ url_for('static', filename='images/shortcut.jpg') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/font_awesome/css/all.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/scrollbar.css') }}">
 
 {# Место подключения стилей для конкретных страниц. #}
 {% block css %}{% endblock %}
