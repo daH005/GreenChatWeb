@@ -1,3 +1,4 @@
+import { dateToTimeStr, dateToDateStr, normalizeDateTimezone }  from "../_datetime.js";
 import { requestChatHistory } from "./_http.js";
 import { websocket } from "./_websocket.js";
 
@@ -82,6 +83,11 @@ export function displayChat(chat) {
     let chatLinkLastMessageEl = chatLinkEl.querySelector(".chat-link__last-message");
     loadedChats[chat.id].chatLinkLastMessageEl = chatLinkLastMessageEl;
 
+    // Элемент с временем последнего сообщения в 'ссылке'.
+    // Время устанавливается в `displayChatMessage`.
+    let chatLinkLastMessageDateEl = chatLinkEl.querySelector(".chat-link__date");
+    loadedChats[chat.id].chatLinkLastMessageDateEl = chatLinkLastMessageDateEl;
+
     // Создаём сам чат.
     let chatNode = chatTempEl.content.cloneNode(true);
     loadedChatsEl.append(chatNode);
@@ -115,14 +121,21 @@ export function displayChat(chat) {
 // обновляется и содержимое 'ссылки' на чат, а также переход этой 'ссылки'
 // на верхнюю позицию в случае если сообщение позднее `commonLastMessageCreatingDatetime`.
 export function displayChatMessage(chatMessage, prepend=false) {
+    // Создаём объект `Date`, а также устанавливаем часовой пояс клиента (от api даты всегда в UTC).
     chatMessage.creatingDatetime = new Date(chatMessage.creatingDatetime);
+    normalizeDateTimezone(chatMessage.creatingDatetime);
+    let timeStr = dateToTimeStr(chatMessage.creatingDatetime);
+    let dateStr = dateToDateStr(chatMessage.creatingDatetime);
+
+    // Работа с боковой панелью:
     if (!prepend) {
-        // Обновляет текст в 'ссылке' на чат.
+        // Обновляет текст, а также время отправки последнего сообщения в 'ссылке' на чат.
         let text = chatMessage.text;
         if (text.length > MAX_CHAT_LINK_TEXT_LENGTH) {
             text = text.slice(0, MAX_CHAT_LINK_TEXT_LENGTH) + "...";
         }
         loadedChats[chatMessage.chatId].chatLinkLastMessageEl.textContent = text;
+        loadedChats[chatMessage.chatId].chatLinkLastMessageDateEl.textContent = dateStr;
     }
     // Если текущее обрабатываемое сообщение самое позднее, то переносим кнопку чата
     // на самый верх.
@@ -153,9 +166,13 @@ export function displayChatMessage(chatMessage, prepend=false) {
     let textEl = chatMessageEl.querySelector(".chat__message__text");
     textEl.textContent = chatMessage.text;
 
+    // Время отправки сообщения.
+    let timeEl = chatMessageEl.querySelector(".chat__message__time");
+    timeEl.textContent = timeStr;
+
     // Фиксируем элементы и данные сообщения в хранилище.
     loadedChats[chatMessage.chatId].messages[chatMessage.id] = {
-        chatMessageEl, nameEl, textEl, chatMessage
+        chatMessageEl, nameEl, textEl, timeEl, chatMessage,
     }
 
     // Если сообщение от нас, то устанавливаем на элемент специальный CSS-класс,
