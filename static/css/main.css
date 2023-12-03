@@ -34,7 +34,7 @@
 
 .chat-link.chat-link--active {
     background: var(--main-3-color);
-    border: none;
+    border-bottom: 2px solid var(--main-3-color);
 }
 
 .chat-link__chat-name {
@@ -43,6 +43,7 @@
 
 .chat-link__last-message {
     padding: 5px;
+    font-size: small;
 }
 
 .chat-link .chat-link__date {
