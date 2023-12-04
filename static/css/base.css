@@ -38,3 +38,7 @@ button, input {
 button {
     cursor: pointer;
 }
+
+input:hover, input:focus {
+    outline: 2px solid var(--main-3-color);
+}

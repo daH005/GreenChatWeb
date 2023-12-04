@@ -14,23 +14,32 @@ GreenChat
 
     <div class="sidebar">
         <div class="sidebar__title" id="js-user-info"></div>
-        <input class="sidebar__search" id="js-chats-search" placeholder="Кого бы найти...">
+        <div class="sidebar__search">
+            <div class="sidebar__input-wrap">
+                <input id="js-chats-search" placeholder="Кого бы найти...">
+                <button>
+                    <i class="fa fa-search" aria-hidden="true"></i>
+                </button>
+            </div>
+        </div>
         <!-- Боковая панель со ссылками на все чаты. -->
         <div class="sidebar__links" id="js-all-chats-links"></div>
     </div>
 
     <!-- Контейнер с полем ввода сообщения и всеми чатами (отображается только один, открытый). -->
-    <div class="cur-chat-container">
+    <div class="cur-chat">
 
         <!-- Контейнер со всеми загруженными чатами. -->
-        <div class="loaded-chats" id="js-loaded-chats"></div>
+        <div class="chats" id="js-loaded-chats"></div>
 
         <!-- Ввод и отправка сообщения. При старте страницы элемент скрыт. -->
-        <div class="chat-message-input-container" id="js-chat-message-input-container">
-            <input type="text" id="js-chat-message-text-input" placeholder="Что же написать...">
-            <button id="js-chat-message-button">
-                <i class="fa fa-play"></i>
-            </button>
+        <div class="cur-chat__input-container" id="js-chat-message-input-container">
+            <div class="cur-chat__input-wrap">
+                <input type="text" id="js-chat-message-text-input" placeholder="Что же написать...">
+                <button id="js-chat-message-button">
+                    <i class="fa fa-play"></i>
+                </button>
+            </div>
         </div>
 
         <div class="closer" id="js-closer">
