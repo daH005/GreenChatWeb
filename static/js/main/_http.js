@@ -2,10 +2,15 @@ import { HTTP_USER_INFO_URL, HTTP_USER_CHATS_URL, HTTP_CHAT_HISTORY_URL, HTTP_RE
 import { redirectToLoginPage } from "../_redirects.js";
 import { makeAuthHeaders } from "./_auth_tools.js";
 
-// Запрашивает у сервера информацию о пользователе.
+// Запрашивает у сервера информацию о пользователе (текущем либо другом).
+// При `id` = 1 выдаёт расширенную информацию о текущем пользователе.
+// Иначе - урезанную информацию о пользователе с заданным ID.
 // Ожидаемое возвращаемое значение - `Object` формата {id, username, firstName, lastName, email}.
-export async function requestUserInfo() {
-    let response = await fetch(HTTP_USER_INFO_URL, {
+export async function requestUserInfo(id=null) {
+    let queryParamsStr = "?" + new URLSearchParams({
+        id
+    }).toString();
+    let response = await fetch(HTTP_USER_INFO_URL + queryParamsStr, {
         method: "GET",
         headers: makeAuthHeaders(),
     });
