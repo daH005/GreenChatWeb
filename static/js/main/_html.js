@@ -1,5 +1,5 @@
 import { dateToTimeStr, dateToDateStr, normalizeDateTimezone }  from "../_datetime.js";
-import { requestChatHistory } from "./_http.js";
+import { requestChatHistory, requestUserInfo } from "./_http.js";
 import { websocket } from "./_websocket.js";
 
 // Ключевые элементы страницы:
@@ -252,10 +252,16 @@ function hideChat(chatId) {
 // Отправляет HTTP-запрос на создание нового чата с пользователем, чей ID введён в поле (существование пользователя проверяется).
 // Перед запросом проверяет наличие чата. Если он уже есть - тогда происходит переключение на него.
 async function searchUserAndSwitchToChat() {
-    if (searchInputEl.value == user.id) {
+    let userId = searchInputEl.value;
+    if (userId == user.id) {
         alert("Нельзя найти себя самого!");
         return;
     }
     let chatId = interlocutorsChatsIds[searchInputEl.value];
-    await switchToChat(chatId);
+    if (chatId) {
+        await switchToChat(chatId);
+    } else {
+        let user = await requestUserInfo(userId);
+        console.log(user.firstName);
+    }
 }

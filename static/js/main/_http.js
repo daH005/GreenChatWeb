@@ -7,10 +7,13 @@ import { makeAuthHeaders } from "./_auth_tools.js";
 // Иначе - урезанную информацию о пользователе с заданным ID.
 // Ожидаемое возвращаемое значение - `Object` формата {id, username, firstName, lastName, email}.
 export async function requestUserInfo(id=null) {
-    let queryParamsStr = "?" + new URLSearchParams({
-        id
-    }).toString();
-    let response = await fetch(HTTP_USER_INFO_URL + queryParamsStr, {
+    let url = HTTP_USER_INFO_URL;
+    if (id) {
+        url += "?" + new URLSearchParams({
+            id
+        }).toString();
+    }
+    let response = await fetch(url, {
         method: "GET",
         headers: makeAuthHeaders(),
     });
