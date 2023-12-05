@@ -11,6 +11,32 @@ const textInputEl = document.getElementById("js-chat-message-text-input");
 const buttonEl = document.getElementById("js-chat-message-button");
 const inputContainerEl = document.getElementById("js-chat-message-input-container");
 inputContainerEl.style = "display: none";
+const searchInputEl = document.getElementById("js-search-input");
+const searchButtonEl = document.getElementById("js-search-button");
+
+// Отправка сообщения при нажатии Enter.
+document.addEventListener("keypress", function(event) {
+    if (event.keyCode == 13 && document.activeElement == textInputEl) {
+        sendChatMessage();
+    }
+});
+
+// Отправка сообщения при клике на кнопку.
+buttonEl.onclick = () => {
+    sendChatMessage();
+}
+
+// Поиск пользователя при нажатии Enter.
+document.addEventListener("keypress", function(event) {
+    if (event.keyCode == 13 && document.activeElement == searchInputEl) {
+        searchUserAndSwitchToChat();
+    }
+});
+
+// Отправка сообщения при клике на кнопку.
+searchButtonEl.onclick = () => {
+    searchUserAndSwitchToChat();
+}
 
 // Шаблон 'ссылки' на чат.
 const chatLinkTempEl = document.getElementById("js-chat-link-temp");
@@ -21,6 +47,8 @@ const chatMessageTempEl = document.getElementById("js-chat-message-temp");
 
 // Объект со всеми элементами и другими данными загруженных чатов.
 var loadedChats = {}
+// Объект для сопоставления собеседников и ID чатов с ними.
+var interlocutorsChatsIds = {}
 // Данные пользователя. Подгружаются из `http.requestUserInfo()`.
 var user = null;
 // ID чата, открытого в данный момент времени.
@@ -60,19 +88,17 @@ export function displayChat(chat) {
     // Определяем название чата для текущего клиента.
     // Это может быть общее название беседы, либо имя собеседника.
     let chatName = chat.name ? chat.name : chat.interlocutor.firstName;
+    // Записываем сопоставление для возможности поиска ID чата по ID пользователя.
+    if (chat.interlocutor) {
+        interlocutorsChatsIds[chat.interlocutor.id] = chat.id;
+    }
 
     // Создаём 'ссылку' на чат в боковой панели.
     let chatLinkNode = chatLinkTempEl.content.cloneNode(true);
     allChatsLinksEl.append(chatLinkNode);
     let chatLinkEl = allChatsLinksEl.lastElementChild;
     chatLinkEl.onclick = async function() {
-        switchToChat(chat.id);
-        if (!(loadedChats[chat.id].fullyLoaded)) {
-            loadedChats[chat.id].fullyLoaded = true;
-            let offsetFromEnd = Object.keys(loadedChats[chat.id].messages).length;
-            displayChatHistory(await requestChatHistory(chat.id, offsetFromEnd));
-        }
-
+        await switchToChat(chat.id);
     }
     loadedChats[chat.id].chatLinkEl = chatLinkEl;
 
@@ -195,27 +221,21 @@ export function sendChatMessage() {
     }
 }
 
-// Отправка сообщения при нажатии Enter.
-document.addEventListener("keypress", function(event) {
-    if (event.keyCode == 13 && document.activeElement == textInputEl) {
-        sendChatMessage();
-    }
-});
-
-// Отправка сообщения при клике на кнопку.
-buttonEl.onclick = () => {
-    sendChatMessage();
-}
-
 // Скрывает открытый чат и открывает новый чат, соответствующий указанному `chatId`.
 // Также убирает серую перегородку.
-function switchToChat(chatId) {
+async function switchToChat(chatId) {
     hideChat(openedChatId);
     openedChatId = chatId;
     loadedChats[chatId].chatEl.classList.remove("chat--hidden");
     loadedChats[chatId].chatLinkEl.classList.add("chat-link--active");
     closerEl.style = "display: none;";
     inputContainerEl.style = "";
+    // Загружаем историю чата с учётом сообщений, уже загруженных по веб-сокету.
+    if (!(loadedChats[chatId].fullyLoaded)) {
+        loadedChats[chatId].fullyLoaded = true;
+        let offsetFromEnd = Object.keys(loadedChats[chatId].messages).length;
+        displayChatHistory(await requestChatHistory(chatId, offsetFromEnd));
+    }
 }
 
 // Скрывает чат с указанным `chatId` и ставит серую перегородку.
@@ -227,4 +247,15 @@ function hideChat(chatId) {
     }
     closerEl.style = "";
     inputContainerEl.style = "display: none";
+}
+
+// Отправляет HTTP-запрос на создание нового чата с пользователем, чей ID введён в поле (существование пользователя проверяется).
+// Перед запросом проверяет наличие чата. Если он уже есть - тогда происходит переключение на него.
+async function searchUserAndSwitchToChat() {
+    if (searchInputEl.value == user.id) {
+        alert("Нельзя найти себя самого!");
+        return;
+    }
+    let chatId = interlocutorsChatsIds[searchInputEl.value];
+    await switchToChat(chatId);
 }
