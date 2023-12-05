@@ -198,7 +198,8 @@
     font-size: 1.1em;
     position: absolute;
     right: 5px;
-    top: 0;
+    top: 50%;
+    transform: translateY(-50%);
 }
 
 .cur-chat__input-container button:hover, .sidebar__search button:hover {
