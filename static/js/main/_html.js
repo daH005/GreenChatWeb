@@ -197,7 +197,7 @@ export function sendChatMessage() {
 
 // Отправка сообщения при нажатии Enter.
 document.addEventListener("keypress", function(event) {
-    if (event.keyCode == 13) {
+    if (event.keyCode == 13 && document.activeElement == textInputEl) {
         sendChatMessage();
     }
 });
