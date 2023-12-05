@@ -57,6 +57,9 @@ export function displayChatHistory(chat) {
 export function displayChat(chat) {
     // Создаём новое хранилище всех данных + элементов чата.
     loadedChats[chat.id] = {fullyLoaded: false, messages: {}}
+    // Определяем название чата для текущего клиента.
+    // Это может быть общее название беседы, либо имя собеседника.
+    let chatName = chat.name ? chat.name : chat.interlocutor.firstName;
 
     // Создаём 'ссылку' на чат в боковой панели.
     let chatLinkNode = chatLinkTempEl.content.cloneNode(true);
@@ -75,7 +78,7 @@ export function displayChat(chat) {
 
     // Название чата в 'ссылке'.
     let chatLinkNameEl = chatLinkEl.querySelector(".chat-link__chat-name");
-    chatLinkNameEl.textContent = chat.name;
+    chatLinkNameEl.textContent = chatName
     loadedChats[chat.id].chatLinkNameEl = chatLinkNameEl;
 
     // Элемент последнего сообщения в 'ссылке'.
@@ -96,7 +99,7 @@ export function displayChat(chat) {
 
     // Название чата.
     let chatNameEl = chatEl.querySelector(".chat__name");
-    chatNameEl.textContent = chat.name;
+    chatNameEl.textContent = chatName;
     loadedChats[chat.id].chatNameEl = chatNameEl;
 
     // Кнопка выхода из чата.
