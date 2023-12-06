@@ -120,6 +120,7 @@
 .chat .chat__messages {
     overflow-y: auto;
     padding: 20px 5vw;
+    padding-bottom: 0;
     background: var(--main-2-color);
     box-sizing: border-box;
     height: calc(100vh - 60px - 50px - 70px);
