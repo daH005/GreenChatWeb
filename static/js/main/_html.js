@@ -16,13 +16,6 @@ const allChatsLinksEl = document.getElementById("js-all-chats-links");
 
 // Элемент со всеми чатами, на которые заходил пользователь в данной сессии.
 const loadedChatsEl = document.getElementById("js-loaded-chats");
-// Контейнер, содержащий поле ввода и кнопку отправки сообщения. На старте страницы мы скрываем этот контейнер.
-const inputContainerEl = document.getElementById("js-chat-message-input-container");
-inputContainerEl.style = "display: none";
-// Ввод сообщения.
-const textInputEl = document.getElementById("js-chat-message-text-input");
-// Отправка сообщения в выбранный чат.
-const buttonEl = document.getElementById("js-chat-message-button");
 
 // Поле ввода ID искомого пользователя.
 const searchInputEl = document.getElementById("js-search-input");
@@ -41,18 +34,6 @@ newChatBackLinkEl.onclick = () => {
     hideChat(null);
 }
 
-// Отправка сообщения при нажатии Enter.
-document.addEventListener("keypress", function(event) {
-    if (event.keyCode == 13 && document.activeElement == textInputEl) {
-        sendChatMessage();
-    }
-});
-
-// Отправка сообщения при клике на кнопку.
-buttonEl.onclick = () => {
-    sendChatMessage();
-}
-
 // Поиск пользователя при нажатии Enter.
 document.addEventListener("keypress", function(event) {
     if (event.keyCode == 13 && document.activeElement == searchInputEl) {
@@ -60,7 +41,7 @@ document.addEventListener("keypress", function(event) {
     }
 });
 
-// Отправка сообщения при клике на кнопку.
+// Поиск пользователя при клике на кнопку.
 searchButtonEl.onclick = () => {
     searchUserAndSwitchToChat();
 }
@@ -170,6 +151,23 @@ export function displayChat(chat) {
     let chatMessagesEl = chatEl.querySelector(".chat__messages");
     loadedChats[chat.id].chatMessagesEl = chatMessagesEl;
 
+    // Поле ввода сообщения.
+    let chatInputEl = chatEl.querySelector("input");
+    loadedChats[chat.id].chatInputEl = chatInputEl;
+
+    // Кнопка для отправки сообщения.
+    let chatButtonEl = chatEl.querySelector("button");
+    chatButtonEl.onclick = () => {
+        sendChatMessage(chatInputEl);
+    }
+    // Отправка сообщения при нажатии Enter.
+    document.addEventListener("keypress", function(event) {
+        if (event.keyCode == 13 && document.activeElement == chatInputEl) {
+            sendChatMessage(chatInputEl);
+        }
+    });
+    loadedChats[chat.id].chatButtonEl = chatButtonEl;
+
     if (chat.lastMessage) {
         displayChatMessage(chat.lastMessage);
     }
@@ -258,9 +256,9 @@ export function handleWebSocketMessage(message) {
 }
 
 // Отправляет сообщение на сервер по веб-сокету.
-export function sendChatMessage() {
-    if (textInputEl.value) {
-        let data = {chatId: openedChatId, text: textInputEl.value}
+export function sendChatMessage(inputEl) {
+    if (inputEl.value) {
+        let data = {chatId: openedChatId, text: inputEl.value}
         // Если в данный момент у нас открыт фейковый новый чат, то составим сообщение,
         // по которому веб-сокет создаст нам новый чат.
         if (newChatUserId) {
@@ -270,7 +268,7 @@ export function sendChatMessage() {
         }
         websocket.sendMessage(data);
         // Очищаем поле ввода, после отправки сообщения.
-        textInputEl.value = "";
+        inputEl.value = "";
     }
 }
 
@@ -282,7 +280,6 @@ async function switchToChat(chatId) {
     loadedChats[chatId].chatEl.classList.remove("chat--hidden");
     loadedChats[chatId].chatLinkEl.classList.add("chat-link--active");
     closerEl.style = "display: none;";
-    inputContainerEl.style = "";
     // Загружаем историю чата с учётом сообщений, уже загруженных по веб-сокету.
     if (!(loadedChats[chatId].fullyLoaded)) {
         loadedChats[chatId].fullyLoaded = true;
@@ -303,7 +300,6 @@ function hideChat(chatId, showCloser=true) {
     }
     if (showCloser) {
         closerEl.style = "";
-        inputContainerEl.style = "display: none";
     }
 }
 
@@ -336,5 +332,4 @@ async function searchUserAndSwitchToChat() {
     newChatEl.classList.remove("chat--hidden");
     // Убираем перегородку, а также показываем поле ввода сообщения + кнопку.
     closerEl.style = "display: none;";
-    inputContainerEl.style = "";
 }

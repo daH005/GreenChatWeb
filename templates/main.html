@@ -50,16 +50,6 @@ GreenChat
 
         </div>
 
-        <!-- Ввод и отправка сообщения. При старте страницы элемент скрыт. -->
-        <div class="cur-chat__input-container" id="js-chat-message-input-container">
-            <div class="cur-chat__input-wrap">
-                <input type="text" id="js-chat-message-text-input" placeholder="Что же написать...">
-                <button id="js-chat-message-button">
-                    <i class="fa fa-play"></i>
-                </button>
-            </div>
-        </div>
-
         <div class="closer" id="js-closer">
             <i class="fa fa-caret-left"></i> <span style="margin-left: 5px;">Выберите чат</span>
         </div>
@@ -87,6 +77,15 @@ GreenChat
             <div class="chat__name"></div>
         </div>
         <div class="chat__messages"></div>
+        <!-- Ввод и отправка сообщения. -->
+        <div class="chat__input-container" id="js-chat-message-input-container">
+            <div class="chat__input-wrap">
+                <input type="text" placeholder="Что же написать...">
+                <button>
+                    <i class="fa fa-play"></i>
+                </button>
+            </div>
+        </div>
     </div>
 </template>
 
