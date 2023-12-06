@@ -30,7 +30,20 @@ GreenChat
     <div class="cur-chat">
 
         <!-- Контейнер со всеми загруженными чатами. -->
-        <div class="chats" id="js-loaded-chats"></div>
+        <div class="chats" id="js-loaded-chats">
+
+            <!-- Фейковый чат для демонстрации пустого чата перед созданием. -->
+            <div class="chat chat--hidden" id="js-new-chat">
+                <div class="chat__header">
+                    <div class="chat__back-link" id="js-new-chat-back-link">
+                        <i class="fa fa-caret-left"></i>
+                    </div>
+                    <div class="chat__name" id="js-new-chat-name"></div>
+                </div>
+                <div class="chat__messages"></div>
+            </div>
+
+        </div>
 
         <!-- Ввод и отправка сообщения. При старте страницы элемент скрыт. -->
         <div class="cur-chat__input-container" id="js-chat-message-input-container">
