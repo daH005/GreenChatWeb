@@ -3,16 +3,41 @@ import { requestChatHistory, requestUserInfo } from "./_http.js";
 import { websocket } from "./_websocket.js";
 
 // Ключевые элементы страницы:
+
+// Холст, застилающий правую часть мессенджера. Необходим на случай, если чат не выбран.
 const closerEl = document.getElementById("js-closer");
+
+// Имя пользователя.
 const userInfoEl = document.getElementById("js-user-info");
+// Элемент с ссылками на чаты.
 const allChatsLinksEl = document.getElementById("js-all-chats-links");
+
+// Элемент со всеми чатами, на которые заходил пользователь в данной сессии.
 const loadedChatsEl = document.getElementById("js-loaded-chats");
-const textInputEl = document.getElementById("js-chat-message-text-input");
-const buttonEl = document.getElementById("js-chat-message-button");
+// Контейнер, содержащий поле ввода и кнопку отправки сообщения. На старте страницы мы скрываем этот контейнер.
 const inputContainerEl = document.getElementById("js-chat-message-input-container");
 inputContainerEl.style = "display: none";
+// Ввод сообщения.
+const textInputEl = document.getElementById("js-chat-message-text-input");
+// Отправка сообщения в выбранный чат.
+const buttonEl = document.getElementById("js-chat-message-button");
+
+// Поле ввода ID искомого пользователя.
 const searchInputEl = document.getElementById("js-search-input");
+// Кнопка для поиска пользователя по ID.
 const searchButtonEl = document.getElementById("js-search-button");
+
+// Элемент фейкового нового чата.
+const newChatEl = document.getElementById("js-new-chat");
+// Кнопка для выхода из фейкового чата.
+const newChatBackLinkEl = document.getElementById("js-new-chat-back-link");
+// Название нового чата.
+const newChatNameEl = document.getElementById("js-new-chat-name");
+
+// Выход из фейкового чата при нажатии на кнопку.
+newChatBackLinkEl.onclick = () => {
+    hideChat(null);
+}
 
 // Отправка сообщения при нажатии Enter.
 document.addEventListener("keypress", function(event) {
@@ -47,10 +72,8 @@ const chatMessageTempEl = document.getElementById("js-chat-message-temp");
 
 // Объект со всеми элементами и другими данными загруженных чатов.
 var loadedChats = {}
-
-var newChats = {}  // FixMe: Тест
-var newChatIsOpened = false;
-var newChatInterlocutor = null;
+// ID пользователя, с которым мы потенциально хотим начать новый чат.
+var newChatUserId = null;
 
 // Объект для сопоставления собеседников и ID чатов с ними.
 var interlocutorsChatsIds = {}
@@ -219,24 +242,28 @@ export function displayChatMessage(chatMessage, prepend=false) {
 
 // Обрабатывает сообщение от веб-сокета.
 export function handleWebSocketMessage(message) {
+    // Если сообщение от веб-сокета представляет собой новый чат, то создаём его.
     if (message.chatIsNew) {
         displayChat(message);
-        if ("newChat" + message.interlocutor.id == openedChatId) {
+        if (message.interlocutor.id == newChatUserId) {
             switchToChat(message.id);
         }
+    // Иначе - это обычное сообщение в уже существующий чат. Создаём его.
     } else {
         displayChatMessage(message);
     }
 }
 
-
-// Отправляет рядовое сообщение на сервер в текущий открытый чат.
+// Отправляет сообщение на сервер по веб-сокету.
 export function sendChatMessage() {
     if (textInputEl.value) {
         let data = {chatId: openedChatId, text: textInputEl.value}
-        if (newChatIsOpened) {
+        // Если в данный момент у нас открыт фейковый новый чат, то составим сообщение,
+        // по которому веб-сокет создаст нам новый чат.
+        if (newChatUserId) {
+            data.chatId = null;
             data.chatIsNew = true;
-            data.usersIds = [user.id, newChatInterlocutor.id];
+            data.usersIds = [user.id, newChatUserId];
         }
         websocket.sendMessage(data);
         // Очищаем поле ввода, после отправки сообщения.
@@ -245,7 +272,7 @@ export function sendChatMessage() {
 }
 
 // Скрывает открытый чат и открывает новый чат, соответствующий указанному `chatId`.
-// Также убирает серую перегородку.
+// Также убирает серую перегородку `closerEl`.
 async function switchToChat(chatId) {
     hideChat(openedChatId);
     openedChatId = chatId;
@@ -261,62 +288,47 @@ async function switchToChat(chatId) {
     }
 }
 
-// Скрывает чат с указанным `chatId` и ставит серую перегородку.
-function hideChat(chatId) {
+// Скрывает чат с указанным `chatId` и ставит серую перегородку `closerEl`.
+function hideChat(chatId, showCloser=true) {
     if (chatId != null) {
         loadedChats[chatId].chatEl.classList.add("chat--hidden");
-        if (loadedChats[chatId].chatLinkEl) {
-            loadedChats[chatId].chatLinkEl.classList.remove("chat-link--active");
-        }
+        loadedChats[chatId].chatLinkEl.classList.remove("chat-link--active");
     }
-    newChatInterlocutor = null;
-    newChatIsOpened = false;
-    closerEl.style = "";
-    inputContainerEl.style = "display: none";
+    if (newChatUserId) {
+        newChatUserId = null;
+        newChatEl.classList.add("chat--hidden");
+    }
+    if (showCloser) {
+        closerEl.style = "";
+        inputContainerEl.style = "display: none";
+    }
 }
 
 // Отправляет HTTP-запрос на создание нового чата с пользователем, чей ID введён в поле (существование пользователя проверяется).
 // Перед запросом проверяет наличие чата. Если он уже есть - тогда происходит переключение на него.
 async function searchUserAndSwitchToChat() {
     let userId = searchInputEl.value;
+    let maybeChatId = interlocutorsChatsIds[userId];
+    if (maybeChatId) {
+        switchToChat(maybeChatId);
+        return;
+    }
     if (userId == user.id) {
         alert("Нельзя найти себя самого!");
         return;
     }
-    let chatId = interlocutorsChatsIds[searchInputEl.value];
-    if (chatId) {
-        await switchToChat(chatId);
-    } else {
-        hideChat(openedChatId);
-        let user = await requestUserInfo(userId);
-        newChatInterlocutor = user;
-        closerEl.style = "display: none;";
-        inputContainerEl.style = "";
-        newChatIsOpened = true;
-        let chatId = "newChat" + user.id;
-        openedChatId = chatId;
-        if (!loadedChats[chatId]) {
-            loadedChats[chatId] = {fullyLoaded: true, messages: {}}
-
-            // Создаём сам чат.
-            let chatNode = chatTempEl.content.cloneNode(true);
-            loadedChatsEl.append(chatNode);
-            let chatEl = loadedChatsEl.lastElementChild;
-            loadedChats[chatId].chatEl = chatEl;
-
-            // Название чата.
-            let chatNameEl = chatEl.querySelector(".chat__name");
-            chatNameEl.textContent = user.firstName;
-            loadedChats[chatId].chatNameEl = chatNameEl;
-
-            // Кнопка выхода из чата.
-            let chatBackLinkEl = chatEl.querySelector(".chat__back-link");
-            chatBackLinkEl.onclick = function() {
-                hideChat(chatId);
-            }
-            loadedChats[chatId].chatBackLinkEl = chatBackLinkEl;
-        }
-        loadedChats[chatId].chatEl.classList.remove("chat--hidden");
-
-    }
+    // Находим нашего потенциального собеседника.
+    // Если пользователь не найден или ID некорректен, то на этом этапе возникает исключение (оно ничего не ломает).
+    let interlocutor = await requestUserInfo(userId);
+    // Скрываем текущий открытый чат.
+    hideChat(openedChatId, false);
+    // Устанавливаем `newChatUserId` для обозначения того, что мы сейчас находимся в фейковом чате.
+    newChatUserId = interlocutor.id;
+    // Устанавливаем название нового потенциального чата (т.е. имя собеседника).
+    newChatNameEl.textContent = interlocutor.firstName;
+    // Показываем фейковый чат.
+    newChatEl.classList.remove("chat--hidden");
+    // Убираем перегородку, а также показываем поле ввода сообщения + кнопку.
+    closerEl.style = "display: none;";
+    inputContainerEl.style = "";
 }
