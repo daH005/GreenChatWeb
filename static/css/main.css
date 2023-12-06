@@ -94,6 +94,13 @@
     display: none;
 }
 
+.chat.chat--new-fake .chat__messages {
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .chat .chat__header {
     display: flex;
     justify-content: space-between;
