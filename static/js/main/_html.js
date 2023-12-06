@@ -7,8 +7,10 @@ import { websocket } from "./_websocket.js";
 // Холст, застилающий правую часть мессенджера. Необходим на случай, если чат не выбран.
 const closerEl = document.getElementById("js-closer");
 
+// ID пользователя.
+const userIdEl = document.getElementById("js-user-id");
 // Имя пользователя.
-const userInfoEl = document.getElementById("js-user-info");
+const userNameEl = document.getElementById("js-user-name");
 // Элемент с ссылками на чаты.
 const allChatsLinksEl = document.getElementById("js-all-chats-links");
 
@@ -90,7 +92,8 @@ const MAX_CHAT_LINK_TEXT_LENGTH = 20;
 // Отображает на странице информацию об авторизированном пользователе.
 export function displayUserInfo(user_) {
     user = user_;
-    userInfoEl.textContent = user.firstName;
+    userIdEl.textContent = user.id;
+    userNameEl.textContent = user.firstName;
 }
 
 // Отображает на странице чаты (но они изначально скрыты) и 'ссылки' на эти чаты в боковой панели.
