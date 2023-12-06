@@ -13,23 +13,49 @@ GreenChat
 <div class="messenger">
 
     <div class="sidebar">
-        <div class="user-info" id="js-user-info"></div>
+        <div class="sidebar__title">
+            <div class="sidebar__name" id="js-user-name">Загрузка...</div>
+            <div class="sidebar__id" id="js-user-id">ID: ...</div>
+        </div>
+        <div class="sidebar__search">
+            <div class="sidebar__input-wrap">
+                <input id="js-search-input" placeholder="Введите ID...">
+                <button id="js-search-button">
+                    <i class="fa fa-search" aria-hidden="true"></i>
+                </button>
+            </div>
+        </div>
         <!-- Боковая панель со ссылками на все чаты. -->
-        <div class="all-chats-links" id="js-all-chats-links"></div>
+        <div class="sidebar__links" id="js-all-chats-links"></div>
     </div>
 
     <!-- Контейнер с полем ввода сообщения и всеми чатами (отображается только один, открытый). -->
-    <div class="cur-chat-container">
+    <div class="cur-chat">
 
         <!-- Контейнер со всеми загруженными чатами. -->
-        <div class="loaded-chats" id="js-loaded-chats"></div>
+        <div class="chats" id="js-loaded-chats">
+
+            <!-- Фейковый чат для демонстрации пустого чата перед созданием. -->
+            <div class="chat chat--hidden" id="js-new-chat">
+                <div class="chat__header">
+                    <div class="chat__back-link" id="js-new-chat-back-link">
+                        <i class="fa fa-caret-left"></i>
+                    </div>
+                    <div class="chat__name" id="js-new-chat-name"></div>
+                </div>
+                <div class="chat__messages"></div>
+            </div>
+
+        </div>
 
         <!-- Ввод и отправка сообщения. При старте страницы элемент скрыт. -->
-        <div class="chat-message-input-container" id="js-chat-message-input-container">
-            <input type="text" id="js-chat-message-text-input" placeholder="Что же написать...">
-            <button id="js-chat-message-button">
-                <i class="fa fa-play"></i>
-            </button>
+        <div class="cur-chat__input-container" id="js-chat-message-input-container">
+            <div class="cur-chat__input-wrap">
+                <input type="text" id="js-chat-message-text-input" placeholder="Что же написать...">
+                <button id="js-chat-message-button">
+                    <i class="fa fa-play"></i>
+                </button>
+            </div>
         </div>
 
         <div class="closer" id="js-closer">

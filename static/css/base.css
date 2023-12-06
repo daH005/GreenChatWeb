@@ -29,8 +29,16 @@ body, input, button {
 button, input {
     outline: none;
     border: none;
+    padding: 15px;
+    border-radius: 10px;
+    font-size: medium;
+    box-sizing: border-box;
 }
 
 button {
     cursor: pointer;
+}
+
+input:hover, input:focus {
+    outline: 2px solid var(--main-3-color);
 }
