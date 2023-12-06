@@ -308,6 +308,9 @@ function hideChat(chatId, showCloser=true) {
 // Перед запросом проверяет наличие чата. Если он уже есть - тогда происходит переключение на него.
 async function searchUserAndSwitchToChat() {
     let userId = searchInputEl.value;
+    if (!searchInputEl.value) {
+        return;
+    }
     let maybeChatId = interlocutorsChatsIds[userId];
     if (maybeChatId) {
         switchToChat(maybeChatId);
