@@ -92,7 +92,7 @@ const MAX_CHAT_LINK_TEXT_LENGTH = 20;
 // Отображает на странице информацию об авторизированном пользователе.
 export function displayUserInfo(user_) {
     user = user_;
-    userIdEl.textContent = user.id;
+    userIdEl.textContent = "ID: " + user.id;
     userNameEl.textContent = user.firstName;
 }
 
