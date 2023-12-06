@@ -47,6 +47,11 @@ const chatMessageTempEl = document.getElementById("js-chat-message-temp");
 
 // Объект со всеми элементами и другими данными загруженных чатов.
 var loadedChats = {}
+
+var newChats = {}  // FixMe: Тест
+var newChatIsOpened = false;
+var newChatInterlocutor = null;
+
 // Объект для сопоставления собеседников и ID чатов с ними.
 var interlocutorsChatsIds = {}
 // Данные пользователя. Подгружаются из `http.requestUserInfo()`.
@@ -212,10 +217,28 @@ export function displayChatMessage(chatMessage, prepend=false) {
     }
 }
 
+// Обрабатывает сообщение от веб-сокета.
+export function handleWebSocketMessage(message) {
+    if (message.chatIsNew) {
+        displayChat(message);
+        if ("newChat" + message.interlocutor.id == openedChatId) {
+            switchToChat(message.id);
+        }
+    } else {
+        displayChatMessage(message);
+    }
+}
+
+
 // Отправляет рядовое сообщение на сервер в текущий открытый чат.
 export function sendChatMessage() {
     if (textInputEl.value) {
-        websocket.sendMessage({chatId: openedChatId, text: textInputEl.value});
+        let data = {chatId: openedChatId, text: textInputEl.value}
+        if (newChatIsOpened) {
+            data.chatIsNew = true;
+            data.usersIds = [user.id, newChatInterlocutor.id];
+        }
+        websocket.sendMessage(data);
         // Очищаем поле ввода, после отправки сообщения.
         textInputEl.value = "";
     }
@@ -240,11 +263,14 @@ async function switchToChat(chatId) {
 
 // Скрывает чат с указанным `chatId` и ставит серую перегородку.
 function hideChat(chatId) {
-    if (openedChatId != null) {
-        loadedChats[openedChatId].chatEl.classList.add("chat--hidden");
-        loadedChats[openedChatId].chatLinkEl.classList.remove("chat-link--active");
-        openedChatId = null;
+    if (chatId != null) {
+        loadedChats[chatId].chatEl.classList.add("chat--hidden");
+        if (loadedChats[chatId].chatLinkEl) {
+            loadedChats[chatId].chatLinkEl.classList.remove("chat-link--active");
+        }
     }
+    newChatInterlocutor = null;
+    newChatIsOpened = false;
     closerEl.style = "";
     inputContainerEl.style = "display: none";
 }
@@ -261,7 +287,36 @@ async function searchUserAndSwitchToChat() {
     if (chatId) {
         await switchToChat(chatId);
     } else {
+        hideChat(openedChatId);
         let user = await requestUserInfo(userId);
-        console.log(user.firstName);
+        newChatInterlocutor = user;
+        closerEl.style = "display: none;";
+        inputContainerEl.style = "";
+        newChatIsOpened = true;
+        let chatId = "newChat" + user.id;
+        openedChatId = chatId;
+        if (!loadedChats[chatId]) {
+            loadedChats[chatId] = {fullyLoaded: true, messages: {}}
+
+            // Создаём сам чат.
+            let chatNode = chatTempEl.content.cloneNode(true);
+            loadedChatsEl.append(chatNode);
+            let chatEl = loadedChatsEl.lastElementChild;
+            loadedChats[chatId].chatEl = chatEl;
+
+            // Название чата.
+            let chatNameEl = chatEl.querySelector(".chat__name");
+            chatNameEl.textContent = user.firstName;
+            loadedChats[chatId].chatNameEl = chatNameEl;
+
+            // Кнопка выхода из чата.
+            let chatBackLinkEl = chatEl.querySelector(".chat__back-link");
+            chatBackLinkEl.onclick = function() {
+                hideChat(chatId);
+            }
+            loadedChats[chatId].chatBackLinkEl = chatBackLinkEl;
+        }
+        loadedChats[chatId].chatEl.classList.remove("chat--hidden");
+
     }
 }

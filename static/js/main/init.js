@@ -3,7 +3,7 @@ import { redirectToLoginPage } from "../_redirects.js";
 import { JWT_TOKEN_REFRESH_INTERVAL_DELAY } from "../_config.js";
 import { requestUserInfo, requestUserChats, requestNewJWTToken } from "./_http.js";
 import { startWebSocket } from "./_websocket.js";
-import { displayUserInfo, displayUserChats, displayChatMessage } from "./_html.js";
+import { displayUserInfo, displayUserChats, handleWebSocketMessage } from "./_html.js";
 
 // FixMe: Ещё важнее: после запуска nginx код перестал работать, как задумывалось.
 // Важно: запрещает переход вперёд-назад по истории браузера (а точнее вкладки).
@@ -32,4 +32,4 @@ console.log("Загружаем чаты...");
 displayUserChats(await requestUserChats());
 
 console.log("Запускаем веб-сокет...");
-startWebSocket(displayChatMessage);
+startWebSocket(handleWebSocketMessage);
