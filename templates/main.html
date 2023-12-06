@@ -46,6 +46,15 @@ GreenChat
                 <div class="chat__messages">
                     Отправьте сообщение для создания нового чата.
                 </div>
+                <!-- Ввод и отправка первого сообщения для создания нового чата. -->
+                <div class="chat__input-container">
+                    <div class="chat__input-wrap">
+                        <input type="text" placeholder="Ваше первое сообщение?..." id="js-new-chat-input">
+                        <button id="js-new-chat-button">
+                            <i class="fa fa-play"></i>
+                        </button>
+                    </div>
+                </div>
             </div>
 
         </div>
@@ -78,7 +87,7 @@ GreenChat
         </div>
         <div class="chat__messages"></div>
         <!-- Ввод и отправка сообщения. -->
-        <div class="chat__input-container" id="js-chat-message-input-container">
+        <div class="chat__input-container">
             <div class="chat__input-wrap">
                 <input type="text" placeholder="Что же написать...">
                 <button>

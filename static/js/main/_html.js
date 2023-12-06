@@ -26,8 +26,22 @@ const searchButtonEl = document.getElementById("js-search-button");
 const newChatEl = document.getElementById("js-new-chat");
 // Кнопка для выхода из фейкового чата.
 const newChatBackLinkEl = document.getElementById("js-new-chat-back-link");
-// Название нового чата.
+// Название фейкового чата.
 const newChatNameEl = document.getElementById("js-new-chat-name");
+// Поле ввода в фейковом чате.
+const newChatInputEl = document.getElementById("js-new-chat-input");
+// Кнопка для отправки первого сообщения в фейковом чате.
+const newChatButtonEl = document.getElementById("js-new-chat-button");
+
+newChatButtonEl.onclick = () => {
+    sendChatMessage(newChatInputEl);
+}
+// Отправка сообщения при нажатии Enter.
+document.addEventListener("keypress", function(event) {
+    if (event.keyCode == 13 && document.activeElement == newChatInputEl) {
+        sendChatMessage(newChatInputEl);
+    }
+});
 
 // Выход из фейкового чата при нажатии на кнопку.
 newChatBackLinkEl.onclick = () => {
