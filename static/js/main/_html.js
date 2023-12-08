@@ -239,7 +239,6 @@ export function displayChatMessage(chatMessage, prepend=false) {
         }
     }
 
-
     // Непосредственно формируем элемент сообщения.
     let chatMessageNode = chatMessageTempEl.content.cloneNode(true);
     let chatMessageEl;
@@ -271,6 +270,7 @@ export function displayChatMessage(chatMessage, prepend=false) {
         chatMessageEl, nameEl, textEl, timeEl, chatMessage,
     }
 
+    // Записываем крайнее сообщение для последующих разделителей дней.
     if (prepend) {
         loadedChats[chatMessage.chatId].bottomMessage = loadedChats[chatMessage.chatId].messages[chatMessage.id];
     } else {
