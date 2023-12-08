@@ -66,6 +66,8 @@ const chatLinkTempEl = document.getElementById("js-chat-link-temp");
 const chatTempEl = document.getElementById("js-chat-temp");
 // Шаблон сообщения.
 const chatMessageTempEl = document.getElementById("js-chat-message-temp");
+// Шаблон разделителя сообщений.
+const chatDateSepTempEl = document.getElementById("js-chat-date-sep-temp");
 
 // Объект со всеми элементами и другими данными загруженных чатов.
 var loadedChats = {}
@@ -110,7 +112,12 @@ export function displayChatHistory(chat) {
 // Отображает чат на странице (но изначально каждый чат всегда скрыт), а также 'ссылку' на него.
 export function displayChat(chat) {
     // Создаём новое хранилище всех данных + элементов чата.
-    loadedChats[chat.id] = {fullyLoaded: false, messages: {}}
+    loadedChats[chat.id] = {
+        fullyLoaded: false,
+        messages: {},
+        topMessage: null,
+        bottomMessage: null,
+    }
     // Определяем название чата для текущего клиента.
     // Это может быть общее название беседы, либо имя собеседника.
     let chatName = chat.name ? chat.name : chat.interlocutor.firstName;
@@ -216,6 +223,23 @@ export function displayChatMessage(chatMessage, prepend=false) {
         allChatsLinksEl.prepend(loadedChats[chatMessage.chatId].chatLinkEl);
     }
 
+    // Формируем разделительный элемент между днями, если это требуется.
+    if (prepend && loadedChats[chatMessage.chatId].bottomMessage) {
+        if (loadedChats[chatMessage.chatId].bottomMessage.chatMessage.creatingDatetime.toLocaleDateString() != chatMessage.creatingDatetime.toLocaleDateString()) {
+            let chatDateSepNode = chatDateSepTempEl.content.cloneNode(true);
+            loadedChats[chatMessage.chatId].chatMessagesEl.prepend(chatDateSepNode);
+            loadedChats[chatMessage.chatId].chatMessagesEl.firstElementChild.textContent = dateToDateStr(loadedChats[chatMessage.chatId].bottomMessage.chatMessage.creatingDatetime);
+        }
+    }
+    if (!prepend && loadedChats[chatMessage.chatId].topMessage) {
+        if (loadedChats[chatMessage.chatId].topMessage.chatMessage.creatingDatetime.toLocaleDateString() != chatMessage.creatingDatetime.toLocaleDateString()) {
+            let chatDateSepNode = chatDateSepTempEl.content.cloneNode(true);
+            loadedChats[chatMessage.chatId].chatMessagesEl.append(chatDateSepNode);
+            loadedChats[chatMessage.chatId].chatMessagesEl.lastElementChild.textContent = dateStr;
+        }
+    }
+
+
     // Непосредственно формируем элемент сообщения.
     let chatMessageNode = chatMessageTempEl.content.cloneNode(true);
     let chatMessageEl;
@@ -247,12 +271,25 @@ export function displayChatMessage(chatMessage, prepend=false) {
         chatMessageEl, nameEl, textEl, timeEl, chatMessage,
     }
 
+    if (prepend) {
+        loadedChats[chatMessage.chatId].bottomMessage = loadedChats[chatMessage.chatId].messages[chatMessage.id];
+    } else {
+        loadedChats[chatMessage.chatId].topMessage = loadedChats[chatMessage.chatId].messages[chatMessage.id];
+    }
+
     // Если сообщение от нас, то устанавливаем на элемент специальный CSS-класс,
     // а также выполняем прокрутку в самый низ чата.
     if (chatMessage.user.id == user.id) {
         chatMessageEl.classList.add("chat__message--self");
         loadedChats[chatMessage.chatId].chatMessagesEl.scrollTop = loadedChats[chatMessage.chatId].chatMessagesEl.scrollHeight;
     }
+
+    // Если сообщение первое, то обозначим его, как крайнее и сверху и снизу.
+    if (!loadedChats[chatMessage.chatId].topMessage && !loadedChats[chatMessage.chatId].bottomMessage) {
+        loadedChats[chatMessage.chatId].topMessage = loadedChats[chatMessage.chatId].messages[chatMessage.id];
+        loadedChats[chatMessage.chatId].bottomMessage = loadedChats[chatMessage.chatId].messages[chatMessage.id];
+    }
+
 }
 
 // Обрабатывает сообщение от веб-сокета.

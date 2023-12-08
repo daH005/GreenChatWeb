@@ -138,6 +138,13 @@
     padding-right: 10px;
 }
 
+.chat .chat__date-sep {
+    margin-bottom: 20px;
+    text-align: center;
+    color: white;
+    font-size: small;
+}
+
 .chat .chat__messages {
     overflow-y: auto;
     padding: 20px 5vw;
