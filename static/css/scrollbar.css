@@ -1,15 +1,13 @@
 ::-webkit-scrollbar {
-  width: 0.1vw;
+    width: 0.25vw;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--main-color);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: white;
+    background: white;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: white;
 }
