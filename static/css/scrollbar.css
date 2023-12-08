@@ -7,7 +7,7 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--main-3-color);
+  background: white;
 }
 
 ::-webkit-scrollbar-thumb:hover {
