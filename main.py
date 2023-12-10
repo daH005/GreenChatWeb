@@ -9,8 +9,7 @@ from config import (
     HOST,
     PORT,
 )
-from endpoints import EndpointName, Url
-from templates import TemplateName
+from endpoints import EndpointName, Url, TemplateName
 
 app: Flask = Flask(__name__)
 
