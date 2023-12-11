@@ -28,17 +28,17 @@ GreenChat
                 </button>
             </div>
         </div>
-        <!-- Боковая панель со ссылками на все чаты. -->
+        {# Боковая панель со ссылками на все чаты. #}
         <div class="sidebar__links" id="js-all-chats-links"></div>
     </div>
 
-    <!-- Контейнер, хранящий все загруженные чаты, и показывающий только один, выбранный. -->
+    {# Контейнер, хранящий все загруженные чаты, и показывающий только один, выбранный. #}
     <div class="cur-chat">
 
-        <!-- Контейнер со всеми загруженными чатами. -->
+        {# Контейнер со всеми загруженными чатами. #}
         <div class="chats" id="js-loaded-chats">
 
-            <!-- Фейковый чат для демонстрации потенциального нового чата. -->
+            {# Фейковый чат для демонстрации потенциального нового чата. #}
             <div class="chat chat--hidden chat--new-fake" id="js-new-chat">
                 <div class="chat__header">
                     <div class="chat__back-link" id="js-new-chat-back-link">
@@ -49,7 +49,7 @@ GreenChat
                 <div class="chat__messages">
                     Отправьте сообщение для создания нового чата.
                 </div>
-                <!-- Ввод и отправка первого сообщения для создания нового чата. -->
+                {# Ввод и отправка первого сообщения для создания нового чата. #}
                 <div class="chat__input-container">
                     <div class="chat__input-wrap">
                         <input type="text" placeholder="Ваше первое сообщение?..." id="js-new-chat-input">
@@ -70,7 +70,7 @@ GreenChat
 
 </div>
 
-<!-- Шаблон ссылки на чат для боковой панели. -->
+{# Шаблон ссылки на чат для боковой панели. #}
 <template id="js-chat-link-temp">
     <div class="chat-link">
         <div class="chat-link__chat-name"></div>
@@ -79,7 +79,7 @@ GreenChat
     </div>
 </template>
 
-<!-- Шаблон чата. -->
+{# Шаблон чата. #}
 <template id="js-chat-temp">
     <div class="chat chat--hidden">
         <div class="chat__header">
@@ -89,7 +89,7 @@ GreenChat
             <div class="chat__name"></div>
         </div>
         <div class="chat__messages"></div>
-        <!-- Ввод и отправка сообщения. -->
+        {# Ввод и отправка сообщения. #}
         <div class="chat__input-container">
             <div class="chat__input-wrap">
                 <input type="text" placeholder="Что же написать...">
@@ -101,7 +101,7 @@ GreenChat
     </div>
 </template>
 
-<!-- Шаблон сообщения для чата. -->
+{# Шаблон сообщения для чата. #}
 <template id="js-chat-message-temp">
     <div class="chat__message">
         <div class="chat__message__name"></div>
@@ -112,7 +112,7 @@ GreenChat
     </div>
 </template>
 
-<!-- Шаблон разделителя множеств сообщений по дате. -->
+{# Шаблон разделителя множеств сообщений по дате. #}
 <template id="js-chat-date-sep-temp">
     <div class="chat__date-sep"></div>
 </template>
