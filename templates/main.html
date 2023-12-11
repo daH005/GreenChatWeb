@@ -1,13 +1,16 @@
 {% extends '_base.html' %}
 
+
 {% block title %}
 GreenChat
 {% endblock %}
+
 
 {% block css %}
 {{ super() }}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
 {% endblock %}
+
 
 {% block main %}
 <div class="messenger">
@@ -115,6 +118,7 @@ GreenChat
 </template>
 
 {% endblock %}
+
 
 {% block js %}
 <script src="{{ url_for('static', filename='js/main/init.js') }}" type="module"></script>
