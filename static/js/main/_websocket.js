@@ -8,9 +8,9 @@ export var websocket;
 // Также определяет два кастомных метода:
 // 1. `websocket.handleMessage(...)` - вызывается при получении сообщения от сервера.
 //    В него передаётся десериализованный JSON.
-//    Ожидается `Object` - {chatId, userId, username, firstName, lastName, text, creatingDatetime}.
+//    Ожидается объект - {type, data}.
 // 2. `websocket.sendMessage(...)` - сериализует переданные данные в JSON и отправляет на сервер.
-//    Ожидается `Object` - {chatId, text}.
+//    Передается объект - {type, data}.
 export function startWebSocket(handleMessageFunc) {
     websocket = new WebSocket(WEBSOCKET_URL);
 
