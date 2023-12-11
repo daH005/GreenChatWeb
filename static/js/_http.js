@@ -10,7 +10,7 @@ import { redirectToLoginPage } from "./_redirects.js";
 import { makeAuthHeaders } from "./_auth_tools.js";
 
 // Отправляет запрос на регистрацию нового аккаунта. Возвращает объект {JWTToken}.
-async function requestRegistration(firstName, lastName, username, password, email) {
+export async function requestRegistration(firstName, lastName, username, password, email) {
     let response = await fetch(HTTP_REG_URL, {
         method: "POST",
         body: JSON.stringify({firstName, lastName, username, password, email}),
