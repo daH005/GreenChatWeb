@@ -2,6 +2,7 @@ import { JWT_TOKEN_LOCAL_STORAGE_KEY } from "./_config.js";
 import { redirectToMainPage } from "./_redirects.js";
 import { saveJWTToken } from "./_local_storage.js";
 import { requestAuthByUsernameAndPassword } from "./_http.js";
+import { saveJWTTokenAndRedirect } from "./auth_tools.js";
 
 // Ключевые элементы страницы:
 const usernameInputEl = document.getElementById("js-username");
@@ -19,10 +20,4 @@ buttonEl.onclick = async () => {
     } else {
         alert("Логин или пароль пусты!...");
     }
-}
-
-// Сохраняет JWT-токен в `localStorage` и перенаправляет на главную.
-export function saveJWTTokenAndRedirect(token) {
-    saveJWTToken(token);
-    redirectToMainPage();
 }

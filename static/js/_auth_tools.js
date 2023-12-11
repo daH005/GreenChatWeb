@@ -8,3 +8,9 @@ export function makeAuthHeaders() {
         Authorization: `Bearer ${getJWTToken()}`,
     }
 }
+
+// Сохраняет JWT-токен в `localStorage` и перенаправляет на главную.
+export function saveJWTTokenAndRedirect(token) {
+    saveJWTToken(token);
+    redirectToMainPage();
+}
