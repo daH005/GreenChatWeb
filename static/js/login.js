@@ -14,6 +14,7 @@ buttonEl.onclick = async () => {
     // Запрашиваем авторизацию. После получения токена сохраняем его и перенаправляемся на главную.
     if (username && password) {
         let data = await requestAuthByUsernameAndPassword(username, password);
+        // Вызывается исключение в случае плохого ответа, поэтому нулевой токен сохранён не будет.
         saveJWTTokenAndRedirect(data.JWTToken);
     } else {
         alert("Логин или пароль пусты!...");
