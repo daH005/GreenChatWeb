@@ -1,5 +1,5 @@
-import { HTTP_USER_INFO_URL, HTTP_USER_CHATS_URL, HTTP_CHAT_HISTORY_URL, HTTP_REFRESH_TOKEN_URL } from "../_config.js";
-import { redirectToLoginPage } from "../_redirects.js";
+import { HTTP_USER_INFO_URL, HTTP_USER_CHATS_URL, HTTP_CHAT_HISTORY_URL, HTTP_REFRESH_TOKEN_URL } from "./_config.js";
+import { redirectToLoginPage } from "./_redirects.js";
 import { makeAuthHeaders } from "./_auth_tools.js";
 
 // Запрашивает у сервера информацию о пользователе (текущем либо другом).

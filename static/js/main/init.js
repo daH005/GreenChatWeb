@@ -1,7 +1,7 @@
 import { getJWTToken, saveJWTToken } from "../_local_storage.js";
 import { redirectToLoginPage } from "../_redirects.js";
 import { JWT_TOKEN_REFRESH_INTERVAL_DELAY } from "../_config.js";
-import { requestUserInfo, requestUserChats, requestNewJWTToken } from "./_http.js";
+import { requestUserInfo, requestUserChats, requestNewJWTToken } from "../_http.js";
 import { startWebSocket } from "./_websocket.js";
 import { displayUserInfo, displayUserChats, handleWebSocketMessage } from "./_html.js";
 

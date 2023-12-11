@@ -1,5 +1,5 @@
 import { dateToTimeStr, dateToDateStr, normalizeDateTimezone }  from "../_datetime.js";
-import { requestChatHistory, requestUserInfo } from "./_http.js";
+import { requestChatHistory, requestUserInfo } from "../_http.js";
 import { websocket } from "./_websocket.js";
 
 // Ключевые элементы страницы:
