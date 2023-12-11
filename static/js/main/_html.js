@@ -293,29 +293,33 @@ export function displayChatMessage(chatMessage, prepend=false) {
 // Обрабатывает сообщение от веб-сокета.
 export function handleWebSocketMessage(message) {
     // Если сообщение от веб-сокета представляет собой новый чат, то создаём его.
-    if (message.chatIsNew) {
-        displayChat(message);
-        if (message.interlocutor.id == newChatUserId) {
-            switchToChat(message.id);
+    if (message.type == "newChat") {
+        displayChat(message.data);
+        if (message.data.interlocutor.id == newChatUserId) {
+            switchToChat(message.data.id);
         }
-    // Иначе - это обычное сообщение в уже существующий чат. Создаём его.
-    } else {
-        displayChatMessage(message);
+    // Или если - это обычное сообщение в уже существующий чат. Создаём его.
+    } else if (message.type == "newChatMessage") {
+        displayChatMessage(message.data);
     }
 }
 
 // Отправляет сообщение на сервер по веб-сокету.
 export function sendChatMessage(inputEl) {
-    if (inputEl.value) {
-        let data = {chatId: openedChatId, text: inputEl.value}
+    let text = inputEl.value;
+    if (text) {
+        let message = {type: null, data: {text}}
         // Если в данный момент у нас открыт фейковый новый чат, то составим сообщение,
-        // по которому веб-сокет создаст нам новый чат.
+        // по которому веб-сокет создаст нам новый чат. Иначе - сообщения на создание нового обычного сообщения
+        // в конкретный чат.
         if (newChatUserId) {
-            data.chatId = null;
-            data.chatIsNew = true;
-            data.usersIds = [user.id, newChatUserId];
+            message.type = "newChat";
+            message.data.usersIds = [user.id, newChatUserId];
+        } else {
+            message.type = "newChatMessage";
+            message.data.chatId = openedChatId;
         }
-        websocket.sendMessage(data);
+        websocket.sendMessage(message);
         // Очищаем поле ввода, после отправки сообщения.
         inputEl.value = "";
     }

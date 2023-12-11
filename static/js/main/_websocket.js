@@ -16,7 +16,7 @@ export function startWebSocket(handleMessageFunc) {
 
     websocket.onopen = (event) => {
         // Отправляем авторизующее сообщение.
-        websocket.sendMessage({JWTToken: getJWTToken()})
+        websocket.sendMessage({type: "auth", data: {JWTToken: getJWTToken()}})
     }
 
     websocket.onmessage = (event) => {
