@@ -1,6 +1,3 @@
-import { JWT_TOKEN_LOCAL_STORAGE_KEY } from "./_config.js";
-import { redirectToMainPage } from "./_redirects.js";
-import { saveJWTToken } from "./_local_storage.js";
 import { requestAuthByUsernameAndPassword } from "./_http.js";
 import { saveJWTTokenAndRedirect } from "./_auth_tools.js";
 
