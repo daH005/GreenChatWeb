@@ -1,30 +1,26 @@
-import { HTTP_AUTH_URL, JWT_TOKEN_LOCAL_STORAGE_KEY, BASE_HEADERS } from "./_config.js";
+import { JWT_TOKEN_LOCAL_STORAGE_KEY } from "./_config.js";
 import { redirectToMainPage } from "./_redirects.js";
 import { saveJWTToken } from "./_local_storage.js";
+import { requestAuthByUsernameAndPassword } from "./_http.js";
 
-const usernameInputEl = document.getElementById("js-username-input");
-const passwordInputEl = document.getElementById("js-password-input");
+const usernameInputEl = document.getElementById("js-username");
+const passwordInputEl = document.getElementById("js-password");
 const buttonEl = document.getElementById("js-button");
 
-buttonEl.onclick = () => {
-    auth(usernameInputEl.value, passwordInputEl.value);
+buttonEl.onclick = async () => {
+    let username = usernameInputEl.value;
+    let password = passwordInputEl.value;
+    // Запрашиваем авторизацию. После получения токена сохраняем его и перенаправляемся на главную.
+    if (username && password) {
+        let data = await requestAuthByUsernameAndPassword(username, password);
+        saveJWTTokenAndRedirect(data.JWTToken);
+    } else {
+        alert("Логин или пароль пусты!...");
+    }
 }
 
-// Проводит попытку авторизовать пользователя.
-// При статус-коде 200 фиксирует JWT-токен в `localStorage` и
-// производит перенаправление на главную страницу мессенджера.
-async function auth(username, password) {
-    let response = await fetch(HTTP_AUTH_URL, {
-        method: "POST",
-        body: JSON.stringify({username, password}),
-        headers: BASE_HEADERS,
-    });
-    if (response.ok) {
-        let data = await response.json();
-        // Сохраняем JWT-токен в `localStorage` и перенаправляемся на главную страницу мессенджера.
-        saveJWTToken(data.JWTToken);
-        redirectToMainPage();
-    } else {
-        alert("Неверный логин или пароль!");
-    }
+// Сохраняет JWT-токен в `localStorage` и перенаправляет на главную.
+export function saveJWTTokenAndRedirect(token) {
+    saveJWTToken(token);
+    redirectToMainPage();
 }

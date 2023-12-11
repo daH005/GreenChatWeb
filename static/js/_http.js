@@ -1,11 +1,32 @@
-import { HTTP_USER_INFO_URL, HTTP_USER_CHATS_URL, HTTP_CHAT_HISTORY_URL, HTTP_REFRESH_TOKEN_URL } from "./_config.js";
+import { BASE_HEADERS,
+         HTTP_AUTH_URL,
+         HTTP_USER_INFO_URL,
+         HTTP_USER_CHATS_URL,
+         HTTP_CHAT_HISTORY_URL,
+         HTTP_REFRESH_TOKEN_URL,
+       } from "./_config.js";
 import { redirectToLoginPage } from "./_redirects.js";
 import { makeAuthHeaders } from "./_auth_tools.js";
 
-// Запрашивает у сервера информацию о пользователе (текущем либо другом).
-// При `id` = 1 выдаёт расширенную информацию о текущем пользователе.
+// Отправляет запрос авторизации. Возвращает объект {JWTToken}.
+export async function requestAuthByUsernameAndPassword(username, password) {
+    let response = await fetch(HTTP_AUTH_URL, {
+        method: "POST",
+        body: JSON.stringify({username, password}),
+        headers: BASE_HEADERS,
+    });
+    if (response.ok) {
+        return await response.json();
+    } else {
+        alert("Неверный логин или пароль!");
+        throw Error();
+    }
+}
+
+// Запрашивает у сервера информацию о пользователе (о текущем по токену либо о другом по ID).
+// При `id` = null выдаёт расширенную информацию о текущем пользователе.
 // Иначе - урезанную информацию о пользователе с заданным ID.
-// Ожидаемое возвращаемое значение - `Object` формата {id, username, firstName, lastName, email}.
+// Ожидается объект {id, firstName, lastName, ?username, ?email}.
 export async function requestUserInfo(id=null) {
     let url = HTTP_USER_INFO_URL;
     if (id) {
@@ -26,9 +47,8 @@ export async function requestUserInfo(id=null) {
     }
 }
 
-// Запрашивает у сервера все чаты, в которых состоит пользователь.
-// Ожидаемое возвращаемое значение - `Object` формата:
-// {chats: [{id, chatName, lastChatMessage: {id, userId, chatId, username, firstName, lastName, text, creatingDatetime}}, ...]}.
+// Запрашивает все чаты, в которых состоит текущий пользователь. Ожидается объект формата:
+// {chats: [{id, ?name, ?interlocutor: {...}, lastMessage: {id, chatId, user: {...}, text, creatingDatetime}}, ...]}.
 export async function requestUserChats() {
     let response = await fetch(HTTP_USER_CHATS_URL, {
         method: "GET",
@@ -43,10 +63,10 @@ export async function requestUserChats() {
     }
 }
 
-// Запрашивает у сервера историю конкретного чата (пользователь обязательно должен в нём состоять!).
+// Запрашивает историю конкретного чата (пользователь обязательно должен в нём состоять!).
 // Поскольку часть сообщений может быть уже загружена по веб-сокету, то был определён параметр `offsetFromEnd`.
-// Ожидаемое возвращаемое значение - `Object` формата:
-// {messages: [{id, userId, chatId, username, firstName, lastName, text, creatingDatetime}, ...]}.
+// Ожидается объект формата:
+// {messages: [{id, chatId, user: {...}, text, creatingDatetime}, ...]}.
 export async function requestChatHistory(chatId, offsetFromEnd=null) {
     let queryParamsStr = "?" + new URLSearchParams({
         offsetFromEnd
@@ -65,7 +85,7 @@ export async function requestChatHistory(chatId, offsetFromEnd=null) {
 }
 
 // Запрашивает у сервера новый JWT-токен для продления срока доступа.
-// Ожидаемое возвращаемое значение - `Object` формата {JWTToken}.
+// Ожидается объект {JWTToken}.
 export async function requestNewJWTToken() {
     let response = await fetch(HTTP_REFRESH_TOKEN_URL, {
         method: "POST",
