@@ -26,6 +26,15 @@ body, input, button {
     font-family: main;
 }
 
+a {
+    text-decoration: none;
+    color: white;
+}
+
+a:hover {
+    color: var(--main-3-color);
+}
+
 button, input {
     outline: none;
     border: none;
@@ -37,8 +46,42 @@ button, input {
 
 button {
     cursor: pointer;
+    background: var(--main-3-color);
+    color: white;
+}
+
+button:hover {
+    background: none;
 }
 
 input:hover, input:focus {
     outline: 2px solid var(--main-3-color);
+}
+
+h1 {
+    color: white;
+}
+
+.main {
+    height: 100vh;
+    overflow-y: hidden;
+}
+
+.central-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+.inputs-container {
+    display: flex;
+    flex-direction: column;
+    padding: 2vw 1vw;
+    max-width: 350px;
+    border-radius: 15px;
+}
+
+.inputs-container input, .inputs-container button {
+    margin-bottom: 15px;
 }
