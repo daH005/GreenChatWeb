@@ -3,6 +3,7 @@ import { redirectToMainPage } from "./_redirects.js";
 import { saveJWTToken } from "./_local_storage.js";
 import { requestAuthByUsernameAndPassword } from "./_http.js";
 
+// Ключевые элементы страницы:
 const usernameInputEl = document.getElementById("js-username");
 const passwordInputEl = document.getElementById("js-password");
 const buttonEl = document.getElementById("js-button");
