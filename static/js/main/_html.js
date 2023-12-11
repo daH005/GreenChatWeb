@@ -270,8 +270,12 @@ export function displayChatMessage(chatMessage, prepend=false) {
         chatMessageEl, nameEl, textEl, timeEl, chatMessage,
     }
 
-    // Записываем крайнее сообщение для последующих разделителей дней.
-    if (prepend) {
+    // Записываем крайнее сообщение для последующих разделителей дней:
+    if (!loadedChats[chatMessage.chatId].topMessage && !loadedChats[chatMessage.chatId].bottomMessage) {
+        // Если сообщение первое, то обозначим его, как крайнее и сверху и снизу.
+        loadedChats[chatMessage.chatId].topMessage = loadedChats[chatMessage.chatId].messages[chatMessage.id];
+        loadedChats[chatMessage.chatId].bottomMessage = loadedChats[chatMessage.chatId].messages[chatMessage.id];
+    } else if (prepend) {
         loadedChats[chatMessage.chatId].bottomMessage = loadedChats[chatMessage.chatId].messages[chatMessage.id];
     } else {
         loadedChats[chatMessage.chatId].topMessage = loadedChats[chatMessage.chatId].messages[chatMessage.id];
@@ -282,12 +286,6 @@ export function displayChatMessage(chatMessage, prepend=false) {
     if (chatMessage.user.id == user.id) {
         chatMessageEl.classList.add("chat__message--self");
         loadedChats[chatMessage.chatId].chatMessagesEl.scrollTop = loadedChats[chatMessage.chatId].chatMessagesEl.scrollHeight;
-    }
-
-    // Если сообщение первое, то обозначим его, как крайнее и сверху и снизу.
-    if (!loadedChats[chatMessage.chatId].topMessage && !loadedChats[chatMessage.chatId].bottomMessage) {
-        loadedChats[chatMessage.chatId].topMessage = loadedChats[chatMessage.chatId].messages[chatMessage.id];
-        loadedChats[chatMessage.chatId].bottomMessage = loadedChats[chatMessage.chatId].messages[chatMessage.id];
     }
 
 }
