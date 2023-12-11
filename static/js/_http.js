@@ -1,4 +1,5 @@
 import { BASE_HEADERS,
+         HTTP_REG_URL,
          HTTP_AUTH_URL,
          HTTP_USER_INFO_URL,
          HTTP_USER_CHATS_URL,
@@ -7,6 +8,21 @@ import { BASE_HEADERS,
        } from "./_config.js";
 import { redirectToLoginPage } from "./_redirects.js";
 import { makeAuthHeaders } from "./_auth_tools.js";
+
+// Отправляет запрос на регистрацию нового аккаунта. Возвращает объект {JWTToken}.
+async function requestRegistration(firstName, lastName, username, password, email) {
+    let response = await fetch(HTTP_REG_URL, {
+        method: "POST",
+        body: JSON.stringify({firstName, lastName, username, password, email}),
+        headers: BASE_HEADERS,
+    });
+    if (response.ok) {
+        return await response.json();
+    } else {
+        alert("Ошибка регистрации... " + response.status);
+        throw Error();
+    }
+}
 
 // Отправляет запрос авторизации. Возвращает объект {JWTToken}.
 export async function requestAuthByUsernameAndPassword(username, password) {
