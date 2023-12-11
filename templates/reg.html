@@ -1,35 +1,50 @@
 {% extends '_base.html' %}
 
+
 {% block title %}
 Регистрация
 {% endblock %}
+
 
 {% block css %}
 {{ super() }}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/reg.css') }}">
 {% endblock %}
 
+
 {% block main %}
 
-<div class="reg" id="js-reg-carousel">
-    <div class="reg__step">
-        <input placeholder="Ваше имя">
-        <input placeholder="Ваша фамилия">
-        <button class="js-next">Далее</button>
+<div class="steps-carousel" id="js-reg-carousel">
+
+    <div class="central-container">
+        {# 1-й этап регистрации: имя и фамилия. #}
+        <div class="reg__step inputs-container">
+            <input id="js-first-name" placeholder="Ваше имя">
+            <input id="js-last-name" placeholder="Ваша фамилия">
+            <button class="js-next">Далее</button>
+        </div>
     </div>
-    <div class="reg__step">
-        <button class="reg__step__back js-back">Назад</button>
-        <input placeholder="Ваш логин">
-        <input placeholder="Ваш пароль">
-        <input placeholder="Повтор пароля">
-        <button class="js-next">Далее</button>
+
+    <div class="central-container">
+        <div class="reg__step inputs-container">
+            {# 2-й этап регистрации: логин и пароль. #}
+            <button class="reg__step__back js-back">Назад</button>
+            <input id="js-username" placeholder="Ваш логин">
+            <input id="js-password" type="password" placeholder="Ваш пароль">
+            <input id="js-password-confirm" type="password" placeholder="Повтор пароля">
+            <button class="js-next">Далее</button>
+        </div>
     </div>
-    <div class="reg__step">
-        <button class="reg__step__back js-back">Назад</button>
-        <input placeholder="Ваша почта">
-        <button>Отправить код</button>
-        <input placeholder="Код подтверждения">
-        <button>Создать аккаунт</button>
+
+    <div class="central-container">
+        <div class="reg__step inputs-container">
+            {# 3-й этап регистрации: почта и её подтверждение. #}
+            <button class="reg__step__back js-back">Назад</button>
+            <input id="js-email" placeholder="Ваша почта">
+            <button id="js-send-mail">Отправить код</button>
+            <input id="js-mail-code" placeholder="Код подтверждения">
+            <button id="js-create-account">Создать аккаунт</button>
+        </div>
     </div>
 </div>
 
