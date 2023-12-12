@@ -18,7 +18,7 @@
 
     <div class="central-container">
         {# 1-й этап регистрации: имя и фамилия. #}
-        <div class="reg__step inputs-container">
+        <div class="inputs-container">
             <input id="js-first-name" placeholder="Ваше имя">
             <input id="js-last-name" placeholder="Ваша фамилия">
             <button class="js-next">Далее</button>
@@ -26,9 +26,9 @@
     </div>
 
     <div class="central-container">
-        <div class="reg__step inputs-container">
+        <div class="inputs-container">
             {# 2-й этап регистрации: логин и пароль. #}
-            <button class="reg__step__back js-back">Назад</button>
+            <button class="js-back">Назад</button>
             <input id="js-username" placeholder="Ваш логин">
             <input id="js-password" type="password" placeholder="Ваш пароль">
             <input id="js-password-confirm" type="password" placeholder="Повтор пароля">
@@ -37,11 +37,15 @@
     </div>
 
     <div class="central-container">
-        <div class="reg__step inputs-container">
+        <div class="inputs-container">
             {# 3-й этап регистрации: почта и её подтверждение. #}
-            <button class="reg__step__back js-back">Назад</button>
-            <input id="js-email" placeholder="Ваша почта">
-            <button id="js-send-mail">Отправить код</button>
+            <button class="js-back">Назад</button>
+            <div class="input-and-inner-button-container">
+                <input id="js-email" placeholder="Ваша почта">
+                <button id="js-send-mail">
+                    <small>Код</small>
+                </button>
+            </div>
             <input id="js-mail-code" placeholder="Код подтверждения">
             <button id="js-create-account">Создать аккаунт</button>
         </div>
