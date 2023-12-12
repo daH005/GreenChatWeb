@@ -83,7 +83,7 @@ h1 {
     border-radius: 15px;
 }
 
-.inputs-container input, .inputs-container button {
+.inputs-container > input, .inputs-container > button, .inputs-container .input-and-inner-button-container {
     margin-bottom: 15px;
 }
 
@@ -104,6 +104,7 @@ h1 {
     right: 5px;
     top: 50%;
     transform: translateY(-50%);
+    margin: 0;
 }
 
 .input-and-inner-button-container button:hover {
