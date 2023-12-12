@@ -221,29 +221,6 @@
     box-sizing: border-box;
 }
 
-.chat__input-wrap, .sidebar__input-wrap {
-    position: relative;
-}
-
-.chat__input-container input, .sidebar__search input {
-    width: 100%;
-    padding-right: 60px;
-}
-
-.chat__input-container button, .sidebar__search button {
-    background: none;
-    color: var(--main-2-color);
-    font-size: 1.1em;
-    position: absolute;
-    right: 5px;
-    top: 50%;
-    transform: translateY(-50%);
-}
-
-.chat__input-container button:hover, .sidebar__search button:hover {
-    color: var(--main-3-color);
-}
-
 @media only screen and (max-width: 700px), only screen and
 (max-device-width: 700px){
 

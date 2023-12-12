@@ -86,3 +86,26 @@ h1 {
 .inputs-container input, .inputs-container button {
     margin-bottom: 15px;
 }
+
+.input-and-inner-button-container {
+    position: relative;
+}
+
+.input-and-inner-button-container input {
+    width: 100%;
+    padding-right: 60px;
+}
+
+.input-and-inner-button-container button {
+    background: none;
+    color: var(--main-2-color);
+    font-size: 1.1em;
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.input-and-inner-button-container button:hover {
+    color: var(--main-3-color);
+}
