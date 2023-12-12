@@ -1,5 +1,5 @@
 import { saveJWTTokenAndRedirect } from "./_auth_tools.js";
-import { requestRegistration } from "./_http.js";
+import { requestRegistration, requestCheckUsername, requestCheckEmail } from "./_http.js";
 
 // Текущий этап регистрации.
 var curStep = 0;
@@ -31,7 +31,39 @@ backButtons.forEach((el) => {
 // Переход на следующие шаги:
 const nextButtons = document.querySelectorAll(".js-next");
 nextButtons.forEach((el) => {
-    el.onclick = () => {
+    el.onclick = async () => {
+        // Проверка введённых данных. В частности на непустоту.
+        if (curStep == 0) {
+            if (!firstNameInputEl.value) {
+                alert("Введите имя!");
+                return;
+            }
+            if (!lastNameInputEl.value) {
+                alert("Введите фамилию!");
+                return;
+            }
+        } else if (curStep == 1) {
+            if (!usernameInputEl.value) {
+                alert("Введите логин!");
+                return;
+            } else {
+                // Проверяем занятость логина.
+                let flagData = await requestCheckUsername(usernameInputEl.value);
+                if (flagData.isAlreadyTaken) {
+                    alert("Логин уже занят!");
+                    return;
+                }
+            }
+            if (!passwordInputEl.value) {
+                alert("Введите пароль!");
+                return;
+            }
+            if (passwordInputEl.value != passwordConfirmInputEl.value) {
+                alert("Пароли не совпадают!");
+                return;
+            }
+        }
+        // После успешно пройденных проверок мы можем перейти на следующий шаг.
         curStep += 1;
         setCarouselStep(curStep);
     }
@@ -39,12 +71,25 @@ nextButtons.forEach((el) => {
 
 // Отправляет регистрационные данные API и в случае получения токена, сохраняет его, после чего перенаправляет на главную.
 createAccountButtonEl.onclick = async () => {
-    let firstName = firstNameInputEl.value;
-    let lastName = lastNameInputEl.value;
-    let username = usernameInputEl.value;
-    let password = passwordInputEl.value;
-    let email = emailInputEl.value;
-    let data = await requestRegistration(firstName, lastName, username, password, email);
+    // Проверка почты на пустоту и занятость:
+    if (!emailInputEl.value) {
+        alert("Введите почту!");
+        return;
+    } else {
+        let flagData = await requestCheckEmail(emailInputEl.value);
+        if (flagData.isAlreadyTaken) {
+            alert("Почта уже занята!");
+            return;
+        }
+    }
+    // Все данные проверены. Пробуем отправить запрос на регистрацию.
+    let data = await requestRegistration(
+        firstNameInputEl.value,
+        lastNameInputEl.value,
+        usernameInputEl.value,
+        passwordInputEl.value,
+        emailInputEl.value,
+    );
     // Вызывается исключение в случае плохого ответа, поэтому нулевой токен сохранён не будет.
     saveJWTTokenAndRedirect(data.JWTToken);
 }
