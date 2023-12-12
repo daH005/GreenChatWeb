@@ -1,5 +1,7 @@
 import { BASE_HEADERS,
          HTTP_REG_URL,
+         HTTP_CHECK_USERNAME_URL,
+         HTTP_CHECK_EMAIL_URL,
          HTTP_AUTH_URL,
          HTTP_USER_INFO_URL,
          HTTP_USER_CHATS_URL,
@@ -20,6 +22,34 @@ export async function requestRegistration(firstName, lastName, username, passwor
         return await response.json();
     } else {
         alert("Ошибка регистрации... " + response.status);
+        throw Error();
+    }
+}
+
+// Отправляет запрос на проверку занятости логина. Возвращает объект {isAlreadyTaken}.
+export async function requestCheckUsername(username) {
+    let response = await fetch(HTTP_CHECK_USERNAME_URL, {
+        method: "GET",
+        body: JSON.stringify({username}),
+        headers: BASE_HEADERS,
+    });
+    if (response.ok) {
+        return await response.json();
+    } else {
+        throw Error();
+    }
+}
+
+// Отправляет запрос на проверку занятости почты. Возвращает объект {isAlreadyTaken}.
+export async function requestCheckUsername(email) {
+    let response = await fetch(HTTP_CHECK_EMAIL_URL, {
+        method: "GET",
+        body: JSON.stringify({email}),
+        headers: BASE_HEADERS,
+    });
+    if (response.ok) {
+        return await response.json();
+    } else {
         throw Error();
     }
 }
