@@ -41,7 +41,7 @@ export async function requestCheckUsername(username) {
 }
 
 // Отправляет запрос на проверку занятости почты. Возвращает объект {isAlreadyTaken}.
-export async function requestCheckUsername(email) {
+export async function requestCheckEmail(email) {
     let response = await fetch(HTTP_CHECK_EMAIL_URL, {
         method: "GET",
         body: JSON.stringify({email}),
