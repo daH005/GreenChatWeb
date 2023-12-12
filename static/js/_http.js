@@ -28,9 +28,11 @@ export async function requestRegistration(firstName, lastName, username, passwor
 
 // Отправляет запрос на проверку занятости логина. Возвращает объект {isAlreadyTaken}.
 export async function requestCheckUsername(username) {
-    let response = await fetch(HTTP_CHECK_USERNAME_URL, {
+    let queryParamsStr = "?" + new URLSearchParams({
+        username
+    }).toString();
+    let response = await fetch(HTTP_CHECK_USERNAME_URL + queryParamsStr, {
         method: "GET",
-        body: JSON.stringify({username}),
         headers: BASE_HEADERS,
     });
     if (response.ok) {
@@ -42,9 +44,11 @@ export async function requestCheckUsername(username) {
 
 // Отправляет запрос на проверку занятости почты. Возвращает объект {isAlreadyTaken}.
 export async function requestCheckEmail(email) {
-    let response = await fetch(HTTP_CHECK_EMAIL_URL, {
+    let queryParamsStr = "?" + new URLSearchParams({
+        email
+    }).toString();
+    let response = await fetch(HTTP_CHECK_EMAIL_URL + queryParamsStr, {
         method: "GET",
-        body: JSON.stringify({email}),
         headers: BASE_HEADERS,
     });
     if (response.ok) {
