@@ -1,5 +1,10 @@
 import { saveJWTTokenAndRedirect } from "./_auth_tools.js";
-import { requestRegistration, requestCheckUsername, requestCheckEmail } from "./_http.js";
+import { requestRegistration,
+         requestCheckUsername,
+         requestCheckEmail,
+         requestSendEmailCode,
+         requestCheckEmailCode,
+       } from "./_http.js";
 
 // Текущий этап регистрации.
 var curStep = 0;
@@ -69,19 +74,16 @@ nextButtons.forEach((el) => {
     }
 });
 
+// Отправка письма с кодом на почту:
+sendMailButtonEl.onclick = () => {
+    checkEmail();
+    requestSendEmailCode(emailInputEl.value);
+    alert("Код успешно отправлен!");
+}
+
 // Отправляет регистрационные данные API и в случае получения токена, сохраняет его, после чего перенаправляет на главную.
 createAccountButtonEl.onclick = async () => {
-    // Проверка почты на пустоту и занятость:
-    if (!emailInputEl.value) {
-        alert("Введите почту!");
-        return;
-    } else {
-        let flagData = await requestCheckEmail(emailInputEl.value);
-        if (flagData.isAlreadyTaken) {
-            alert("Почта уже занята!");
-            return;
-        }
-    }
+    checkEmail();
     // Все данные проверены. Пробуем отправить запрос на регистрацию.
     let data = await requestRegistration(
         firstNameInputEl.value,
@@ -92,6 +94,20 @@ createAccountButtonEl.onclick = async () => {
     );
     // Вызывается исключение в случае плохого ответа, поэтому нулевой токен сохранён не будет.
     saveJWTTokenAndRedirect(data.JWTToken);
+}
+
+// Проверка почты на пустоту и занятость:
+function checkEmail() {
+    if (!emailInputEl.value) {
+        alert("Введите почту!");
+        throw Error();  // FixMe: Подумать над лучшей реализацией. Однородной (выше return'ы).
+    } else {
+        let flagData = await requestCheckEmail(emailInputEl.value);
+        if (flagData.isAlreadyTaken) {
+            alert("Почта уже занята!");
+            throw Error();  // FixMe: Подумать над лучшей реализацией. Однородной (выше return'ы).
+        }
+    }
 }
 
 // Прокручивает страницу на заданный шаг регистрации.
