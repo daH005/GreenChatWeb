@@ -1,30 +1,32 @@
-import { HTTP_AUTH_URL, JWT_TOKEN_LOCAL_STORAGE_KEY, BASE_HEADERS } from "./_config.js";
-import { redirectToMainPage } from "./_redirects.js";
-import { saveJWTToken } from "./_local_storage.js";
+import { requestAuthByUsernameAndPassword } from "./_http.js";
+import { saveJWTTokenAndRedirect } from "./_auth_tools.js";
 
-const usernameInputEl = document.getElementById("js-username-input");
-const passwordInputEl = document.getElementById("js-password-input");
+// Ключевые элементы страницы:
+const usernameInputEl = document.getElementById("js-username");
+const passwordInputEl = document.getElementById("js-password");
 const buttonEl = document.getElementById("js-button");
+const passwordSwitchButtonEl = document.getElementById("js-password-switch");
+const eyeEl = passwordSwitchButtonEl.querySelector("i");
 
-buttonEl.onclick = () => {
-    auth(usernameInputEl.value, passwordInputEl.value);
+buttonEl.onclick = async () => {
+    let username = usernameInputEl.value;
+    let password = passwordInputEl.value;
+    // Запрашиваем авторизацию. После получения токена сохраняем его и перенаправляемся на главную.
+    if (username && password) {
+        let data = await requestAuthByUsernameAndPassword(username, password);
+        // Вызывается исключение в случае плохого ответа, поэтому нулевой токен сохранён не будет.
+        saveJWTTokenAndRedirect(data.JWTToken);
+    } else {
+        alert("Логин или пароль пусты!...");
+    }
 }
 
-// Проводит попытку авторизовать пользователя.
-// При статус-коде 200 фиксирует JWT-токен в `localStorage` и
-// производит перенаправление на главную страницу мессенджера.
-async function auth(username, password) {
-    let response = await fetch(HTTP_AUTH_URL, {
-        method: "POST",
-        body: JSON.stringify({username, password}),
-        headers: BASE_HEADERS,
-    });
-    if (response.ok) {
-        let data = await response.json();
-        // Сохраняем JWT-токен в `localStorage` и перенаправляемся на главную страницу мессенджера.
-        saveJWTToken(data.JWTToken);
-        redirectToMainPage();
+// Показ и сокрытие пароля.
+passwordSwitchButtonEl.onclick = () => {
+    passwordInputEl.type = passwordInputEl.type == "password" ? "text" : "password";
+    if (passwordInputEl.type == "password") {
+        eyeEl.className = eyeEl.className.replace("fa-eye", "fa-eye-slash");
     } else {
-        alert("Неверный логин или пароль!");
+        eyeEl.className = eyeEl.className.replace("fa-eye-slash", "fa-eye");
     }
 }

@@ -1,5 +1,5 @@
 import { dateToTimeStr, dateToDateStr, normalizeDateTimezone }  from "../_datetime.js";
-import { requestChatHistory, requestUserInfo } from "./_http.js";
+import { requestChatHistory, requestUserInfo } from "../_http.js";
 import { websocket } from "./_websocket.js";
 
 // Ключевые элементы страницы:
@@ -16,13 +16,6 @@ const allChatsLinksEl = document.getElementById("js-all-chats-links");
 
 // Элемент со всеми чатами, на которые заходил пользователь в данной сессии.
 const loadedChatsEl = document.getElementById("js-loaded-chats");
-// Контейнер, содержащий поле ввода и кнопку отправки сообщения. На старте страницы мы скрываем этот контейнер.
-const inputContainerEl = document.getElementById("js-chat-message-input-container");
-inputContainerEl.style = "display: none";
-// Ввод сообщения.
-const textInputEl = document.getElementById("js-chat-message-text-input");
-// Отправка сообщения в выбранный чат.
-const buttonEl = document.getElementById("js-chat-message-button");
 
 // Поле ввода ID искомого пользователя.
 const searchInputEl = document.getElementById("js-search-input");
@@ -33,24 +26,26 @@ const searchButtonEl = document.getElementById("js-search-button");
 const newChatEl = document.getElementById("js-new-chat");
 // Кнопка для выхода из фейкового чата.
 const newChatBackLinkEl = document.getElementById("js-new-chat-back-link");
-// Название нового чата.
+// Название фейкового чата.
 const newChatNameEl = document.getElementById("js-new-chat-name");
+// Поле ввода в фейковом чате.
+const newChatInputEl = document.getElementById("js-new-chat-input");
+// Кнопка для отправки первого сообщения в фейковом чате.
+const newChatButtonEl = document.getElementById("js-new-chat-button");
+
+newChatButtonEl.onclick = () => {
+    sendChatMessage(newChatInputEl);
+}
+// Отправка сообщения при нажатии Enter.
+document.addEventListener("keypress", function(event) {
+    if (event.keyCode == 13 && document.activeElement == newChatInputEl) {
+        sendChatMessage(newChatInputEl);
+    }
+});
 
 // Выход из фейкового чата при нажатии на кнопку.
 newChatBackLinkEl.onclick = () => {
     hideChat(null);
-}
-
-// Отправка сообщения при нажатии Enter.
-document.addEventListener("keypress", function(event) {
-    if (event.keyCode == 13 && document.activeElement == textInputEl) {
-        sendChatMessage();
-    }
-});
-
-// Отправка сообщения при клике на кнопку.
-buttonEl.onclick = () => {
-    sendChatMessage();
 }
 
 // Поиск пользователя при нажатии Enter.
@@ -60,7 +55,7 @@ document.addEventListener("keypress", function(event) {
     }
 });
 
-// Отправка сообщения при клике на кнопку.
+// Поиск пользователя при клике на кнопку.
 searchButtonEl.onclick = () => {
     searchUserAndSwitchToChat();
 }
@@ -71,6 +66,8 @@ const chatLinkTempEl = document.getElementById("js-chat-link-temp");
 const chatTempEl = document.getElementById("js-chat-temp");
 // Шаблон сообщения.
 const chatMessageTempEl = document.getElementById("js-chat-message-temp");
+// Шаблон разделителя сообщений.
+const chatDateSepTempEl = document.getElementById("js-chat-date-sep-temp");
 
 // Объект со всеми элементами и другими данными загруженных чатов.
 var loadedChats = {}
@@ -115,7 +112,12 @@ export function displayChatHistory(chat) {
 // Отображает чат на странице (но изначально каждый чат всегда скрыт), а также 'ссылку' на него.
 export function displayChat(chat) {
     // Создаём новое хранилище всех данных + элементов чата.
-    loadedChats[chat.id] = {fullyLoaded: false, messages: {}}
+    loadedChats[chat.id] = {
+        fullyLoaded: false,
+        messages: {},
+        topMessage: null,
+        bottomMessage: null,
+    }
     // Определяем название чата для текущего клиента.
     // Это может быть общее название беседы, либо имя собеседника.
     let chatName = chat.name ? chat.name : chat.interlocutor.firstName;
@@ -170,6 +172,23 @@ export function displayChat(chat) {
     let chatMessagesEl = chatEl.querySelector(".chat__messages");
     loadedChats[chat.id].chatMessagesEl = chatMessagesEl;
 
+    // Поле ввода сообщения.
+    let chatInputEl = chatEl.querySelector("input");
+    loadedChats[chat.id].chatInputEl = chatInputEl;
+
+    // Кнопка для отправки сообщения.
+    let chatButtonEl = chatEl.querySelector("button");
+    chatButtonEl.onclick = () => {
+        sendChatMessage(chatInputEl);
+    }
+    // Отправка сообщения при нажатии Enter.
+    document.addEventListener("keypress", function(event) {
+        if (event.keyCode == 13 && document.activeElement == chatInputEl) {
+            sendChatMessage(chatInputEl);
+        }
+    });
+    loadedChats[chat.id].chatButtonEl = chatButtonEl;
+
     if (chat.lastMessage) {
         displayChatMessage(chat.lastMessage);
     }
@@ -204,6 +223,22 @@ export function displayChatMessage(chatMessage, prepend=false) {
         allChatsLinksEl.prepend(loadedChats[chatMessage.chatId].chatLinkEl);
     }
 
+    // Формируем разделительный элемент между днями, если это требуется.
+    if (prepend && loadedChats[chatMessage.chatId].bottomMessage) {
+        if (loadedChats[chatMessage.chatId].bottomMessage.chatMessage.creatingDatetime.toLocaleDateString() != chatMessage.creatingDatetime.toLocaleDateString()) {
+            let chatDateSepNode = chatDateSepTempEl.content.cloneNode(true);
+            loadedChats[chatMessage.chatId].chatMessagesEl.prepend(chatDateSepNode);
+            loadedChats[chatMessage.chatId].chatMessagesEl.firstElementChild.textContent = dateToDateStr(loadedChats[chatMessage.chatId].bottomMessage.chatMessage.creatingDatetime);
+        }
+    }
+    if (!prepend && loadedChats[chatMessage.chatId].topMessage) {
+        if (loadedChats[chatMessage.chatId].topMessage.chatMessage.creatingDatetime.toLocaleDateString() != chatMessage.creatingDatetime.toLocaleDateString()) {
+            let chatDateSepNode = chatDateSepTempEl.content.cloneNode(true);
+            loadedChats[chatMessage.chatId].chatMessagesEl.append(chatDateSepNode);
+            loadedChats[chatMessage.chatId].chatMessagesEl.lastElementChild.textContent = dateStr;
+        }
+    }
+
     // Непосредственно формируем элемент сообщения.
     let chatMessageNode = chatMessageTempEl.content.cloneNode(true);
     let chatMessageEl;
@@ -235,42 +270,58 @@ export function displayChatMessage(chatMessage, prepend=false) {
         chatMessageEl, nameEl, textEl, timeEl, chatMessage,
     }
 
+    // Записываем крайнее сообщение для последующих разделителей дней:
+    if (!loadedChats[chatMessage.chatId].topMessage && !loadedChats[chatMessage.chatId].bottomMessage) {
+        // Если сообщение первое, то обозначим его, как крайнее и сверху и снизу.
+        loadedChats[chatMessage.chatId].topMessage = loadedChats[chatMessage.chatId].messages[chatMessage.id];
+        loadedChats[chatMessage.chatId].bottomMessage = loadedChats[chatMessage.chatId].messages[chatMessage.id];
+    } else if (prepend) {
+        loadedChats[chatMessage.chatId].bottomMessage = loadedChats[chatMessage.chatId].messages[chatMessage.id];
+    } else {
+        loadedChats[chatMessage.chatId].topMessage = loadedChats[chatMessage.chatId].messages[chatMessage.id];
+    }
+
     // Если сообщение от нас, то устанавливаем на элемент специальный CSS-класс,
     // а также выполняем прокрутку в самый низ чата.
     if (chatMessage.user.id == user.id) {
         chatMessageEl.classList.add("chat__message--self");
         loadedChats[chatMessage.chatId].chatMessagesEl.scrollTop = loadedChats[chatMessage.chatId].chatMessagesEl.scrollHeight;
     }
+
 }
 
 // Обрабатывает сообщение от веб-сокета.
 export function handleWebSocketMessage(message) {
     // Если сообщение от веб-сокета представляет собой новый чат, то создаём его.
-    if (message.chatIsNew) {
-        displayChat(message);
-        if (message.interlocutor.id == newChatUserId) {
-            switchToChat(message.id);
+    if (message.type == "newChat") {
+        displayChat(message.data);
+        if (message.data.interlocutor.id == newChatUserId) {
+            switchToChat(message.data.id);
         }
-    // Иначе - это обычное сообщение в уже существующий чат. Создаём его.
-    } else {
-        displayChatMessage(message);
+    // Или если - это обычное сообщение в уже существующий чат. Создаём его.
+    } else if (message.type == "newChatMessage") {
+        displayChatMessage(message.data);
     }
 }
 
 // Отправляет сообщение на сервер по веб-сокету.
-export function sendChatMessage() {
-    if (textInputEl.value) {
-        let data = {chatId: openedChatId, text: textInputEl.value}
+export function sendChatMessage(inputEl) {
+    let text = inputEl.value;
+    if (text) {
+        let message = {type: null, data: {text}}
         // Если в данный момент у нас открыт фейковый новый чат, то составим сообщение,
-        // по которому веб-сокет создаст нам новый чат.
+        // по которому веб-сокет создаст нам новый чат. Иначе - сообщения на создание нового обычного сообщения
+        // в конкретный чат.
         if (newChatUserId) {
-            data.chatId = null;
-            data.chatIsNew = true;
-            data.usersIds = [user.id, newChatUserId];
+            message.type = "newChat";
+            message.data.usersIds = [user.id, newChatUserId];
+        } else {
+            message.type = "newChatMessage";
+            message.data.chatId = openedChatId;
         }
-        websocket.sendMessage(data);
+        websocket.sendMessage(message);
         // Очищаем поле ввода, после отправки сообщения.
-        textInputEl.value = "";
+        inputEl.value = "";
     }
 }
 
@@ -282,7 +333,6 @@ async function switchToChat(chatId) {
     loadedChats[chatId].chatEl.classList.remove("chat--hidden");
     loadedChats[chatId].chatLinkEl.classList.add("chat-link--active");
     closerEl.style = "display: none;";
-    inputContainerEl.style = "";
     // Загружаем историю чата с учётом сообщений, уже загруженных по веб-сокету.
     if (!(loadedChats[chatId].fullyLoaded)) {
         loadedChats[chatId].fullyLoaded = true;
@@ -303,7 +353,6 @@ function hideChat(chatId, showCloser=true) {
     }
     if (showCloser) {
         closerEl.style = "";
-        inputContainerEl.style = "display: none";
     }
 }
 
@@ -336,5 +385,4 @@ async function searchUserAndSwitchToChat() {
     newChatEl.classList.remove("chat--hidden");
     // Убираем перегородку, а также показываем поле ввода сообщения + кнопку.
     closerEl.style = "display: none;";
-    inputContainerEl.style = "";
 }

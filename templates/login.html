@@ -1,19 +1,33 @@
 {% extends '_base.html' %}
 
+
 {% block title %}
 Вход
 {% endblock %}
+
 
 {% block css %}
 {{ super() }}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
 {% endblock %}
 
+
 {% block main %}
-<div>
-    <input id="js-username-input" name="username" type="text" placeholder="Логин">
-    <input id="js-password-input" name="password" type="password" placeholder="Пароль">
-    <button id="js-button">Войти</button>
+
+<div class="central-container">
+    <div class="inputs-container">
+        <h1 align="center">GreenChat</h1>
+        <input id="js-username" name="username" type="text" placeholder="Логин">
+        <div class="input-and-inner-button-container">
+            <input id="js-password" name="password" type="password" placeholder="Пароль">
+            <button id="js-password-switch">
+                <i class="fa fa-eye-slash" aria-hidden="true"></i>
+            </button>
+        </div>
+        <button id="js-button">Войти</button>
+        <a href="{{ url_for('reg') }}">Не зарегистрированы? Перейдите сюда.</a>
+    </div>
 </div>
+
 <script src="{{ url_for('static', filename='js/login.js') }}" type="module"></script>
 {% endblock %}

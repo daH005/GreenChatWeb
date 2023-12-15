@@ -1,10 +1,56 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends '_base.html' %}
 
-</body>
-</html>
+
+{% block title %}
+Регистрация
+{% endblock %}
+
+
+{% block css %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/reg.css') }}">
+{% endblock %}
+
+
+{% block main %}
+
+<div class="steps-carousel" id="js-reg-carousel">
+
+    <div class="central-container">
+        {# 1-й этап регистрации: имя и фамилия. #}
+        <div class="inputs-container">
+            <input id="js-first-name" placeholder="Ваше имя">
+            <input id="js-last-name" placeholder="Ваша фамилия">
+            <button class="js-next">Далее</button>
+        </div>
+    </div>
+
+    <div class="central-container">
+        <div class="inputs-container">
+            {# 2-й этап регистрации: логин и пароль. #}
+            <button class="js-back">Назад</button>
+            <input id="js-username" placeholder="Ваш логин">
+            <input id="js-password" type="password" placeholder="Ваш пароль">
+            <input id="js-password-confirm" type="password" placeholder="Повтор пароля">
+            <button class="js-next">Далее</button>
+        </div>
+    </div>
+
+    <div class="central-container">
+        <div class="inputs-container">
+            {# 3-й этап регистрации: почта и её подтверждение. #}
+            <button class="js-back">Назад</button>
+            <div class="input-and-inner-button-container">
+                <input id="js-email" placeholder="Ваша почта">
+                <button id="js-send-mail">
+                    <small>Код</small>
+                </button>
+            </div>
+            <input id="js-mail-code" placeholder="Код подтверждения">
+            <button id="js-create-account">Создать аккаунт</button>
+        </div>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/reg.js') }}" type="module"></script>
+{% endblock %}
