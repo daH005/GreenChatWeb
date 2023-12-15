@@ -62,7 +62,7 @@ export async function requestCheckEmail(email) {
 export async function requestSendEmailCode(email) {
     let response = await fetch(HTTP_SEND_EMAIL_CODE_URL, {
         method: "POST",
-        body: JSON.stringify({email})
+        body: JSON.stringify({email}),
         headers: BASE_HEADERS,
     });
     if (response.ok) {
@@ -76,7 +76,7 @@ export async function requestSendEmailCode(email) {
 export async function requestCheckEmailCode(code) {
     let response = await fetch(HTTP_CHECK_EMAIL_CODE_URL, {
         method: "POST",
-        body: JSON.stringify({code})
+        body: JSON.stringify({code}),
         headers: BASE_HEADERS,
     });
     if (response.ok) {
