@@ -91,6 +91,7 @@ createAccountButtonEl.onclick = async () => {
         usernameInputEl.value,
         passwordInputEl.value,
         emailInputEl.value,
+        mailCodeEl.value,
     );
     // Вызывается исключение в случае плохого ответа, поэтому нулевой токен сохранён не будет.
     saveJWTTokenAndRedirect(data.JWTToken);
