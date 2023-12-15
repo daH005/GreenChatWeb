@@ -84,6 +84,11 @@ sendMailButtonEl.onclick = async () => {
 // Отправляет регистрационные данные API и в случае получения токена, сохраняет его, после чего перенаправляет на главную.
 createAccountButtonEl.onclick = async () => {
     checkEmail();
+    let flagData = await requestCheckEmailCode(mailCodeEl.value);
+    if (!flagData.codeIsValid) {
+        alert("Код подтверждения неверный!");
+        return;
+    }
     // Все данные проверены. Пробуем отправить запрос на регистрацию.
     let data = await requestRegistration(
         firstNameInputEl.value,

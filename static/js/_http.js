@@ -74,7 +74,6 @@ export async function requestSendEmailCode(email) {
     }
 }
 
-// FixMe: Функция не используется (как и сам ресурс).
 // Отправляет запрос на проверку кода подтверждения почты. Возвращает объект {codeIsValid}.
 export async function requestCheckEmailCode(code) {
     let response = await fetch(HTTP_CHECK_EMAIL_CODE_URL, {
