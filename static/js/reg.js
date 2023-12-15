@@ -75,8 +75,8 @@ nextButtons.forEach((el) => {
 });
 
 // Отправка письма с кодом на почту:
-sendMailButtonEl.onclick = () => {
-    checkEmail();
+sendMailButtonEl.onclick = async () => {
+    await checkEmail();
     requestSendEmailCode(emailInputEl.value);
     alert("Код успешно отправлен!");
 }
@@ -97,7 +97,7 @@ createAccountButtonEl.onclick = async () => {
 }
 
 // Проверка почты на пустоту и занятость:
-function checkEmail() {
+async function checkEmail() {
     if (!emailInputEl.value) {
         alert("Введите почту!");
         throw Error();  // FixMe: Подумать над лучшей реализацией. Однородной (выше return'ы).
