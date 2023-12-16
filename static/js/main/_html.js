@@ -223,7 +223,7 @@ export function displayChatMessage(chatMessage, prepend=false) {
         allChatsLinksEl.prepend(loadedChats[chatMessage.chatId].chatLinkEl);
     }
 
-    // Формируем разделительный элемент между днями, если это требуется.
+    // Формируем разделительный элемент между днями, если это требуется:
     if (prepend && loadedChats[chatMessage.chatId].bottomMessage) {
         if (loadedChats[chatMessage.chatId].bottomMessage.chatMessage.creatingDatetime.toLocaleDateString() != chatMessage.creatingDatetime.toLocaleDateString()) {
             let chatDateSepNode = chatDateSepTempEl.content.cloneNode(true);
@@ -237,6 +237,13 @@ export function displayChatMessage(chatMessage, prepend=false) {
             loadedChats[chatMessage.chatId].chatMessagesEl.append(chatDateSepNode);
             loadedChats[chatMessage.chatId].chatMessagesEl.lastElementChild.textContent = dateStr;
         }
+    }
+
+    // Определяем флаг, обозначающий прокрутили ли мы весь чат в самый низ или нет. Флаг необходим для продолжения прокрутки
+    // при новом сообщении.
+    let scrollingIsBottom = false;
+    if (loadedChats[chatMessage.chatId].chatMessagesEl.scrollHeight - loadedChats[chatMessage.chatId].chatMessagesEl.scrollTop - loadedChats[chatMessage.chatId].chatMessagesEl.clientHeight < 1) {
+        scrollingIsBottom = true;
     }
 
     // Непосредственно формируем элемент сообщения.
@@ -281,10 +288,12 @@ export function displayChatMessage(chatMessage, prepend=false) {
         loadedChats[chatMessage.chatId].topMessage = loadedChats[chatMessage.chatId].messages[chatMessage.id];
     }
 
-    // Если сообщение от нас, то устанавливаем на элемент специальный CSS-класс,
-    // а также выполняем прокрутку в самый низ чата.
+    // Если сообщение от нас, то устанавливаем на элемент специальный CSS-класс.
     if (chatMessage.user.id == user.id) {
         chatMessageEl.classList.add("chat__message--self");
+    }
+    // Если наш чат был прокручен к самому низу, то продолжаем его прокручивать.
+    if (scrollingIsBottom) {
         loadedChats[chatMessage.chatId].chatMessagesEl.scrollTop = loadedChats[chatMessage.chatId].chatMessagesEl.scrollHeight;
     }
 
