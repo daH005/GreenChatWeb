@@ -359,8 +359,8 @@ function hideChat(chatId, showCloser=true) {
 // Отправляет HTTP-запрос на создание нового чата с пользователем, чей ID введён в поле (существование пользователя проверяется).
 // Перед запросом проверяет наличие чата. Если он уже есть - тогда происходит переключение на него.
 async function searchUserAndSwitchToChat() {
-    let userId = searchInputEl.value;
-    if (!searchInputEl.value) {
+    let userId = Number(searchInputEl.value);
+    if (!userId) {
         return;
     }
     let maybeChatId = interlocutorsChatsIds[userId];
