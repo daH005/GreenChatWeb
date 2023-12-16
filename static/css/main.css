@@ -11,6 +11,7 @@
     background: var(--main-color);
     display: flex;
     flex-direction: column;
+    overflow-x: hidden;
 }
 
 .sidebar .sidebar__title {
@@ -39,6 +40,7 @@
 
 .sidebar .sidebar__links {
     overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .chat-link {
