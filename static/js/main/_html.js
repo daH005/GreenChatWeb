@@ -172,8 +172,8 @@ export function displayChat(chat) {
     let chatMessagesEl = chatEl.querySelector(".chat__messages");
     loadedChats[chat.id].chatMessagesEl = chatMessagesEl;
 
-    // Поле ввода сообщения.
-    let chatInputEl = chatEl.querySelector("input");
+    // Поле ввода сообщения (учесть, что это textarea, а не input).
+    let chatInputEl = chatEl.querySelector("textarea");
     loadedChats[chat.id].chatInputEl = chatInputEl;
 
     // Кнопка для отправки сообщения.
