@@ -34,12 +34,27 @@ const newChatInputEl = document.getElementById("js-new-chat-input");
 const newChatButtonEl = document.getElementById("js-new-chat-button");
 
 newChatButtonEl.onclick = () => {
-    sendChatMessage(newChatInputEl);
+    sendMessageToWebSocket(newChatInputEl);
 }
-// Отправка сообщения при нажатии Enter.
-document.addEventListener("keypress", function(event) {
-    if (event.keyCode == 13 && document.activeElement == newChatInputEl) {
-        sendChatMessage(newChatInputEl);
+
+// Отслеживает зажатие клавиши Shift. Необходимо при отправке на Enter: если зажат Shift, то отправлять ни в коем случае не нужно,
+// поскольку этими клавишами пользователь делает перенос.
+var shiftIsDown = false;
+document.addEventListener("keydown", (event) => {
+    if (event.keyCode == 16) {
+        shiftIsDown = true;
+    }
+});
+document.addEventListener("keyup", (event) => {
+    if (event.keyCode == 16) {
+        shiftIsDown = false;
+    }
+});
+
+// Отправка сообщения при нажатии Enter (Важно: отправки не будет, если зажат Shift!).
+document.addEventListener("keypress", (event) => {
+    if (event.keyCode == 13 && !shiftIsDown && document.activeElement == newChatInputEl) {
+	    sendMessageToWebSocket(newChatInputEl);
     }
 });
 
@@ -179,12 +194,12 @@ export function displayChat(chat) {
     // Кнопка для отправки сообщения.
     let chatButtonEl = chatEl.querySelector("button");
     chatButtonEl.onclick = () => {
-        sendChatMessage(chatInputEl);
+        sendMessageToWebSocket(chatInputEl);
     }
-    // Отправка сообщения при нажатии Enter.
+    // Отправка сообщения при нажатии Enter (Важно: отправки не происходит, если зажат Shift!).
     document.addEventListener("keypress", function(event) {
-        if (event.keyCode == 13 && document.activeElement == chatInputEl) {
-            sendChatMessage(chatInputEl);
+        if (event.keyCode == 13 && !shiftIsDown && document.activeElement == chatInputEl) {
+            sendMessageToWebSocket(chatInputEl);
         }
     });
     loadedChats[chat.id].chatButtonEl = chatButtonEl;
@@ -314,7 +329,7 @@ export function handleWebSocketMessage(message) {
 }
 
 // Отправляет сообщение на сервер по веб-сокету.
-export function sendChatMessage(inputEl) {
+export function sendMessageToWebSocket(inputEl) {
     let text = inputEl.value;
     if (text) {
         let message = {type: null, data: {text}}
