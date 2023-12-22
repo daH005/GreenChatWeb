@@ -52,9 +52,19 @@ document.addEventListener("keyup", (event) => {
 });
 
 // Отправка сообщения при нажатии Enter (Важно: отправки не будет, если зажат Shift!).
+// Работает для всех textarea на странице.
 document.addEventListener("keypress", (event) => {
-    if (event.keyCode == 13 && !shiftIsDown && document.activeElement == newChatInputEl) {
-	    sendMessageToWebSocket(newChatInputEl);
+    if (event.keyCode == 13 && !shiftIsDown && document.activeElement.tagName == "TEXTAREA") {
+	    sendMessageToWebSocket(document.activeElement);
+        event.preventDefault();
+    }
+});
+
+// Увеличивает высоту каждого textarea при добавлении переносов строк.
+// Ограничивается стилем max-height, разумеется.
+document.addEventListener("keypress", (event) => {
+    if (event.keyCode == 13 && shiftIsDown && document.activeElement.tagName == "TEXTAREA") {
+        document.activeElement.style.height = document.activeElement.scrollHeight + "px";
     }
 });
 
@@ -192,16 +202,11 @@ export function displayChat(chat) {
     loadedChats[chat.id].chatInputEl = chatInputEl;
 
     // Кнопка для отправки сообщения.
+    // (Вопрос отправки сообщений на Enter решён в начале модуля).
     let chatButtonEl = chatEl.querySelector("button");
     chatButtonEl.onclick = () => {
         sendMessageToWebSocket(chatInputEl);
     }
-    // Отправка сообщения при нажатии Enter (Важно: отправки не происходит, если зажат Shift!).
-    document.addEventListener("keypress", function(event) {
-        if (event.keyCode == 13 && !shiftIsDown && document.activeElement == chatInputEl) {
-            sendMessageToWebSocket(chatInputEl);
-        }
-    });
     loadedChats[chat.id].chatButtonEl = chatButtonEl;
 
     if (chat.lastMessage) {
@@ -344,8 +349,9 @@ export function sendMessageToWebSocket(inputEl) {
             message.data.chatId = openedChatId;
         }
         websocket.sendMessage(message);
-        // Очищаем поле ввода, после отправки сообщения.
+        // После отправки сообщения очищаем поле ввода и ставим его обычную высоту.
         inputEl.value = "";
+        inputEl.style.height = "50px";
     }
 }
 
