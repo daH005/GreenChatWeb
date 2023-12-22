@@ -225,10 +225,10 @@
 }
 
 .chat__input-container textarea {
-    height: 47px;
-    min-height: 47px;
+    height: 50px;
+    min-height: 50px;
     max-height: 100px;
-    resize: vertical;
+    resize: none;
 }
 
 @media only screen and (max-width: 700px), only screen and
