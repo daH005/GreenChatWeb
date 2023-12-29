@@ -1,4 +1,5 @@
 import { dateToTimeStr, dateToDateStr, normalizeDateTimezone }  from "../_datetime.js";
+import { makeHyperlinks } from "../_str_tools.js";
 import { requestChatHistory, requestUserInfo } from "../_http.js";
 import { websocket } from "./_websocket.js";
 
@@ -272,6 +273,9 @@ export function displayChatMessage(chatMessage, prepend=false) {
     // Текст сообщения.
     let textEl = chatMessageEl.querySelector(".chat__message__text");
     textEl.textContent = chatMessage.text;
+    // Данный трюк с `textContent` и `innerHTML` проворачивается,
+    // чтобы из сообщения не могли быть распарсены никакие теги, введенные пользователем.
+    textEl.innerHTML = makeHyperlinks(textEl.innerHTML);
 
     // Время отправки сообщения.
     let timeEl = chatMessageEl.querySelector(".chat__message__time");
