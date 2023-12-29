@@ -423,4 +423,3 @@ async function searchUserAndSwitchToChat() {
     // Убираем перегородку, а также показываем поле ввода сообщения + кнопку.
     closerEl.style = "display: none;";
 }
-

@@ -122,5 +122,3 @@ function setCarouselStep(step) {
     let transformValue = "translateY(-" + step * 100 + "%);";
     regCarouselEl.style = "transform: " + transformValue;
 }
-
-
