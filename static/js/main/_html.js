@@ -21,18 +21,29 @@ const loadedChatsEl = document.getElementById("js-loaded-chats");
 const searchInputEl = document.getElementById("js-search-input");
 // Кнопка для поиска пользователя по ID.
 const searchButtonEl = document.getElementById("js-search-button");
+searchButtonEl.onclick = () => {
+    searchUserAndSwitchToChat();
+}
+// Поиск пользователя при нажатии Enter.
+document.addEventListener("keypress", function(event) {
+    if (event.key == "Enter" && document.activeElement == searchInputEl) {
+        searchUserAndSwitchToChat();
+    }
+});
 
-// Элемент фейкового нового чата.
+// Фейковый новый чат.
 const newChatEl = document.getElementById("js-new-chat");
 // Кнопка для выхода из фейкового чата.
 const newChatBackLinkEl = document.getElementById("js-new-chat-back-link");
+newChatBackLinkEl.onclick = () => {
+    hideChat(null);
+}
 // Название фейкового чата.
 const newChatNameEl = document.getElementById("js-new-chat-name");
 // Поле ввода в фейковом чате.
 const newChatInputEl = document.getElementById("js-new-chat-input");
 // Кнопка для отправки первого сообщения в фейковом чате.
 const newChatButtonEl = document.getElementById("js-new-chat-button");
-
 newChatButtonEl.onclick = () => {
     sendMessageToWebSocket(newChatInputEl);
 }
@@ -41,49 +52,35 @@ newChatButtonEl.onclick = () => {
 // поскольку этими клавишами пользователь делает перенос.
 var shiftIsDown = false;
 document.addEventListener("keydown", (event) => {
-    if (event.keyCode == 16) {
+    if (event.key == "Shift") {
         shiftIsDown = true;
     }
 });
 document.addEventListener("keyup", (event) => {
-    if (event.keyCode == 16) {
+    if (event.key == "Shift") {
         shiftIsDown = false;
     }
 });
 
 // Отправка сообщения при нажатии Enter (Важно: отправки не будет, если зажат Shift!).
-// Работает для всех textarea на странице.
+// Работает для всех textarea на странице, поскольку решено, что textarea - элемент чисто для ввода сообщений.
+// FixMe: Я думаю стоит добавить CSS-класс.
 document.addEventListener("keypress", (event) => {
-    if (event.keyCode == 13 && !shiftIsDown && document.activeElement.tagName == "TEXTAREA") {
+    if (event.key == "Enter" && !shiftIsDown && document.activeElement.tagName == "TEXTAREA") {
 	    sendMessageToWebSocket(document.activeElement);
         event.preventDefault();
     }
 });
 
-// Увеличивает высоту каждого textarea при добавлении переносов строк.
-// Ограничивается стилем max-height, разумеется.
+// Увеличивает высоту выбранного в данный момент textarea при добавлении переносов строк.
+// Ограничивается стилем max-height.
 document.addEventListener("keypress", (event) => {
-    if (event.keyCode == 13 && shiftIsDown && document.activeElement.tagName == "TEXTAREA") {
+    if (event.key == "Enter" && shiftIsDown && document.activeElement.tagName == "TEXTAREA") {
         document.activeElement.style.height = document.activeElement.scrollHeight + "px";
     }
 });
 
-// Выход из фейкового чата при нажатии на кнопку.
-newChatBackLinkEl.onclick = () => {
-    hideChat(null);
-}
-
-// Поиск пользователя при нажатии Enter.
-document.addEventListener("keypress", function(event) {
-    if (event.keyCode == 13 && document.activeElement == searchInputEl) {
-        searchUserAndSwitchToChat();
-    }
-});
-
-// Поиск пользователя при клике на кнопку.
-searchButtonEl.onclick = () => {
-    searchUserAndSwitchToChat();
-}
+// Шаблоны создаваемых элементов:
 
 // Шаблон 'ссылки' на чат.
 const chatLinkTempEl = document.getElementById("js-chat-link-temp");
@@ -94,20 +91,19 @@ const chatMessageTempEl = document.getElementById("js-chat-message-temp");
 // Шаблон разделителя сообщений.
 const chatDateSepTempEl = document.getElementById("js-chat-date-sep-temp");
 
-// Объект со всеми элементами и другими данными загруженных чатов.
+// Объект, в котором ключи - ID чатов, а значения - вложенные объекты,
+// хранящие html-элементы, а также другие важные данные по типу объектов сообщений.
 var loadedChats = {}
 // ID пользователя, с которым мы потенциально хотим начать новый чат.
+// Необходим, поскольку при создании нового чата chatId нам неизвестен.
 var newChatUserId = null;
-
-// Объект для сопоставления собеседников и ID чатов с ними.
+// Объект для сопоставления ID собеседников и ID чатов с ними.
+// Необходим для поиска уже существующего чата по ID пользователя, введенного в `searchInputEl`. 
 var interlocutorsChatsIds = {}
-// Данные пользователя. Подгружаются из `http.requestUserInfo()`.
+// Данные пользователя. Представляет собой объект - {id, firstName, lastName, username, email}.
 var user = null;
 // ID чата, открытого в данный момент времени.
 var openedChatId = null;
-// Дата и время самого позднего сообщения из всех чатов.
-// Требуется для сортировки ссылок на чаты в боковой панели.
-var commonLastMessageCreatingDatetime = 0;
 // Максимальная длина текста сообщения в боковой панели.
 const MAX_CHAT_LINK_TEXT_LENGTH = 20;
 
@@ -120,6 +116,8 @@ export function displayUserInfo(user_) {
 
 // Отображает на странице чаты (но они изначально скрыты) и 'ссылки' на эти чаты в боковой панели.
 export function displayUserChats(data) {
+    // Переворачиваем массив для добавления чатов в правильном порядке.
+    data.chats.reverse();
     for (let index in data.chats) {
         displayChat(data.chats[index]);
     }
@@ -136,19 +134,40 @@ export function displayChatHistory(chat) {
 
 // Отображает чат на странице (но изначально каждый чат всегда скрыт), а также 'ссылку' на него.
 export function displayChat(chat) {
-    // Создаём новое хранилище всех данных + элементов чата.
-    loadedChats[chat.id] = {
-        fullyLoaded: false,
-        messages: {},
-        topMessage: null,
-        bottomMessage: null,
-    }
     // Определяем название чата для текущего клиента.
     // Это может быть общее название беседы, либо имя собеседника.
     let chatName = chat.name ? chat.name : chat.interlocutor.firstName;
     // Записываем сопоставление для возможности поиска ID чата по ID пользователя.
     if (chat.interlocutor) {
         interlocutorsChatsIds[chat.interlocutor.id] = chat.id;
+    }
+
+    // Создаём корневой элемент чата.
+    let chatNode = chatTempEl.content.cloneNode(true);
+    loadedChatsEl.append(chatNode);
+    let chatEl = loadedChatsEl.lastElementChild;
+
+    // Название чата.
+    let chatNameEl = chatEl.querySelector(".chat__name");
+    chatNameEl.textContent = chatName;
+
+    // Кнопка выхода из чата.
+    let chatBackLinkEl = chatEl.querySelector(".chat__back-link");
+    chatBackLinkEl.onclick = function() {
+        hideChat(chat.id);
+    }
+
+    // Контейнер с историей чата.
+    let chatMessagesEl = chatEl.querySelector(".chat__messages");
+
+    // Поле ввода сообщения.
+    let chatInputEl = chatEl.querySelector("textarea");
+
+    // Кнопка для отправки сообщения.
+    // (Вопрос отправки сообщений на Enter решён в начале модуля).
+    let chatButtonEl = chatEl.querySelector("button");
+    chatButtonEl.onclick = () => {
+        sendMessageToWebSocket(chatInputEl);
     }
 
     // Создаём 'ссылку' на чат в боковой панели.
@@ -158,125 +177,91 @@ export function displayChat(chat) {
     chatLinkEl.onclick = async function() {
         await switchToChat(chat.id);
     }
-    loadedChats[chat.id].chatLinkEl = chatLinkEl;
 
     // Название чата в 'ссылке'.
     let chatLinkNameEl = chatLinkEl.querySelector(".chat-link__chat-name");
     chatLinkNameEl.textContent = chatName
-    loadedChats[chat.id].chatLinkNameEl = chatLinkNameEl;
 
     // Элемент последнего сообщения в 'ссылке'.
     // Содержимое сообщения устанавливается в `displayChatMessage`.
     let chatLinkLastMessageEl = chatLinkEl.querySelector(".chat-link__last-message");
-    loadedChats[chat.id].chatLinkLastMessageEl = chatLinkLastMessageEl;
 
     // Элемент с временем последнего сообщения в 'ссылке'.
     // Время устанавливается в `displayChatMessage`.
-    let chatLinkLastMessageDateEl = chatLinkEl.querySelector(".chat-link__date");
-    loadedChats[chat.id].chatLinkLastMessageDateEl = chatLinkLastMessageDateEl;
+    let chatLinkLastMessageDateEl = chatLinkEl.querySelector(".chat-link__date"); 
 
-    // Создаём сам чат.
-    let chatNode = chatTempEl.content.cloneNode(true);
-    loadedChatsEl.append(chatNode);
-    let chatEl = loadedChatsEl.lastElementChild;
-    loadedChats[chat.id].chatEl = chatEl;
-
-    // Название чата.
-    let chatNameEl = chatEl.querySelector(".chat__name");
-    chatNameEl.textContent = chatName;
-    loadedChats[chat.id].chatNameEl = chatNameEl;
-
-    // Кнопка выхода из чата.
-    let chatBackLinkEl = chatEl.querySelector(".chat__back-link");
-    chatBackLinkEl.onclick = function() {
-        hideChat(chat.id);
+    // Создаём новое хранилище всех данных + элементов чата.
+    loadedChats[chat.id] = {
+        fullyLoaded: false,
+        messages: {},
+        topMessage: null,
+        bottomMessage: null,
+        chatEl,
+        chatNameEl,
+        chatBackLinkEl,
+        chatMessagesEl,
+        chatInputEl,
+        chatButtonEl,
+        chatLinkEl,
+        chatLinkNameEl,
+        chatLinkLastMessageEl,
+        chatLinkLastMessageDateEl,
     }
-    loadedChats[chat.id].chatBackLinkEl = chatBackLinkEl;
-
-    // Контейнер с историей чата.
-    let chatMessagesEl = chatEl.querySelector(".chat__messages");
-    loadedChats[chat.id].chatMessagesEl = chatMessagesEl;
-
-    // Поле ввода сообщения (учесть, что это textarea, а не input).
-    let chatInputEl = chatEl.querySelector("textarea");
-    loadedChats[chat.id].chatInputEl = chatInputEl;
-
-    // Кнопка для отправки сообщения.
-    // (Вопрос отправки сообщений на Enter решён в начале модуля).
-    let chatButtonEl = chatEl.querySelector("button");
-    chatButtonEl.onclick = () => {
-        sendMessageToWebSocket(chatInputEl);
-    }
-    loadedChats[chat.id].chatButtonEl = chatButtonEl;
 
     if (chat.lastMessage) {
         displayChatMessage(chat.lastMessage);
     }
 }
 
-// Отображает сообщение в элементе чата.
-// При `prepend` равном `true` (это используется исключительно в `displayChatHistory(...)`), 
-// предполагается, что сообщение новое и в таком случае
-// обновляется и содержимое 'ссылки' на чат, а также переход этой 'ссылки'
-// на верхнюю позицию в случае если сообщение позднее `commonLastMessageCreatingDatetime`.
+// Отображает сообщение в заданном чате.
+// При `prepend` равном `true` (это используется исключительно в `displayChatHistory(...)`)
+// сообщение добавляется в начало контейнера.
+// При `false` - в конец контейнера. В этом случае сообщение расценивается как новое
+// и обновляется также и боковая панель.
 export function displayChatMessage(chatMessage, prepend=false) {
-    // Создаём объект `Date`, а также устанавливаем часовой пояс клиента (от api даты всегда в UTC).
+    // Создаём объект `Date`, а также устанавливаем часовой пояс клиента (API возвращает даты в UTC):
     chatMessage.creatingDatetime = new Date(chatMessage.creatingDatetime);
     normalizeDateTimezone(chatMessage.creatingDatetime);
+    // Формируем строковые представления даты создания для боковой панели, разделительной черты и самого сообщения:
     let timeStr = dateToTimeStr(chatMessage.creatingDatetime);
     let dateStr = dateToDateStr(chatMessage.creatingDatetime);
 
-    // Работа с боковой панелью:
-    if (!prepend) {
-        // Обновляет текст, а также время отправки последнего сообщения в 'ссылке' на чат.
-        let text = chatMessage.text;
-        if (text.length > MAX_CHAT_LINK_TEXT_LENGTH) {
-            text = text.slice(0, MAX_CHAT_LINK_TEXT_LENGTH) + "...";
-        }
-        loadedChats[chatMessage.chatId].chatLinkLastMessageEl.textContent = text;
-        loadedChats[chatMessage.chatId].chatLinkLastMessageDateEl.textContent = dateStr;
-    }
-    // Если текущее обрабатываемое сообщение самое позднее, то переносим кнопку чата
-    // на самый верх.
-    if (chatMessage.creatingDatetime > commonLastMessageCreatingDatetime) {
-        commonLastMessageCreatingDatetime = chatMessage.creatingDatetime;
-        allChatsLinksEl.prepend(loadedChats[chatMessage.chatId].chatLinkEl);
+    // Определяем флаг, обозначающий прокрутили ли мы весь чат в самый низ или нет. Флаг необходим для продолжения прокрутки
+    // при новом сообщении. Эта проверка обязана быть перед созданием элемента-сообщения!
+    let scrollingIsBottom = false;
+    // Делаем более короткую ссылку на объект, который используется в этой функции чаще всего.
+    let messagesEl = loadedChats[chatMessage.chatId].chatMessagesEl;
+    if (messagesEl.scrollHeight - messagesEl.scrollTop - messagesEl.clientHeight < 1) {
+        scrollingIsBottom = true;
     }
 
     // Формируем разделительный элемент между днями, если это требуется:
+    // (это действие необходимо делать перед формированием `message`)
     if (prepend && loadedChats[chatMessage.chatId].bottomMessage) {
-        if (loadedChats[chatMessage.chatId].bottomMessage.chatMessage.creatingDatetime.toLocaleDateString() != chatMessage.creatingDatetime.toLocaleDateString()) {
+        if (loadedChats[chatMessage.chatId].bottomMessage.dateStr != dateStr) {
             let chatDateSepNode = chatDateSepTempEl.content.cloneNode(true);
-            loadedChats[chatMessage.chatId].chatMessagesEl.prepend(chatDateSepNode);
-            loadedChats[chatMessage.chatId].chatMessagesEl.firstElementChild.textContent = dateToDateStr(loadedChats[chatMessage.chatId].bottomMessage.chatMessage.creatingDatetime);
+            messagesEl.prepend(chatDateSepNode);
+            messagesEl.firstElementChild.textContent = loadedChats[chatMessage.chatId].bottomMessage.dateStr;
         }
-    }
-    if (!prepend && loadedChats[chatMessage.chatId].topMessage) {
-        if (loadedChats[chatMessage.chatId].topMessage.chatMessage.creatingDatetime.toLocaleDateString() != chatMessage.creatingDatetime.toLocaleDateString()) {
+    } else if (!prepend && loadedChats[chatMessage.chatId].topMessage) {
+        if (loadedChats[chatMessage.chatId].topMessage.dateStr != dateStr) {
             let chatDateSepNode = chatDateSepTempEl.content.cloneNode(true);
-            loadedChats[chatMessage.chatId].chatMessagesEl.append(chatDateSepNode);
-            loadedChats[chatMessage.chatId].chatMessagesEl.lastElementChild.textContent = dateStr;
+            messagesEl.append(chatDateSepNode);
+            messagesEl.lastElementChild.textContent = dateStr;
         }
-    }
-
-    // Определяем флаг, обозначающий прокрутили ли мы весь чат в самый низ или нет. Флаг необходим для продолжения прокрутки
-    // при новом сообщении.
-    let scrollingIsBottom = false;
-    if (loadedChats[chatMessage.chatId].chatMessagesEl.scrollHeight - loadedChats[chatMessage.chatId].chatMessagesEl.scrollTop - loadedChats[chatMessage.chatId].chatMessagesEl.clientHeight < 1) {
-        scrollingIsBottom = true;
-    }
+    } 
 
     // Непосредственно формируем элемент сообщения.
     let chatMessageNode = chatMessageTempEl.content.cloneNode(true);
     let chatMessageEl;
     if (prepend) {
         // Если сообщение получено из истории, то добавляем его в начало контейнера. 
-        loadedChats[chatMessage.chatId].chatMessagesEl.prepend(chatMessageNode);
-        chatMessageEl = loadedChats[chatMessage.chatId].chatMessagesEl.firstElementChild;
+        messagesEl.prepend(chatMessageNode);
+        chatMessageEl = messagesEl.firstElementChild;
     } else {
         // Иначе - сообщение получено по веб-сокету - добавляем его в конец.
-        loadedChats[chatMessage.chatId].chatMessagesEl.append(chatMessageNode);
-        chatMessageEl = loadedChats[chatMessage.chatId].chatMessagesEl.lastElementChild;
+        messagesEl.append(chatMessageNode);
+        chatMessageEl = messagesEl.lastElementChild;
     }
 
     // Имя отправителя сообщения.
@@ -292,29 +277,50 @@ export function displayChatMessage(chatMessage, prepend=false) {
     let timeEl = chatMessageEl.querySelector(".chat__message__time");
     timeEl.textContent = timeStr;
 
-    // Фиксируем элементы и данные сообщения в хранилище.
-    loadedChats[chatMessage.chatId].messages[chatMessage.id] = {
-        chatMessageEl, nameEl, textEl, timeEl, chatMessage,
+    // Фиксируем элементы и данные сообщения в хранилище:
+    let message = {
+        chatMessageEl, 
+        nameEl, 
+        textEl, 
+        timeEl, 
+        obj: chatMessage,
+        timeStr,
+        dateStr,
     }
+    loadedChats[chatMessage.chatId].messages[chatMessage.id] = message;
 
     // Записываем крайнее сообщение для последующих разделителей дней:
+    // (это действие необходимо делать формирования `message`)
     if (!loadedChats[chatMessage.chatId].topMessage && !loadedChats[chatMessage.chatId].bottomMessage) {
         // Если сообщение первое, то обозначим его, как крайнее и сверху и снизу.
-        loadedChats[chatMessage.chatId].topMessage = loadedChats[chatMessage.chatId].messages[chatMessage.id];
-        loadedChats[chatMessage.chatId].bottomMessage = loadedChats[chatMessage.chatId].messages[chatMessage.id];
+        loadedChats[chatMessage.chatId].topMessage = message;
+        loadedChats[chatMessage.chatId].bottomMessage = message;
     } else if (prepend) {
-        loadedChats[chatMessage.chatId].bottomMessage = loadedChats[chatMessage.chatId].messages[chatMessage.id];
+        loadedChats[chatMessage.chatId].bottomMessage = message;
     } else {
-        loadedChats[chatMessage.chatId].topMessage = loadedChats[chatMessage.chatId].messages[chatMessage.id];
+        loadedChats[chatMessage.chatId].topMessage = message;
     }
 
+    // Если сообщение новое, то обновим боковую панель:
+    if (!prepend) {
+        // Обновляет текст, а также время отправки последнего сообщения в 'ссылке' на чат.
+        let text = chatMessage.text;
+        if (text.length > MAX_CHAT_LINK_TEXT_LENGTH) {
+            text = text.slice(0, MAX_CHAT_LINK_TEXT_LENGTH) + "...";
+        }
+        loadedChats[chatMessage.chatId].chatLinkLastMessageEl.textContent = text;
+        loadedChats[chatMessage.chatId].chatLinkLastMessageDateEl.textContent = dateStr;
+        // Переносим ссылку на чат на самый верх боковой панели.
+        allChatsLinksEl.prepend(loadedChats[chatMessage.chatId].chatLinkEl);
+    }
+ 
     // Если сообщение от нас, то устанавливаем на элемент специальный CSS-класс.
     if (chatMessage.user.id == user.id) {
         chatMessageEl.classList.add("chat__message--self");
     }
-    // Если наш чат был прокручен к самому низу, то продолжаем его прокручивать.
+    // Если в начале выполнения функции наш чат был прокручен к самому низу, то продолжаем его прокручивать.
     if (scrollingIsBottom) {
-        loadedChats[chatMessage.chatId].chatMessagesEl.scrollTop = loadedChats[chatMessage.chatId].chatMessagesEl.scrollHeight;
+        messagesEl.scrollTop = messagesEl.scrollHeight;
     }
 
 }
@@ -417,3 +423,4 @@ async function searchUserAndSwitchToChat() {
     // Убираем перегородку, а также показываем поле ввода сообщения + кнопку.
     closerEl.style = "display: none;";
 }
+
