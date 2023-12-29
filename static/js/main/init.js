@@ -5,9 +5,10 @@ import { requestUserInfo, requestUserChats, requestNewJWTToken } from "../_http.
 import { startWebSocket } from "./_websocket.js";
 import { displayUserInfo, displayUserChats, handleWebSocketMessage } from "./_html.js";
 
-// FixMe: Ещё важнее: после запуска nginx код перестал работать, как задумывалось.
 // Важно: запрещает переход вперёд-назад по истории браузера (а точнее вкладки).
 // Работает, как на ПК, так и на телефоне.
+// FixMe: Ещё важнее: после запуска nginx код перестал работать, как задумывалось.
+// FixMe: UPD: На ubuntu проблем нет ни с nginx, ни с ngrok...
 window.history.pushState(null, "", window.location.href);
 window.onpopstate = function() {
     window.history.pushState(null, "", window.location.href);
