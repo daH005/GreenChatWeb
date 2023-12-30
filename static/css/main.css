@@ -169,8 +169,12 @@
     max-width: 500px;
 }
 
+.chat .chat__message a {
+    color: deeppink;
+}
+
 .chat .chat__message a:hover {
-    color: var(--main-color);
+    text-decoration: underline;
 }
 
 .chat .chat__message.chat__message--self {
