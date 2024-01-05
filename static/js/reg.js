@@ -6,25 +6,22 @@ import { requestRegistration,
          requestCheckEmailCode,
        } from "./_http.js";
 
-// Текущий этап регистрации.
 var curStep = 0;
 
-// Ключевые элементы страницы:
 const regCarouselEl = document.getElementById("js-reg-carousel");
-// Основные элементы с данными для регистрации:
+
 const firstNameInputEl = document.getElementById("js-first-name");
 const lastNameInputEl = document.getElementById("js-last-name");
 const usernameInputEl = document.getElementById("js-username");
 const passwordInputEl = document.getElementById("js-password");
 const passwordConfirmInputEl = document.getElementById("js-password-confirm");
 const emailInputEl = document.getElementById("js-email");
-// Элементы для подтверждения почты.
+
 const sendMailButtonEl = document.getElementById("js-send-mail");
 const mailCodeEl = document.getElementById("js-mail-code");
-// Создание аккаунта.
+
 const createAccountButtonEl = document.getElementById("js-create-account");
 
-// Возвращение на предыдущие шаги:
 const backButtons = document.querySelectorAll(".js-back");
 backButtons.forEach((el) => {
     el.onclick = () => {
@@ -33,11 +30,9 @@ backButtons.forEach((el) => {
     }
 });
 
-// Переход на следующие шаги:
 const nextButtons = document.querySelectorAll(".js-next");
 nextButtons.forEach((el) => {
     el.onclick = async () => {
-        // Проверка введённых данных. В частности на непустоту.
         if (curStep == 0) {
             if (!firstNameInputEl.value) {
                 alert("Введите имя!");
@@ -52,7 +47,6 @@ nextButtons.forEach((el) => {
                 alert("Введите логин!");
                 return;
             } else {
-                // Проверяем занятость логина.
                 let flagData = await requestCheckUsername(usernameInputEl.value);
                 if (flagData.isAlreadyTaken) {
                     alert("Логин уже занят!");
@@ -68,20 +62,17 @@ nextButtons.forEach((el) => {
                 return;
             }
         }
-        // После успешно пройденных проверок мы можем перейти на следующий шаг.
         curStep += 1;
         setCarouselStep(curStep);
     }
 });
 
-// Отправка письма с кодом на почту:
 sendMailButtonEl.onclick = async () => {
     await checkEmail();
     requestSendEmailCode(emailInputEl.value);
     alert("Код успешно отправлен!");
 }
 
-// Отправляет регистрационные данные API и в случае получения токена, сохраняет его, после чего перенаправляет на главную.
 createAccountButtonEl.onclick = async () => {
     checkEmail();
     let flagData = await requestCheckEmailCode(mailCodeEl.value);
@@ -89,20 +80,17 @@ createAccountButtonEl.onclick = async () => {
         alert("Код подтверждения неверный!");
         return;
     }
-    // Все данные проверены. Пробуем отправить запрос на регистрацию.
-    let data = await requestRegistration(
-        firstNameInputEl.value,
-        lastNameInputEl.value,
-        usernameInputEl.value,
-        passwordInputEl.value,
-        emailInputEl.value,
-        mailCodeEl.value,
-    );
-    // Вызывается исключение в случае плохого ответа, поэтому нулевой токен сохранён не будет.
+    let data = await requestRegistration({
+        firstName: firstNameInputEl.value,
+        lastName: lastNameInputEl.value,
+        username: usernameInputEl.value,
+        password: passwordInputEl.value,
+        email: emailInputEl.value,
+        code: mailCodeEl.value,
+    });
     saveJWTTokenAndRedirect(data.JWTToken);
 }
 
-// Проверка почты на пустоту и занятость:
 async function checkEmail() {
     if (!emailInputEl.value) {
         alert("Введите почту!");
@@ -116,7 +104,6 @@ async function checkEmail() {
     }
 }
 
-// Прокручивает страницу на заданный шаг регистрации.
 function setCarouselStep(step) {
     console.log("Текущий шаг -", step);
     let transformValue = "translateY(-" + step * 100 + "%);";

@@ -1,4 +1,3 @@
-// Перечисление номеров месяцев и их кратких наименований.
 const MONTHS_LABELS = {
     1: "янв",
     2: "фев",
@@ -14,7 +13,6 @@ const MONTHS_LABELS = {
     12: "дек",
 }
 
-// Устанавливает для объекта `Date` часовой пояс клиента.
 export function normalizeDateTimezone(date) {
     date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
 }
@@ -39,7 +37,7 @@ export function dateToTimeStr(date) {
     if (nowDate.toLocaleDateString() == date.toLocaleDateString()) {
         return timeStr;
     }
-    // Определяем добавление даты в скобках:
+
     let yesterdayDate = new Date();
     yesterdayDate.setDate(yesterdayDate.getDate() - 1);
     if (yesterdayDate.toLocaleDateString() == date.toLocaleDateString()) {
