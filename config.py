@@ -9,9 +9,8 @@ __all__ = (
 )
 
 load_dotenv()
-# Флаг для режима тестирования.
+
 DEBUG: Final[bool] = False if environ['DEBUG'].lower() == 'false' else bool(environ['DEBUG'])
-# Хост, на котором работает сайт.
+
 HOST: Final[str] = environ['HOST']
-# Порт для подключения к сайту.
 PORT: Final[int] = int(environ['PORT'])
