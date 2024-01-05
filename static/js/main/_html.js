@@ -126,8 +126,6 @@ export function displayUserChats(data) {
 
 // Отображает все недостающие сообщения (историю) в чате.
 export function displayChatHistory(chat) {
-    // Переворачиваем массив для корректного отображения сообщений через `.prepend(...)`.
-    chat.messages.reverse();
     for (let index in chat.messages) {
         displayChatMessage(chat.messages[index], true);
     }
