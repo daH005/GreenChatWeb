@@ -345,6 +345,7 @@ function hideChat(chatId, showCloser=true) {
 async function searchUserAndSwitchToChat() {
     let userId = Number(searchInputEl.value);
     if (!userId) {
+        alert("Введите нормальное число...");
         return;
     }
     let maybeChatId = interlocutorsChatsIds[userId];
