@@ -334,7 +334,7 @@ export function handleWebSocketMessage(message) {
     // Если сообщение от веб-сокета представляет собой новый чат, то создаём его.
     if (message.type == "newChat") {
         displayChat(message.data);
-        if (message.data.interlocutor.id == newChatUserId) {
+        if (message.data.users.contains(newChatUserId) && !message.data.isGroup) {
             switchToChat(message.data.id);
         }
     // Или если - это обычное сообщение в уже существующий чат. Создаём его.
