@@ -137,10 +137,16 @@ export function displayChatHistory(chat) {
 export function displayChat(chat) {
     // Определяем название чата для текущего клиента.
     // Это может быть общее название беседы, либо имя собеседника.
-    let chatName = chat.name ? chat.name : chat.interlocutor.firstName;
+    let interlocutor = null;
+    for (let index in chat.users) {
+        if (chat.users[index].id != user.id) {
+            interlocutor = chat.users[index];
+        }
+    }
+    let chatName = chat.name ? chat.name : interlocutor.firstName;
     // Записываем сопоставление для возможности поиска ID чата по ID пользователя.
-    if (chat.interlocutor) {
-        interlocutorsChatsIds[chat.interlocutor.id] = chat.id;
+    if (interlocutor) {
+        interlocutorsChatsIds[interlocutor.id] = chat.id;
     }
 
     // Создаём корневой элемент чата.
@@ -334,8 +340,13 @@ export function handleWebSocketMessage(message) {
     // Если сообщение от веб-сокета представляет собой новый чат, то создаём его.
     if (message.type == "newChat") {
         displayChat(message.data);
-        if (message.data.users.contains(newChatUserId) && !message.data.isGroup) {
-            switchToChat(message.data.id);
+        if (!message.data.isGroup) {
+            for (let index in message.data.users) {
+                if (message.data.users[index].id == newChatUserId) {
+                    switchToChat(message.data.id);
+                    break;
+                }
+            }
         }
     // Или если - это обычное сообщение в уже существующий чат. Создаём его.
     } else if (message.type == "newChatMessage") {
