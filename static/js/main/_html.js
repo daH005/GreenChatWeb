@@ -306,7 +306,7 @@ export function sendMessageToWebSocket(inputEl) {
             message.data.chatId = openedChatId;
         }
 
-        websocket.sendMessage(message);
+        websocket.sendJSON(message);
 
         inputEl.value = "";
         inputEl.style.height = "50px";
