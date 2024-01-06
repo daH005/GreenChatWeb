@@ -4,12 +4,12 @@ from flask import (  # pip install flask
 )
 from http import HTTPMethod
 
-from config import (
+from web.config import (
     DEBUG,
     HOST,
     PORT,
 )
-from endpoints import EndpointName, Url, TemplateName
+from web.endpoints import EndpointName, Url, TemplateName
 
 app: Flask = Flask(__name__)
 
