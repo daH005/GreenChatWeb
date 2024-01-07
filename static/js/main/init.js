@@ -5,20 +5,16 @@ import { requestUserInfo, requestUserChats, requestNewJWTToken } from "../_http.
 import { startWebSocket } from "./_websocket.js";
 import { displayUserInfo, displayUserChats, handleWebSocketMessage } from "./_html.js";
 
-// FixMe: Ещё важнее: после запуска nginx код перестал работать, как задумывалось.
-// Важно: запрещает переход вперёд-назад по истории браузера (а точнее вкладки).
-// Работает, как на ПК, так и на телефоне.
 window.history.pushState(null, "", window.location.href);
 window.onpopstate = function() {
     window.history.pushState(null, "", window.location.href);
 }
 
-// Если в `localStorage` совсем нет токена, то сразу же перенаправляемся на страницу авторизации.
-if (["undefined", "null", undefined, null].includes(getJWTToken())) {  // Не опечатка. Из `localStorage`, как показал опыт, может вернуться именно строка, а не обычный undefined.
+// Не опечатка. Из `localStorage`, как показал опыт, может вернуться именно строка, а не обычный undefined.
+if (["undefined", "null", undefined, null].includes(getJWTToken())) {
     redirectToLoginPage();
 }
 
-// Периодическое обновление JWT-токена.
 setInterval(async () => {
     let data = await requestNewJWTToken();
     saveJWTToken(data.JWTToken);

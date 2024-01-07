@@ -13,11 +13,11 @@ import { BASE_HEADERS,
 import { redirectToLoginPage } from "./_redirects.js";
 import { makeAuthHeaders } from "./_auth_tools.js";
 
-// Отправляет запрос на регистрацию нового аккаунта. Возвращает объект {JWTToken}.
-export async function requestRegistration(firstName, lastName, username, password, email, code) {
+// Returns - {JWTToken}.
+export async function requestRegistration(data) {
     let response = await fetch(HTTP_REG_URL, {
         method: "POST",
-        body: JSON.stringify({firstName, lastName, username, password, email, code}),
+        body: JSON.stringify(data),
         headers: BASE_HEADERS,
     });
     if (response.ok) {
@@ -28,7 +28,7 @@ export async function requestRegistration(firstName, lastName, username, passwor
     }
 }
 
-// Отправляет запрос на проверку занятости логина. Возвращает объект {isAlreadyTaken}.
+// Returns - {isAlreadyTaken}.
 export async function requestCheckUsername(username) {
     let queryParamsStr = "?" + new URLSearchParams({
         username
@@ -44,7 +44,7 @@ export async function requestCheckUsername(username) {
     }
 }
 
-// Отправляет запрос на проверку занятости почты. Возвращает объект {isAlreadyTaken}.
+// Returns - {isAlreadyTaken}.
 export async function requestCheckEmail(email) {
     let queryParamsStr = "?" + new URLSearchParams({
         email
@@ -60,7 +60,7 @@ export async function requestCheckEmail(email) {
     }
 }
 
-// Отправляет запрос на отправку кода подтверждения почты. Возвращает объект {status}.
+// Returns - {status}.
 export async function requestSendEmailCode(email) {
     let response = await fetch(HTTP_SEND_EMAIL_CODE_URL, {
         method: "POST",
@@ -74,7 +74,7 @@ export async function requestSendEmailCode(email) {
     }
 }
 
-// Отправляет запрос на проверку кода подтверждения почты. Возвращает объект {codeIsValid}.
+// Returns - {codeIsValid}.
 export async function requestCheckEmailCode(code) {
     let response = await fetch(HTTP_CHECK_EMAIL_CODE_URL, {
         method: "POST",
@@ -88,11 +88,11 @@ export async function requestCheckEmailCode(code) {
     }
 }
 
-// Отправляет запрос авторизации. Возвращает объект {JWTToken}.
-export async function requestAuthByUsernameAndPassword(username, password) {
+// Returns - {JWTToken}.
+export async function requestAuthByUsernameAndPassword(data) {
     let response = await fetch(HTTP_AUTH_URL, {
         method: "POST",
-        body: JSON.stringify({username, password}),
+        body: JSON.stringify(data),
         headers: BASE_HEADERS,
     });
     if (response.ok) {
@@ -103,10 +103,7 @@ export async function requestAuthByUsernameAndPassword(username, password) {
     }
 }
 
-// Запрашивает у сервера информацию о пользователе (о текущем по токену либо о другом по ID).
-// При `id` = null выдаёт расширенную информацию о текущем пользователе.
-// Иначе - урезанную информацию о пользователе с заданным ID.
-// Ожидается объект {id, firstName, lastName, ?username, ?email}.
+// Returns - {id, firstName, lastName, ?username, ?email}.
 export async function requestUserInfo(id=null) {
     let url = HTTP_USER_INFO_URL;
     if (id) {
@@ -123,12 +120,12 @@ export async function requestUserInfo(id=null) {
     } else if (response.status == 401) {
         redirectToLoginPage();
     } else {
+        alert("Пользователь с таким ID не найден!");
         throw Error();
     }
 }
 
-// Запрашивает все чаты, в которых состоит текущий пользователь. Ожидается объект формата:
-// {chats: [{id, ?name, ?interlocutor: {...}, lastMessage: {id, chatId, user: {...}, text, creatingDatetime}}, ...]}.
+// Returns - {chats: [{id, name, isGroup, lastMessage, users}, ...]}.
 export async function requestUserChats() {
     let response = await fetch(HTTP_USER_CHATS_URL, {
         method: "GET",
@@ -143,10 +140,7 @@ export async function requestUserChats() {
     }
 }
 
-// Запрашивает историю конкретного чата (пользователь обязательно должен в нём состоять!).
-// Поскольку часть сообщений может быть уже загружена по веб-сокету, то был определён параметр `offsetFromEnd`.
-// Ожидается объект формата:
-// {messages: [{id, chatId, user: {...}, text, creatingDatetime}, ...]}.
+// Returns - {messages: [{id, chatId, text, creatingDatetime, user}, ...]}.
 export async function requestChatHistory(chatId, offsetFromEnd=null) {
     let queryParamsStr = "?" + new URLSearchParams({
         offsetFromEnd
@@ -164,8 +158,7 @@ export async function requestChatHistory(chatId, offsetFromEnd=null) {
     }
 }
 
-// Запрашивает у сервера новый JWT-токен для продления срока доступа.
-// Ожидается объект {JWTToken}.
+// Returns - {JWTToken}.
 export async function requestNewJWTToken() {
     let response = await fetch(HTTP_REFRESH_TOKEN_URL, {
         method: "POST",

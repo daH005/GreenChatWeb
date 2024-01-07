@@ -11,6 +11,7 @@
     background: var(--main-color);
     display: flex;
     flex-direction: column;
+    overflow-x: hidden;
 }
 
 .sidebar .sidebar__title {
@@ -39,6 +40,7 @@
 
 .sidebar .sidebar__links {
     overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .chat-link {
@@ -167,6 +169,14 @@
     max-width: 500px;
 }
 
+.chat .chat__message a {
+    color: deeppink;
+}
+
+.chat .chat__message a:hover {
+    text-decoration: underline;
+}
+
 .chat .chat__message.chat__message--self {
     margin-left: auto;
 }
@@ -184,6 +194,7 @@
 }
 
 .chat .chat__message .chat__message__text {
+    white-space: pre-line;
     background: white;
     padding: 20px;
     width: fit-content;
@@ -219,6 +230,13 @@
     padding: 0.5vw 5vw;
     width: 100%;
     box-sizing: border-box;
+}
+
+.chat__input-container textarea {
+    height: 50px;
+    min-height: 50px;
+    max-height: 100px;
+    resize: none;
 }
 
 @media only screen and (max-width: 700px), only screen and

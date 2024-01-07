@@ -4,31 +4,28 @@ from flask import (  # pip install flask
 )
 from http import HTTPMethod
 
-from config import (
+from web.config import (
     DEBUG,
     HOST,
     PORT,
 )
-from endpoints import EndpointName, Url, TemplateName
+from web.endpoints import EndpointName, Url, TemplateName
 
 app: Flask = Flask(__name__)
 
 
 @app.route(Url.REG, endpoint=EndpointName.REG, methods=[HTTPMethod.GET])
 def reg() -> str:
-    """Страница регистрации."""
     return render_template(TemplateName.REG)
 
 
 @app.route(Url.LOGIN, endpoint=EndpointName.LOGIN, methods=[HTTPMethod.GET])
 def login() -> str:
-    """Страница авторизации."""
     return render_template(TemplateName.LOGIN)
 
 
 @app.route(Url.MAIN, endpoint=EndpointName.MAIN, methods=[HTTPMethod.GET])
 def main() -> str:
-    """Страница мессенджера."""
     return render_template(TemplateName.MAIN)
 
 
