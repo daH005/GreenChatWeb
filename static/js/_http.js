@@ -68,8 +68,10 @@ export async function requestSendEmailCode(email) {
         headers: BASE_HEADERS,
     });
     if (response.ok) {
+        alert("Код успешно отправлен!")
         return await response.json();
     } else {
+        alert("Некорректная почта!")
         throw Error();
     }
 }

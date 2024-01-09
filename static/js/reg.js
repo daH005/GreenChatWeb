@@ -70,7 +70,6 @@ nextButtons.forEach((el) => {
 sendMailButtonEl.onclick = async () => {
     await checkEmail();
     requestSendEmailCode(emailInputEl.value);
-    alert("Код успешно отправлен!");
 }
 
 createAccountButtonEl.onclick = async () => {
