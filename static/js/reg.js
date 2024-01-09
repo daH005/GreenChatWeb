@@ -1,4 +1,4 @@
-import { saveJWTTokenAndRedirect } from "./_auth_tools.js";
+import { saveJWTTokenAndRedirect } from "./_authTools.js";
 import { requestRegistration,
          requestCheckUsername,
          requestCheckEmail,

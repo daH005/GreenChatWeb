@@ -11,7 +11,7 @@ import { BASE_HEADERS,
          HTTP_REFRESH_TOKEN_URL,
        } from "./_config.js";
 import { redirectToLoginPage } from "./_redirects.js";
-import { makeAuthHeaders } from "./_auth_tools.js";
+import { makeAuthHeaders } from "./_authTools.js";
 
 // Returns - {JWTToken}.
 export async function requestRegistration(data) {

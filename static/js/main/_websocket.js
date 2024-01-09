@@ -1,5 +1,5 @@
 import { WEBSOCKET_URL } from "../_config.js";
-import { getJWTToken } from "../_local_storage.js";
+import { getJWTToken } from "../_localStorage.js";
 
 export var websocket;
 

@@ -1,5 +1,5 @@
 import { requestAuthByUsernameAndPassword } from "./_http.js";
-import { saveJWTTokenAndRedirect } from "./_auth_tools.js";
+import { saveJWTTokenAndRedirect } from "./_authTools.js";
 
 const usernameInputEl = document.getElementById("js-username");
 const passwordInputEl = document.getElementById("js-password");

@@ -1,4 +1,4 @@
-import { getJWTToken, saveJWTToken } from "../_local_storage.js";
+import { getJWTToken, saveJWTToken } from "../_localStorage.js";
 import { redirectToLoginPage } from "../_redirects.js";
 import { JWT_TOKEN_REFRESH_INTERVAL_DELAY } from "../_config.js";
 import { requestUserInfo, requestUserChats, requestNewJWTToken } from "../_http.js";
