@@ -11,7 +11,7 @@ import { BASE_HEADERS,
          HTTP_REFRESH_TOKEN_URL,
        } from "./_config.js";
 import { redirectToLoginPage } from "./_redirects.js";
-import { makeAuthHeaders } from "./_auth_tools.js";
+import { makeAuthHeaders } from "./_authTools.js";
 
 // Returns - {JWTToken}.
 export async function requestRegistration(data) {
@@ -68,8 +68,10 @@ export async function requestSendEmailCode(email) {
         headers: BASE_HEADERS,
     });
     if (response.ok) {
+        alert("Код успешно отправлен!")
         return await response.json();
     } else {
+        alert("Некорректная почта!")
         throw Error();
     }
 }

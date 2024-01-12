@@ -1,5 +1,5 @@
 import { dateToTimeStr, dateToDateStr, normalizeDateTimezone }  from "../_datetime.js";
-import { makeHyperlinks } from "../_str_tools.js";
+import { makeHyperlinks } from "../_strTools.js";
 import { requestChatHistory, requestUserInfo } from "../_http.js";
 import { websocket } from "./_websocket.js";
 

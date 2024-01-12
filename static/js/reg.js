@@ -1,4 +1,4 @@
-import { saveJWTTokenAndRedirect } from "./_auth_tools.js";
+import { saveJWTTokenAndRedirect } from "./_authTools.js";
 import { requestRegistration,
          requestCheckUsername,
          requestCheckEmail,
@@ -70,7 +70,6 @@ nextButtons.forEach((el) => {
 sendMailButtonEl.onclick = async () => {
     await checkEmail();
     requestSendEmailCode(emailInputEl.value);
-    alert("Код успешно отправлен!");
 }
 
 createAccountButtonEl.onclick = async () => {

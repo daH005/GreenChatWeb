@@ -1,5 +1,5 @@
 import { BASE_HEADERS } from "./_config.js";
-import { getJWTToken, saveJWTToken } from "./_local_storage.js";
+import { getJWTToken, saveJWTToken } from "./_localStorage.js";
 import { redirectToMainPage } from "./_redirects.js";
 
 export function makeAuthHeaders() {
