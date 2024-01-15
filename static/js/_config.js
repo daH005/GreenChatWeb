@@ -26,7 +26,7 @@ if (!WEBSOCKET_URL) {
     }
     let host = window.location.host;
     let port = window.location.port;
-    WEBSOCKET_URL = protocol + "//" + host + ":" + port + WEBSOCKET_URL;
+    WEBSOCKET_URL = protocol + "://" + host + WEBSOCKET_URL;
 }
 console.log("WEBSOCKET_URL -", WEBSOCKET_URL);
 
