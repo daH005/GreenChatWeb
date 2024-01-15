@@ -19,7 +19,7 @@ if (!WEBSOCKET_URL) {
     WEBSOCKET_URL = "ws://localhost:5180";
 } else {
     let protocol = window.location.protocol;
-    if (protocol == "https") {
+    if (protocol == "https:") {
         protocol = "wss";
     } else {
         protocol = "ws";
