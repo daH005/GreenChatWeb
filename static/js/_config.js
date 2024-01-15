@@ -17,6 +17,16 @@ export const HTTP_CHAT_HISTORY_URL = HTTP_BASE_URL + "/chats/{}/history";
 export var WEBSOCKET_URL = "";  // <- WEBSOCKET_URL
 if (!WEBSOCKET_URL) {
     WEBSOCKET_URL = "ws://localhost:5180";
+} else {
+    let protocol = window.location.protocol;
+    if (protocol == "https") {
+        protocol = "wss";
+    } else {
+        protocol = "ws";
+    }
+    let host = window.location.host;
+    let port = window.location.port;
+    WEBSOCKET_URL = protocol + "//" + host + ":" + port + WEBSOCKET_URL;
 }
 
 export const JWT_TOKEN_LOCAL_STORAGE_KEY = "JWTToken";
