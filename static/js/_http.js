@@ -68,13 +68,13 @@ export async function requestSendEmailCode(email) {
         headers: BASE_HEADERS,
     });
     if (response.ok) {
-        alert("Код успешно отправлен!")
+        alert("Код успешно отправлен!");
         return await response.json();
     } else if (response.status == 409) {
-        alert("Вы не можете отправлять более одного кода в минуту!")
+        alert("Вы не можете отправлять более одного кода в минуту!");
         throw Error();
     } else {
-        alert("Некорректная почта!")
+        alert("Некорректная почта!");
         throw Error();
     }
 }
@@ -91,6 +91,7 @@ export async function requestCheckEmailCode(code) {
     if (response.ok) {
         return await response.json();
     } else {
+        alert("Код не введён!");
         throw Error();
     }
 }
