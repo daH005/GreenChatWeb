@@ -70,6 +70,9 @@ export async function requestSendEmailCode(email) {
     if (response.ok) {
         alert("Код успешно отправлен!")
         return await response.json();
+    } else if (response.status == 409) {
+        alert("Вы не можете отправлять более одного кода в минуту!")
+        throw Error();
     } else {
         alert("Некорректная почта!")
         throw Error();
