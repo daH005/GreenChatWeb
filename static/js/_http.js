@@ -78,9 +78,11 @@ export async function requestSendEmailCode(email) {
 
 // Returns - {codeIsValid}.
 export async function requestCheckEmailCode(code) {
-    let response = await fetch(HTTP_CHECK_EMAIL_CODE_URL, {
-        method: "POST",
-        body: JSON.stringify({code}),
+    let queryParamsStr = "?" + new URLSearchParams({
+        code
+    }).toString();
+    let response = await fetch(HTTP_CHECK_EMAIL_CODE_URL + queryParamsStr, {
+        method: "GET",
         headers: BASE_HEADERS,
     });
     if (response.ok) {
