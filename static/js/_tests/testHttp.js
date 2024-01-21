@@ -253,7 +253,6 @@ function testPositiveMakeRequestingUrlAndOptions() {
     ];
     for (let i in data) {
         let outputData = makeRequestingUrlAndOptions(...data[i][0]);
-        console.log(outputData);
         assertEqualsObjects(outputData, data[i][1]);
     }
 }
