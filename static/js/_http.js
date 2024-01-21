@@ -22,8 +22,8 @@ export function makeRequestingFunc(options) {
             return options.ERROR_FUNCS[response.status]();
         } else if (!(response.status in options.STATUSES_ALERTS)){
             console.log("Неизвестная ошибка...", response.status);
-            throw Error;
         }
+        throw Error;
     }
     request.options = options;  // save for tests!
     return request;
