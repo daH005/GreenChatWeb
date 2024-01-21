@@ -323,7 +323,7 @@ async function switchToChat(chatId) {
     if (!(loadedChats[chatId].fullyLoaded)) {
         loadedChats[chatId].fullyLoaded = true;
         let offsetFromEnd = Object.keys(loadedChats[chatId].messages).length;
-        displayChatHistory(await requestChatHistory(chatId, offsetFromEnd));
+        displayChatHistory(await requestChatHistory({chatId, offsetFromEnd}));
         loadedChats[chatId].chatMessagesEl.scrollTop = loadedChats[chatId].chatMessagesEl.scrollHeight;
     }
 }

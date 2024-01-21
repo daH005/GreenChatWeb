@@ -13,6 +13,77 @@ import { BASE_HEADERS,
 import { redirectToLoginPage } from "./_redirects.js";
 import { makeAuthHeaders } from "./_authTools.js";
 
+export function makeRequestingFunc(options) {
+    async function request(data) {
+        let fetchUrl = options.URL;
+        let fetchOptions = {
+            method: options.METHOD,
+            headers: BASE_HEADERS,
+        }
+
+        if (options.URL_DATA_NAMES) {
+            let curUrlDataName;
+            for (let i in options.URL_DATA_NAMES) {
+                curUrlDataName = options.URL_DATA_NAMES[i];
+                fetchUrl = fetchUrl.replace("{" + curUrlDataName + "}", data[curUrlDataName]);
+            }
+            // don't deleted because rest api ignoring odd json keys
+        }
+        if (options.METHOD == "GET") {
+            let queryParamsStr = "?" + new URLSearchParams(data).toString();
+            fetchUrl += queryParamsStr;
+        } else {
+            fetchOptions.body = data;
+        }
+
+        if (options.IS_AUTH) {
+            fetchOptions.headers = makeAuthHeaders();
+        }
+
+        let response = await fetch(fetchUrl, fetchOptions);
+        if (response.ok) {
+            return await response.json();
+        } else if (response.status in options.ERROR_ALERTS) {
+            alert(options.ERROR_ALERTS[response.status]);
+            throw Error;
+        } else if (response.status in options.ERROR_FUNCS) {
+            options.ERROR_FUNCS[response.status]();
+        } else {
+            console.log("Неизвестная ошибка...", response.status);
+            throw Error;
+        }
+    }
+    return request;
+}
+
+// Returns - {messages: [{id, chatId, text, creatingDatetime, user}, ...]}.
+export const requestChatHistory = makeRequestingFunc({
+    URL: HTTP_CHAT_HISTORY_URL,
+    URL_DATA_NAMES: ["chatId"],
+    METHOD: "GET",
+    IS_AUTH: true,
+    ERROR_FUNCS: {
+        401: redirectToLoginPage,
+    },
+});
+
+//export async function requestChatHistory(chatId, offsetFromEnd=null) {
+//    let queryParamsStr = "?" + new URLSearchParams({
+//        offsetFromEnd
+//    }).toString();
+//    let response = await fetch(HTTP_CHAT_HISTORY_URL.replace("{}", String(chatId)) + queryParamsStr, {
+//        method: "GET",
+//        headers: makeAuthHeaders(),
+//    });
+//    if (response.ok) {
+//        return await response.json();
+//    } else if (response.status == 401) {
+//        redirectToLoginPage();
+//    } else {
+//        throw Error();
+//    }
+//}
+
 // Returns - {JWTToken}.
 export async function requestRegistration(data) {
     let response = await fetch(HTTP_REG_URL, {
@@ -136,24 +207,6 @@ export async function requestUserInfo(id=null) {
 // Returns - {chats: [{id, name, isGroup, lastMessage, users}, ...]}.
 export async function requestUserChats() {
     let response = await fetch(HTTP_USER_CHATS_URL, {
-        method: "GET",
-        headers: makeAuthHeaders(),
-    });
-    if (response.ok) {
-        return await response.json();
-    } else if (response.status == 401) {
-        redirectToLoginPage();
-    } else {
-        throw Error();
-    }
-}
-
-// Returns - {messages: [{id, chatId, text, creatingDatetime, user}, ...]}.
-export async function requestChatHistory(chatId, offsetFromEnd=null) {
-    let queryParamsStr = "?" + new URLSearchParams({
-        offsetFromEnd
-    }).toString();
-    let response = await fetch(HTTP_CHAT_HISTORY_URL.replace("{}", String(chatId)) + queryParamsStr, {
         method: "GET",
         headers: makeAuthHeaders(),
     });
