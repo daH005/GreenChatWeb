@@ -53,6 +53,7 @@ export function makeRequestingFunc(options) {
             throw Error;
         }
     }
+    request.options = options;  // save for tests!
     return request;
 }
 
