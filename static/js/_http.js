@@ -35,7 +35,7 @@ export function makeRequestingFunc(options) {
 }
 
 // required in `options` - {URL, METHOD}
-export function makeRequestingUrlAndOptions(options, data) {
+export function makeRequestingUrlAndOptions(options, data=null) {
     let fetchUrl = options.URL;
     let fetchOptions = {
         method: options.METHOD,
@@ -50,11 +50,14 @@ export function makeRequestingUrlAndOptions(options, data) {
         }
         // don't deleted because rest api ignoring odd json keys
     }
-    if (options.METHOD == "GET") {
-        let queryParamsStr = "?" + new URLSearchParams(data).toString();
-        fetchUrl += queryParamsStr;
-    } else {
-        fetchOptions.body = data;
+
+    if (data) {
+        if (options.METHOD == "GET") {
+            let queryParamsStr = "?" + new URLSearchParams(data).toString();
+            fetchUrl += queryParamsStr;
+        } else {
+            fetchOptions.body = data;
+        }
     }
 
     if (options.IS_AUTH) {
