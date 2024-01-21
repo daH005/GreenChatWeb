@@ -15,30 +15,7 @@ import { makeAuthHeaders } from "./_authTools.js";
 
 export function makeRequestingFunc(options) {
     async function request(data) {
-        let fetchUrl = options.URL;
-        let fetchOptions = {
-            method: options.METHOD,
-            headers: BASE_HEADERS,
-        }
-
-        if (options.URL_DATA_NAMES) {
-            let curUrlDataName;
-            for (let i in options.URL_DATA_NAMES) {
-                curUrlDataName = options.URL_DATA_NAMES[i];
-                fetchUrl = fetchUrl.replace("{" + curUrlDataName + "}", data[curUrlDataName]);
-            }
-            // don't deleted because rest api ignoring odd json keys
-        }
-        if (options.METHOD == "GET") {
-            let queryParamsStr = "?" + new URLSearchParams(data).toString();
-            fetchUrl += queryParamsStr;
-        } else {
-            fetchOptions.body = data;
-        }
-
-        if (options.IS_AUTH) {
-            fetchOptions.headers = makeAuthHeaders();
-        }
+        let [fetchUrl, fetchOptions] = makeRequestingUrlAndOptions(options, data);
 
         let response = await fetch(fetchUrl, fetchOptions);
         if (response.ok) {
@@ -55,6 +32,35 @@ export function makeRequestingFunc(options) {
     }
     request.options = options;  // save for tests!
     return request;
+}
+
+export function makeRequestingUrlAndOptions(options, data) {
+    let fetchUrl = options.URL;
+    let fetchOptions = {
+        method: options.METHOD,
+        headers: BASE_HEADERS,
+    }
+
+    if (options.URL_DATA_NAMES) {
+        let curUrlDataName;
+        for (let i in options.URL_DATA_NAMES) {
+            curUrlDataName = options.URL_DATA_NAMES[i];
+            fetchUrl = fetchUrl.replace("{" + curUrlDataName + "}", data[curUrlDataName]);
+        }
+        // don't deleted because rest api ignoring odd json keys
+    }
+    if (options.METHOD == "GET") {
+        let queryParamsStr = "?" + new URLSearchParams(data).toString();
+        fetchUrl += queryParamsStr;
+    } else {
+        fetchOptions.body = data;
+    }
+
+    if (options.IS_AUTH) {
+        fetchOptions.headers = makeAuthHeaders();
+    }
+
+    return [fetchUrl, fetchOptions];
 }
 
 // Returns - {messages: [{id, chatId, text, creatingDatetime, user}, ...]}.
