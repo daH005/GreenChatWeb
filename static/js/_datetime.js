@@ -17,6 +17,10 @@ export function nowDate() {
     return new Date();
 }
 
+export function setNowDate(newFunc) {
+    nowDate = newFunc;
+}
+
 export function normalizeDateTimezone(date) {
     date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
 }
@@ -37,8 +41,8 @@ export function dateToTimeStr(date) {
         minutesStr = "0" + minutesStr;
     }
     let timeStr = hoursStr + ":" + String(minutesStr);
-    let nowDate = nowDate();
-    if (nowDate.toLocaleDateString() == date.toLocaleDateString()) {
+    let nowDate_ = nowDate();
+    if (nowDate_.toLocaleDateString() == date.toLocaleDateString()) {
         return timeStr;
     }
 
@@ -56,10 +60,10 @@ export function dateToTimeStr(date) {
 // Если год переданной даты != текущему, то к вышеописанному результату конкатенируется ' <год>'.
 // Также: если переданная дата - это сегодняшний день, то возвращается "сегодня",
 // а если день вчерашний, то соответственно "вчера".
-// Функция используется для выставления дат в боковой панели.
+// Функция используется для выставления дат в боковой панели, а также в разделительных чертах.
 export function dateToDateStr(date) {
-    let nowDate = nowDate();
-    if (nowDate.toLocaleDateString() == date.toLocaleDateString()) {
+    let nowDate_ = nowDate();
+    if (nowDate_.toLocaleDateString() == date.toLocaleDateString()) {
         return "сегодня";
     }
     let yesterdayDate = nowDate();
@@ -68,7 +72,7 @@ export function dateToDateStr(date) {
         return "вчера";
     }
     let dateStr = String(date.getDate()) + " " + MONTHS_LABELS[date.getMonth() + 1];
-    if (nowDate.getFullYear() != date.getFullYear()) {
+    if (nowDate_.getFullYear() != date.getFullYear()) {
         dateStr += " " + String(date.getFullYear());
     }
     return dateStr;
