@@ -3,6 +3,11 @@ import { redirectToLoginPage } from "./_redirects.js";
 import { makeAuthHeaders } from "./_authTools.js";
 
 export function makeRequestingFunc(options) {
+    options = {
+        STATUSES_ALERTS: {},
+        ERROR_FUNCS: {},
+        ...options,
+    }
     async function request(data) {
         let [fetchUrl, fetchOptions] = makeRequestingUrlAndOptions(options, data);
 

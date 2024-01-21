@@ -358,7 +358,7 @@ async function searchUserAndSwitchToChat() {
         return;
     }
 
-    let interlocutor = await requestUserInfo(userId);
+    let interlocutor = await requestUserInfo({id: userId});
     hideChat(openedChatId, false);
     newChatUserId = interlocutor.id;
 

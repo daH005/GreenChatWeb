@@ -47,7 +47,7 @@ nextButtons.forEach((el) => {
                 alert("Введите логин!");
                 return;
             } else {
-                let flagData = await requestCheckUsername(usernameInputEl.value);
+                let flagData = await requestCheckUsername({username: usernameInputEl.value});
                 if (flagData.isAlreadyTaken) {
                     alert("Логин уже занят!");
                     return;
@@ -69,12 +69,12 @@ nextButtons.forEach((el) => {
 
 sendMailButtonEl.onclick = async () => {
     await checkEmail();
-    requestSendEmailCode(emailInputEl.value);
+    requestSendEmailCode({email: emailInputEl.value});
 }
 
 createAccountButtonEl.onclick = async () => {
     checkEmail();
-    let flagData = await requestCheckEmailCode(mailCodeEl.value);
+    let flagData = await requestCheckEmailCode({code: mailCodeEl.value});
     if (!flagData.codeIsValid) {
         alert("Код подтверждения неверный!");
         return;
@@ -95,7 +95,7 @@ async function checkEmail() {
         alert("Введите почту!");
         throw Error();  // FixMe: Подумать над лучшей реализацией. Однородной (выше return'ы).
     } else {
-        let flagData = await requestCheckEmail(emailInputEl.value);
+        let flagData = await requestCheckEmail({email: emailInputEl.value});
         if (flagData.isAlreadyTaken) {
             alert("Почта уже занята!");
             throw Error();  // FixMe: Подумать над лучшей реализацией. Однородной (выше return'ы).
