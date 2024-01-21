@@ -7,3 +7,7 @@ export function saveJWTToken(token) {
 export function getJWTToken() {
     return localStorage.getItem(JWT_TOKEN_LOCAL_STORAGE_KEY);  // may be strings - "undefined" / "null".
 }
+
+export function setGetJWTToken(newFunc) {
+    getJWTToken = newFunc;
+}
