@@ -12,7 +12,7 @@ export const HTTP_AUTH_URL = HTTP_BASE_URL + "/user/auth";
 export const HTTP_REFRESH_TOKEN_URL = HTTP_BASE_URL + "/user/refreshToken";
 export const HTTP_USER_INFO_URL = HTTP_BASE_URL + "/user/info";
 export const HTTP_USER_CHATS_URL = HTTP_BASE_URL + "/user/chats";
-export const HTTP_CHAT_HISTORY_URL = HTTP_BASE_URL + "/chats/{}/history";
+export const HTTP_CHAT_HISTORY_URL = HTTP_BASE_URL + "/chats/{chatId}/history";
 
 export var WEBSOCKET_URL = "";  // <- WEBSOCKET_URL
 if (!WEBSOCKET_URL) {
