@@ -13,6 +13,10 @@ const MONTHS_LABELS = {
     12: "дек",
 }
 
+export function nowDate() {
+    return new Date();
+}
+
 export function normalizeDateTimezone(date) {
     date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
 }
@@ -33,12 +37,12 @@ export function dateToTimeStr(date) {
         minutesStr = "0" + minutesStr;
     }
     let timeStr = hoursStr + ":" + String(minutesStr);
-    let nowDate = new Date();
+    let nowDate = nowDate();
     if (nowDate.toLocaleDateString() == date.toLocaleDateString()) {
         return timeStr;
     }
 
-    let yesterdayDate = new Date();
+    let yesterdayDate = nowDate();
     yesterdayDate.setDate(yesterdayDate.getDate() - 1);
     if (yesterdayDate.toLocaleDateString() == date.toLocaleDateString()) {
         timeStr += " (вчера)";
@@ -54,11 +58,11 @@ export function dateToTimeStr(date) {
 // а если день вчерашний, то соответственно "вчера".
 // Функция используется для выставления дат в боковой панели.
 export function dateToDateStr(date) {
-    let nowDate = new Date();
+    let nowDate = nowDate();
     if (nowDate.toLocaleDateString() == date.toLocaleDateString()) {
         return "сегодня";
     }
-    let yesterdayDate = new Date();
+    let yesterdayDate = nowDate();
     yesterdayDate.setDate(yesterdayDate.getDate() - 1);
     if (yesterdayDate.toLocaleDateString() == date.toLocaleDateString()) {
         return "вчера";
