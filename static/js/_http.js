@@ -34,6 +34,7 @@ export function makeRequestingFunc(options) {
     return request;
 }
 
+// required in `options` - {URL, METHOD}
 export function makeRequestingUrlAndOptions(options, data) {
     let fetchUrl = options.URL;
     let fetchOptions = {
