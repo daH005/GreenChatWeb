@@ -25,10 +25,6 @@ export function normalizeDateTimezone(date) {
     date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
 }
 
-// Формирует из объекта `Date` строку формата '<часы>:<минуты>'.
-// Если час или минута < 10, то в их начало добавляется 0.
-// Также если переданная дата - не сегодняшний день, то добавляется подстрока ' (<день> <краткое имя месяца>)' / ' (вчера)'.
-// Функция используется для элементов сообщений.
 export function dateToTimeStr(date) {
     let hours = date.getHours();
     let hoursStr = String(hours);
@@ -56,11 +52,6 @@ export function dateToTimeStr(date) {
     return timeStr;
 }
 
-// Формирует из объекта `Date` строку формата '<день> <краткое имя месяца>'.
-// Если год переданной даты != текущему, то к вышеописанному результату конкатенируется ' <год>'.
-// Также: если переданная дата - это сегодняшний день, то возвращается "сегодня",
-// а если день вчерашний, то соответственно "вчера".
-// Функция используется для выставления дат в боковой панели, а также в разделительных чертах.
 export function dateToDateStr(date) {
     let nowDate_ = nowDate();
     if (nowDate_.toLocaleDateString() == date.toLocaleDateString()) {
