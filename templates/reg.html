@@ -9,6 +9,7 @@
 {% block css %}
 {{ super() }}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/reg.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/password_switch.css') }}">
 {% endblock %}
 
 
@@ -28,8 +29,26 @@
         <div class="inputs-container">
             <button class="js-back">Назад</button>
             <input id="js-username" placeholder="Ваш логин" maxlength="100">
-            <input id="js-password" type="password" placeholder="Ваш пароль" maxlength="50">
-            <input id="js-password-confirm" type="password" placeholder="Повтор пароля" maxlength="50">
+
+            <div class="input-and-inner-button-container js-password-switch">
+                <input id="js-password" class="js-password-switch-input" type="password" placeholder="Ваш пароль" maxlength="50">
+                <button class="js-password-switch-hidden">
+                    <i class="fa fa-eye-slash" aria-hidden="true"></i>
+                </button>
+                <button class="js-password-switch-showed">
+                    <i class="fa fa-eye" aria-hidden="true"></i>
+                </button>
+            </div>
+            <div class="input-and-inner-button-container js-password-switch">
+                <input id="js-password-confirm" class="js-password-switch-input" type="password" placeholder="Повтор пароля" maxlength="50">
+                <button class="js-password-switch-hidden">
+                    <i class="fa fa-eye-slash" aria-hidden="true"></i>
+                </button>
+                <button class="js-password-switch-showed">
+                    <i class="fa fa-eye" aria-hidden="true"></i>
+                </button>
+            </div>
+
             <button class="js-next">Далее</button>
         </div>
     </div>
@@ -50,4 +69,5 @@
 </div>
 
 <script src="{{ url_for('static', filename='js/reg.js') }}" type="module"></script>
+<script src="{{ url_for('static', filename='js/passwordSwitch.js') }}" type="module"></script>
 {% endblock %}
