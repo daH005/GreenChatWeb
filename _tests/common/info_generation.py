@@ -33,7 +33,7 @@ class NewUserInfo(NamedTuple):
     first_name: str = 'Данил'
     last_name: str = 'Шевелёв'
     password: str = 'password123'
-    code: str = '11223344'
+    code: str = '9999'
 
     @classmethod
     def new_and_count(cls, **kwargs) -> NewUserInfo:
