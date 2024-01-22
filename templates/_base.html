@@ -8,25 +8,20 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta http-equiv="content-language" content="ru">
 
-{# Место заголовка страницы. #}
 <title>{% block title %}{% endblock %}</title>
 
-{# Подключение иконок и общих стилей. #}
 <link rel="shortcut icon" href="{{ url_for('static', filename='images/shortcut.jpg') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/font_awesome/css/all.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/scrollbar.css') }}">
 
-{# Место подключения стилей для конкретных страниц. #}
 {% block css %}{% endblock %}
 
 </head>
 <body>
 
-{# Место контента страницы. #}
 <main class="main">{% block main %}{% endblock %}</main>
 
-{# Место подключения JS для конкретной страницы. #}
 {% block js %}{% endblock %}
 
 </body>
