@@ -2,11 +2,16 @@ from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver import Chrome, ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
 from webdriver_manager.core.os_manager import ChromeType
-from typing import Callable
+from typing import Callable, Final
+
+from web.config import HOST, PORT
 
 __all__ = (
+    'WEBSITE_URL',
     'driver',
 )
+
+WEBSITE_URL: Final[str] = f'http://{HOST}:{PORT}'
 
 
 def _make_driver(webdriver_factory: Callable,
