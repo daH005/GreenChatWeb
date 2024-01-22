@@ -14,6 +14,6 @@ WEBSITE_URL: Final[str] = f'http://{host}:{PORT}'
 
 
 class FullUrl(StrEnum):
-    MAIN = WEBSITE_URL + Url.MAIN.rstrip('/')
+    MAIN = WEBSITE_URL + Url.MAIN
     REG = WEBSITE_URL + Url.REG
     LOGIN = WEBSITE_URL + Url.LOGIN
