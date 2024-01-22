@@ -3,6 +3,7 @@
     --dark-green-color: #4F904C;
     --light-green-color: #91D77F;
     --gray-color: #3B3C3E;
+    --red-color: red;
     /* Основные константы дизайна. */
     --main-color: rgb(30, 30, 30);
     --main-2-color: rgb(62, 62, 62);
@@ -56,6 +57,10 @@ button:hover {
 
 input:hover, input:focus, textarea:hover, textarea:focus {
     outline: 2px solid var(--main-3-color);
+}
+
+input.invalid {
+    outline: 2px solid var(--red-color);
 }
 
 h1 {
