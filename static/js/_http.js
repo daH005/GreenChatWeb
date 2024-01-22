@@ -109,7 +109,7 @@ export const requestAuthByUsernameAndPassword = makeRequestingFunc({
     URL: HTTP_ENDPOINTS_URLS.AUTH,
     METHOD: "POST",
     STATUSES_ALERTS: {
-        400: "Неверный логин или пароль!",
+        403: "Неверный логин или пароль!",
     },
 });
 
