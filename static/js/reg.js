@@ -7,6 +7,7 @@ import { requestRegistration,
        } from "./_http.js";
 
 var curStep = 0;
+
 const regCarouselEl = document.getElementById("js-reg-carousel");
 const firstNameInputEl = document.getElementById("js-first-name");
 const lastNameInputEl = document.getElementById("js-last-name");
@@ -16,11 +17,27 @@ const passwordConfirmInputEl = document.getElementById("js-password-confirm");
 const emailInputEl = document.getElementById("js-email");
 const sendMailButtonEl = document.getElementById("js-send-mail");
 const mailCodeEl = document.getElementById("js-mail-code");
-const createAccountButtonEl = document.getElementById("js-create-account");
+
 const backButtons = document.querySelectorAll(".js-back");
 const nextButtons = document.querySelectorAll(".js-next");
+const createAccountButtonEl = document.getElementById("js-create-account");
 
-function setInputAsInvalidAndThrow(inputEl) {
+backButtons.forEach((el) => {
+    el.onclick = () => {
+        moveCarouselStep(-1);
+    }
+});
+
+sendMailButtonEl.onclick = async () => {
+    await checkEmail();
+    await requestSendEmailCode({email: emailInputEl.value});
+    removeInvalidClassForAllInputs();
+}
+
+function setInputAsInvalidAndMessageWithThrow(inputEl, message=null) {
+    if (message) {
+        alert(message);
+    }
     inputEl.classList.add("invalid");
     throw Error;
 }
@@ -42,19 +59,13 @@ function setCarouselStep(step) {
     regCarouselEl.style = "transform: " + transformValue;
 }
 
-backButtons.forEach((el) => {
-    el.onclick = () => {
-        moveCarouselStep(-1);
-    }
-});
-
 nextButtons[0].onclick = () => {
     removeInvalidClassForAllInputs();
     if (!firstNameInputEl.value) {
-        setInputAsInvalidAndThrow(firstNameInputEl);
+        setInputAsInvalidAndMessageWithThrow(firstNameInputEl, "Введите ваше имя!");
     }
     if (!lastNameInputEl.value) {
-        setInputAsInvalidAndThrow(lastNameInputEl);
+        setInputAsInvalidAndMessageWithThrow(lastNameInputEl, "Введите вашу фамилию!");
     }
     moveCarouselStep();
 }
@@ -62,46 +73,34 @@ nextButtons[0].onclick = () => {
 nextButtons[1].onclick = async () => {
     removeInvalidClassForAllInputs();
     if (usernameInputEl.value.length < 5) {
-        alert("Длина логина не должна быть менее 5-ти символов!");
-        setInputAsInvalidAndThrow(usernameInputEl);
+        setInputAsInvalidAndMessageWithThrow(usernameInputEl, "Длина логина не должна быть менее 5-ти символов!");
     } else {
         let flagData = await requestCheckUsername({username: usernameInputEl.value});
         if (flagData.isAlreadyTaken) {
-            alert("Логин уже занят!");
-            setInputAsInvalidAndThrow(usernameInputEl);
+            setInputAsInvalidAndMessageWithThrow(usernameInputEl, "Логин уже занят!");
         }
     }
     if (passwordInputEl.value.length < 10) {
-        alert("Длина пароля не должна быть менее 10-ти символов!");
-        setInputAsInvalidAndThrow(passwordInputEl);
+        setInputAsInvalidAndMessageWithThrow(passwordInputEl, "Длина пароля не должна быть менее 10-ти символов!");
     }
     if (passwordInputEl.value != passwordConfirmInputEl.value) {
-        alert("Пароли не совпадают!");
         try {
-            setInputAsInvalidAndThrow(passwordInputEl);
+            setInputAsInvalidAndMessageWithThrow(passwordInputEl, "Пароли не совпадают!");
         } catch {
-            setInputAsInvalidAndThrow(passwordConfirmInputEl);
+            setInputAsInvalidAndMessageWithThrow(passwordConfirmInputEl);
         }
     }
     moveCarouselStep();
 }
 
-sendMailButtonEl.onclick = async () => {
-    await checkEmail();
-    await requestSendEmailCode({email: emailInputEl.value});
-    removeInvalidClassForAllInputs();
-}
-
 createAccountButtonEl.onclick = async () => {
     await checkEmail();
     if (mailCodeEl.value.length < 4) {
-        alert("Введите 4-х значный код!");
-        setInputAsInvalidAndThrow(mailCodeEl);
+        setInputAsInvalidAndMessageWithThrow(mailCodeEl, "Введите 4-х значный код!");
     }
     let flagData = await requestCheckEmailCode({code: mailCodeEl.value});
     if (!flagData.codeIsValid) {
-        alert("Код подтверждения неверный!");
-        setInputAsInvalidAndThrow(mailCodeEl);
+        setInputAsInvalidAndMessageWithThrow(mailCodeEl, "Код подтверждения неверный!");
     }
     let data = await requestRegistration({
         firstName: firstNameInputEl.value,
@@ -116,13 +115,11 @@ createAccountButtonEl.onclick = async () => {
 
 async function checkEmail() {
     if (!emailInputEl.value.includes("@")) {
-        alert("Введите почту!");
-        setInputAsInvalidAndThrow(emailInputEl);
+        setInputAsInvalidAndMessageWithThrow(emailInputEl, "Введите почту!");
     } else {
         let flagData = await requestCheckEmail({email: emailInputEl.value});
         if (flagData.isAlreadyTaken) {
-            alert("Почта уже занята!");
-            setInputAsInvalidAndThrow(emailInputEl);
+            setInputAsInvalidAndMessageWithThrow(emailInputEl, "Почта уже занята!");
         }
     }
 }
