@@ -18,24 +18,30 @@ WEBSITE_URL: Final[str] = f'http://{HOST}:{PORT}'
 def _make_driver(webdriver_factory: Callable,
                  options_factory: Callable,
                  service_factory: Callable,
-                 driver_manager_factory: Callable,
-                 **driver_manager_kwargs,
+                 webdriver_manager_factory: Callable,
+                 **webdriver_manager_kwargs,
                  ) -> WebDriver:
     options: BaseOptions = options_factory()
 
-    path: str = driver_manager_factory(**driver_manager_kwargs).install()
+    path: str = webdriver_manager_factory(**webdriver_manager_kwargs).install()
     service: Service = service_factory(executable_path=path)
 
     driver_: WebDriver = webdriver_factory(options=options, service=service)
     return driver_
 
 
+def _make_chrome_options() -> ChromeOptions:
+    options: ChromeOptions = ChromeOptions()
+    options.add_argument('--remote-debugging-port=9222')  # ToDo: check on windows
+    return options
+
+
 _chromium_driver: Chrome = _make_driver(
     webdriver_factory=Chrome,
-    options_factory=ChromeOptions,
+    options_factory=_make_chrome_options,
     service_factory=ChromeService,
-    driver_manager_factory=ChromeDriverManager,
-    chrome_type=ChromeType.CHROMIUM
+    webdriver_manager_factory=ChromeDriverManager,
+    chrome_type=ChromeType.CHROMIUM,
 )
 
 driver = _chromium_driver
