@@ -90,8 +90,6 @@ export const requestSendEmailCode = makeRequestingFunc({
     STATUSES_ALERTS: {
         200: "Код успешно отправлен!",
         409: "Вы не можете отправлять более одного кода в минуту!",
-        403: "Почта уже занята!",
-        400: "Некорректная почта!",
     },
 });
 
@@ -99,9 +97,6 @@ export const requestSendEmailCode = makeRequestingFunc({
 export const requestCheckEmailCode = makeRequestingFunc({
     URL: HTTP_ENDPOINTS_URLS.CHECK_EMAIL_CODE,
     METHOD: "GET",
-    STATUSES_ALERTS: {
-        400: "Код не введён!",
-    }
 });
 
 // Returns - {JWTToken}
