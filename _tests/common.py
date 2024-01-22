@@ -4,16 +4,25 @@ from selenium.webdriver import Chrome, ChromeService, ChromeOptions
 from webdriver_manager.chrome import ChromeDriverManager
 from webdriver_manager.core.os_manager import ChromeType
 from typing import Callable, Final
+from enum import StrEnum
 
 from web.config import HOST, PORT
+from web.endpoints import Url
 
 __all__ = (
     'WEBSITE_URL',
+    'FullUrl',
     'driver',
 )
 
 host: str = HOST.replace('0.0.0.0', 'localhost')
 WEBSITE_URL: Final[str] = f'http://{host}:{PORT}'
+
+
+class FullUrl(StrEnum):
+    MAIN = WEBSITE_URL + Url.MAIN
+    REG = WEBSITE_URL + Url.REG
+    LOGIN = WEBSITE_URL + Url.LOGIN
 
 
 def _make_driver(webdriver_factory: Callable,
