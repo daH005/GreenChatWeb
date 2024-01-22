@@ -1,7 +1,9 @@
+import { OUR_ENDPOINTS_URLS } from "./_config.js";
+
 export function redirectToLoginPage() {
-    window.location.href = "/login";
+    window.location.href = OUR_ENDPOINTS_URLS.LOGIN;
 }
 
 export function redirectToMainPage() {
-    window.location.href = "/";
+    window.location.href = OUR_ENDPOINTS_URLS.MAIN;
 }

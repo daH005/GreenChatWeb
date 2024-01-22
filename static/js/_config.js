@@ -1,3 +1,9 @@
+export const OUR_ENDPOINTS_URLS = {
+    MAIN: "/",
+    LOGIN: "/login",
+    REG: "/reg",
+}
+
 export var HTTP_BASE_URL = "";  // <- HTTP_API_URL
 if (!HTTP_BASE_URL) {
     HTTP_BASE_URL = "http://localhost:5181";
