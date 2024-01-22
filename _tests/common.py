@@ -12,7 +12,8 @@ __all__ = (
     'driver',
 )
 
-WEBSITE_URL: Final[str] = f'http://{HOST}:{PORT}'
+host: str = HOST.replace('0.0.0.0', 'localhost')
+WEBSITE_URL: Final[str] = f'http://{host}:{PORT}'
 
 
 def _make_driver(webdriver_factory: Callable,
