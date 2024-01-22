@@ -11,7 +11,5 @@ buttonEl.onclick = async () => {
     if (username && password) {
         let data = await requestAuthByUsernameAndPassword({username, password});
         saveJWTTokenAndRedirect(data.JWTToken);
-    } else {
-        alert("Логин или пароль пусты!...");
     }
 }
