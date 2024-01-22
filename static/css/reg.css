@@ -2,3 +2,8 @@
     height: 100vh;
     transition: 0.3s;
 }
+
+.hint {
+    color: white;
+    padding-bottom: 5px;
+}
