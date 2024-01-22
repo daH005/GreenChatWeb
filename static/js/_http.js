@@ -51,7 +51,7 @@ export function makeRequestingUrlAndOptions(options, data=null) {
             let queryParamsStr = "?" + new URLSearchParams(data).toString();
             fetchUrl += queryParamsStr;
         } else {
-            fetchOptions.body = data;
+            fetchOptions.body = JSON.stringify(data);
         }
     }
 

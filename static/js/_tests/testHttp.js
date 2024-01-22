@@ -41,14 +41,14 @@ function testPositiveMakeRequestingUrlAndOptions() {
                     headers: {
                         "Content-Type": "application/json",
                     },
-                    body: {
+                    body: JSON.stringify({
                         username: "dan005",
                         password: "Mypass",
                         firstName: "Danil",
                         lastName: "Shevelev",
                         email: "email.123@mail.ru",
                         code: 5150,
-                    }
+                    })
                 }
             ]
         ],
@@ -106,9 +106,9 @@ function testPositiveMakeRequestingUrlAndOptions() {
                     headers: {
                         "Content-Type": "application/json",
                     },
-                    body: {
+                    body: JSON.stringify({
                         code: 5150,
-                    }
+                    })
                 }
             ]
         ],
@@ -148,10 +148,10 @@ function testPositiveMakeRequestingUrlAndOptions() {
                     headers: {
                         "Content-Type": "application/json",
                     },
-                    body: {
+                    body: JSON.stringify({
                         username: "dan005",
                         password: "Mypass",
-                    }
+                    })
                 }
             ]
         ],
