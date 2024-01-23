@@ -17,11 +17,6 @@ const searchButtonEl = document.getElementById("js-search-button");
 searchButtonEl.onclick = () => {
     searchUserAndSwitchToChat();
 }
-document.addEventListener("keypress", function(event) {
-    if (event.key == "Enter" && document.activeElement == searchInputEl) {
-        searchUserAndSwitchToChat();
-    }
-});
 
 const newChatEl = document.getElementById("js-new-chat");
 const newChatBackLinkEl = document.getElementById("js-new-chat-back-link");
@@ -34,38 +29,6 @@ const newChatButtonEl = document.getElementById("js-new-chat-button");
 newChatButtonEl.onclick = () => {
     sendMessageToWebSocket(newChatInputEl);
 }
-
-// Отслеживает зажатие клавиши Shift. Необходимо при отправке на Enter: если зажат Shift, то отправлять ни в коем случае не нужно,
-// поскольку этими клавишами пользователь делает перенос.
-var shiftIsDown = false;
-document.addEventListener("keydown", (event) => {
-    if (event.key == "Shift") {
-        shiftIsDown = true;
-    }
-});
-document.addEventListener("keyup", (event) => {
-    if (event.key == "Shift") {
-        shiftIsDown = false;
-    }
-});
-
-// Отправка сообщения при нажатии Enter (Важно: отправки не будет, если зажат Shift!).
-// Работает для всех textarea на странице, поскольку решено, что textarea - элемент чисто для ввода сообщений.
-// FixMe: Я думаю стоит добавить CSS-класс.
-document.addEventListener("keypress", (event) => {
-    if (event.key == "Enter" && !shiftIsDown && document.activeElement.tagName == "TEXTAREA") {
-	    sendMessageToWebSocket(document.activeElement);
-        event.preventDefault();
-    }
-});
-
-// Увеличивает высоту выбранного в данный момент textarea при добавлении переносов строк.
-// Ограничивается стилем max-height.
-document.addEventListener("keypress", (event) => {
-    if (event.key == "Enter" && shiftIsDown && document.activeElement.tagName == "TEXTAREA") {
-        document.activeElement.style.height = document.activeElement.scrollHeight + "px";
-    }
-});
 
 // Шаблоны создаваемых элементов:
 const chatLinkTempEl = document.getElementById("js-chat-link-temp");

@@ -21,9 +21,9 @@ GreenChat
             <div class="sidebar__id" id="js-user-id">ID: ...</div>
         </div>
         <div class="sidebar__search">
-            <div class="input-and-inner-button-container">
-                <input id="js-search-input" placeholder="Введите ID..." maxlength="100">
-                <button id="js-search-button">
+            <div class="input-and-inner-button-container js-click-by-press-enter">
+                <input id="js-search-input" class="js-click-by-press-enter-input" placeholder="Введите ID..." maxlength="100">
+                <button id="js-search-button" class="js-click-by-press-enter-button">
                     <i class="fa fa-search" aria-hidden="true"></i>
                 </button>
             </div>
@@ -49,9 +49,12 @@ GreenChat
                 </div>
 
                 <div class="chat__input-container">
-                    <div class="input-and-inner-button-container">
-			            <textarea placeholder="Ваше первое сообщение?..." id="js-new-chat-input" maxlength="10000"></textarea>
-                        <button id="js-new-chat-button">
+                    <div class="input-and-inner-button-container js-click-by-press-enter">
+			            <textarea id="js-new-chat-input"
+                                  class="js-click-by-press-enter-input"
+                                  placeholder="Ваше первое сообщение?..."
+                                  maxlength="10000"></textarea>
+                        <button id="js-new-chat-button" class="js-click-by-press-enter-button">
                             <i class="fa fa-play"></i>
                         </button>
                     </div>
@@ -88,9 +91,9 @@ GreenChat
         <div class="chat__messages"></div>
 
         <div class="chat__input-container">
-            <div class="input-and-inner-button-container">
-		        <textarea placeholder="Что же написать..." maxlength="10000"></textarea>
-                <button>
+            <div class="input-and-inner-button-container js-click-by-press-enter">
+		        <textarea class="js-click-by-press-enter-input" placeholder="Что же написать..." maxlength="10000"></textarea>
+                <button class="js-click-by-press-enter-button">
                     <i class="fa fa-play"></i>
                 </button>
             </div>
@@ -117,6 +120,8 @@ GreenChat
 
 
 {% block js %}
+<script src="{{ url_for('static', filename='js/textareaIncrease.js') }}" type="module"></script>
+<script src="{{ url_for('static', filename='js/clickByPressEnter.js') }}" type="module"></script>
 <script src="{{ url_for('static', filename='js/disableBackReferrer.js') }}" type="module"></script>
 <script src="{{ url_for('static', filename='js/main/init.js') }}" type="module"></script>
 {% endblock %}
