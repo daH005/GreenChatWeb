@@ -5,6 +5,7 @@ import { requestRegistration,
          requestSendEmailCode,
          requestCheckEmailCode,
        } from "./_http.js";
+import { setInputAsInvalidAndMessageWithThrow, removeInvalidClassForAllInputs } from "./_common.js";
 
 var curStep = 0;
 
@@ -32,20 +33,6 @@ sendMailButtonEl.onclick = async () => {
     await checkEmail();
     await requestSendEmailCode({email: emailInputEl.value});
     removeInvalidClassForAllInputs();
-}
-
-function setInputAsInvalidAndMessageWithThrow(inputEl, message=null) {
-    if (message) {
-        alert(message);
-    }
-    inputEl.classList.add("invalid");
-    throw Error;
-}
-
-function removeInvalidClassForAllInputs() {
-    document.querySelectorAll("input").forEach((el) => {
-        el.classList.remove("invalid");
-    });
 }
 
 function moveCarouselStep(dir=1) {
