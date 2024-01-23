@@ -1,5 +1,3 @@
-import { notify } from "./_notification.js";
-
 export function setInputAsInvalidAndMessageWithThrow(inputEl, message=null) {
     if (message) {
         notify(message);

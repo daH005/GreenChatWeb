@@ -1,6 +1,6 @@
 const notificationEl = document.getElementById("notification");
 
-export function notify(text) {
+function notify(text) {
     notificationEl.textContent = text;
     setTimeout(() => {
         notificationEl.textContent = "";

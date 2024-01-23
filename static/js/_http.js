@@ -1,7 +1,6 @@
 import { BASE_HEADERS, HTTP_ENDPOINTS_URLS } from "./_config.js";
 import { redirectToLoginPage } from "./_redirects.js";
 import { makeAuthHeaders } from "./_authTools.js";
-import { notify } from "./_notification.js";
 
 export function makeRequestingFunc(options) {
     options = {
