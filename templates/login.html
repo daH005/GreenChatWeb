@@ -9,6 +9,7 @@
 {% block css %}
 {{ super() }}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/password_switch.css') }}">
 {% endblock %}
 
 
@@ -17,11 +18,14 @@
 <div class="central-container">
     <div class="inputs-container">
         <h1 align="center">GreenChat</h1>
-        <input id="js-username" name="username" type="text" placeholder="Логин">
-        <div class="input-and-inner-button-container">
-            <input id="js-password" name="password" type="password" placeholder="Пароль">
-            <button id="js-password-switch">
+        <input id="js-username" name="username" type="text" placeholder="Логин" maxlength="100">
+        <div class="input-and-inner-button-container js-password-switch">
+            <input id="js-password" class="js-password-switch-input" name="password" type="password" placeholder="Пароль" maxlength="50">
+            <button class="js-password-switch-hidden">
                 <i class="fa fa-eye-slash" aria-hidden="true"></i>
+            </button>
+            <button class="js-password-switch-showed">
+                <i class="fa fa-eye" aria-hidden="true"></i>
             </button>
         </div>
         <button id="js-button">Войти</button>
@@ -30,4 +34,5 @@
 </div>
 
 <script src="{{ url_for('static', filename='js/login.js') }}" type="module"></script>
+<script src="{{ url_for('static', filename='js/passwordSwitch.js') }}" type="module"></script>
 {% endblock %}

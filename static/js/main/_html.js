@@ -1,5 +1,6 @@
 import { dateToTimeStr, dateToDateStr, normalizeDateTimezone }  from "../_datetime.js";
 import { makeHyperlinks } from "../_strTools.js";
+import { setInputAsInvalidAndMessageWithThrow, removeInvalidClassForAllInputs } from "../_common.js";
 import { requestChatHistory, requestUserInfo } from "../_http.js";
 import { websocket } from "./_websocket.js";
 
@@ -17,11 +18,6 @@ const searchButtonEl = document.getElementById("js-search-button");
 searchButtonEl.onclick = () => {
     searchUserAndSwitchToChat();
 }
-document.addEventListener("keypress", function(event) {
-    if (event.key == "Enter" && document.activeElement == searchInputEl) {
-        searchUserAndSwitchToChat();
-    }
-});
 
 const newChatEl = document.getElementById("js-new-chat");
 const newChatBackLinkEl = document.getElementById("js-new-chat-back-link");
@@ -32,57 +28,44 @@ const newChatNameEl = document.getElementById("js-new-chat-name");
 const newChatInputEl = document.getElementById("js-new-chat-input");
 const newChatButtonEl = document.getElementById("js-new-chat-button");
 newChatButtonEl.onclick = () => {
-    sendMessageToWebSocket(newChatInputEl);
+    sendMessageToWebSocketAndClearInput({
+        type: "newChat",
+        data: {
+            text: newChatInputEl.value,
+            usersIds: [user.id, newChatUserId],
+        }
+    }, newChatInputEl);
 }
 
-// Отслеживает зажатие клавиши Shift. Необходимо при отправке на Enter: если зажат Shift, то отправлять ни в коем случае не нужно,
-// поскольку этими клавишами пользователь делает перенос.
-var shiftIsDown = false;
-document.addEventListener("keydown", (event) => {
-    if (event.key == "Shift") {
-        shiftIsDown = true;
-    }
-});
-document.addEventListener("keyup", (event) => {
-    if (event.key == "Shift") {
-        shiftIsDown = false;
-    }
-});
-
-// Отправка сообщения при нажатии Enter (Важно: отправки не будет, если зажат Shift!).
-// Работает для всех textarea на странице, поскольку решено, что textarea - элемент чисто для ввода сообщений.
-// FixMe: Я думаю стоит добавить CSS-класс.
-document.addEventListener("keypress", (event) => {
-    if (event.key == "Enter" && !shiftIsDown && document.activeElement.tagName == "TEXTAREA") {
-	    sendMessageToWebSocket(document.activeElement);
-        event.preventDefault();
-    }
-});
-
-// Увеличивает высоту выбранного в данный момент textarea при добавлении переносов строк.
-// Ограничивается стилем max-height.
-document.addEventListener("keypress", (event) => {
-    if (event.key == "Enter" && shiftIsDown && document.activeElement.tagName == "TEXTAREA") {
-        document.activeElement.style.height = document.activeElement.scrollHeight + "px";
-    }
-});
-
-// Шаблоны создаваемых элементов:
 const chatLinkTempEl = document.getElementById("js-chat-link-temp");
 const chatTempEl = document.getElementById("js-chat-temp");
 const chatMessageTempEl = document.getElementById("js-chat-message-temp");
 const chatDateSepTempEl = document.getElementById("js-chat-date-sep-temp");
 
-// Объект, в котором ключи - ID чатов, а значения - вложенные объекты,
-// хранящие html-элементы, а также другие важные данные по типу объектов сообщений.
+export const newDataHandlers = {
+    "newChat": (data) => {
+        displayChat(data);
+        if (!data.isGroup) {
+            for (let index in data.users) {
+                if (data.users[index].id == newChatUserId) {
+                    switchToChat(data.id);
+                    break;
+                }
+            }
+        }
+    },
+    "newChatMessage": (data) => {
+        displayChatMessage(data);
+    }
+}
+
+const MAX_CHAT_LINK_TEXT_LENGTH = 20;
+
 var loadedChats = {}
 var newChatUserId = null;
-// Объект для сопоставления ID собеседников и ID чатов с ними.
-// Необходим для поиска уже существующего чата по ID пользователя, введенного в `searchInputEl`.
 var interlocutorsChatsIds = {}
 var user = null;
 var openedChatId = null;
-const MAX_CHAT_LINK_TEXT_LENGTH = 20;
 
 export function displayUserInfo(user_) {
     user = user_;
@@ -91,7 +74,7 @@ export function displayUserInfo(user_) {
 }
 
 export function displayUserChats(data) {
-    // Переворачиваем массив для добавления чатов в правильном порядке.
+    // for correct order
     data.chats.reverse();
     for (let index in data.chats) {
         displayChat(data.chats[index]);
@@ -132,10 +115,18 @@ export function displayChat(chat) {
 
     let chatInputEl = chatEl.querySelector("textarea");
 
-    // (Вопрос отправки сообщений на Enter решён в начале модуля).
     let chatButtonEl = chatEl.querySelector("button");
     chatButtonEl.onclick = () => {
-        sendMessageToWebSocket(chatInputEl);
+        if (!chatInputEl.value) {
+            return;
+        }
+        sendMessageToWebSocketAndClearInput({
+            type: "newChatMessage",
+            data: {
+                chatId: chat.id,
+                text: chatInputEl.value,
+            }
+        }, chatInputEl);
     }
 
     let chatLinkNode = chatLinkTempEl.content.cloneNode(true);
@@ -278,39 +269,10 @@ export function displayChatMessage(chatMessage, prepend=false) {
 
 }
 
-export function handleWebSocketMessage(message) {
-    if (message.type == "newChat") {
-        displayChat(message.data);
-        if (!message.data.isGroup) {
-            for (let index in message.data.users) {
-                if (message.data.users[index].id == newChatUserId) {
-                    switchToChat(message.data.id);
-                    break;
-                }
-            }
-        }
-    } else if (message.type == "newChatMessage") {
-        displayChatMessage(message.data);
-    }
-}
-
-export function sendMessageToWebSocket(inputEl) {
-    let text = inputEl.value;
-    if (text) {
-        let message = {type: null, data: {text}}
-        if (newChatUserId) {
-            message.type = "newChat";
-            message.data.usersIds = [user.id, newChatUserId];
-        } else {
-            message.type = "newChatMessage";
-            message.data.chatId = openedChatId;
-        }
-
-        websocket.sendJSON(message);
-
-        inputEl.value = "";
-        inputEl.style.height = "50px";
-    }
+export function sendMessageToWebSocketAndClearInput(data, inputEl) {
+    websocket.sendJSON(data);
+    inputEl.value = "";
+    inputEl.style.height = "50px";
 }
 
 async function switchToChat(chatId) {
@@ -323,7 +285,7 @@ async function switchToChat(chatId) {
     if (!(loadedChats[chatId].fullyLoaded)) {
         loadedChats[chatId].fullyLoaded = true;
         let offsetFromEnd = Object.keys(loadedChats[chatId].messages).length;
-        displayChatHistory(await requestChatHistory(chatId, offsetFromEnd));
+        displayChatHistory(await requestChatHistory({chatId, offsetFromEnd}));
         loadedChats[chatId].chatMessagesEl.scrollTop = loadedChats[chatId].chatMessagesEl.scrollHeight;
     }
 }
@@ -343,10 +305,10 @@ function hideChat(chatId, showCloser=true) {
 }
 
 async function searchUserAndSwitchToChat() {
+    removeInvalidClassForAllInputs();
     let userId = Number(searchInputEl.value);
     if (!userId) {
-        alert("Введите нормальное число...");
-        return;
+        setInputAsInvalidAndMessageWithThrow(searchInputEl, "Введите нормальное число...")
     }
     let maybeChatId = interlocutorsChatsIds[userId];
     if (maybeChatId) {
@@ -354,11 +316,10 @@ async function searchUserAndSwitchToChat() {
         return;
     }
     if (userId == user.id) {
-        alert("Нельзя найти себя самого!");
-        return;
+        setInputAsInvalidAndMessageWithThrow(searchInputEl, "Нельзя найти себя самого!")
     }
 
-    let interlocutor = await requestUserInfo(userId);
+    let interlocutor = await requestUserInfo({id: userId});
     hideChat(openedChatId, false);
     newChatUserId = interlocutor.id;
 

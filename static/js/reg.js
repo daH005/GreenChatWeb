@@ -5,79 +5,89 @@ import { requestRegistration,
          requestSendEmailCode,
          requestCheckEmailCode,
        } from "./_http.js";
+import { setInputAsInvalidAndMessageWithThrow, removeInvalidClassForAllInputs } from "./_common.js";
 
 var curStep = 0;
 
 const regCarouselEl = document.getElementById("js-reg-carousel");
-
 const firstNameInputEl = document.getElementById("js-first-name");
 const lastNameInputEl = document.getElementById("js-last-name");
 const usernameInputEl = document.getElementById("js-username");
 const passwordInputEl = document.getElementById("js-password");
 const passwordConfirmInputEl = document.getElementById("js-password-confirm");
 const emailInputEl = document.getElementById("js-email");
-
 const sendMailButtonEl = document.getElementById("js-send-mail");
 const mailCodeEl = document.getElementById("js-mail-code");
 
+const backButtons = document.querySelectorAll(".js-back");
+const nextButtons = document.querySelectorAll(".js-next");
 const createAccountButtonEl = document.getElementById("js-create-account");
 
-const backButtons = document.querySelectorAll(".js-back");
 backButtons.forEach((el) => {
     el.onclick = () => {
-        curStep -= 1;
-        setCarouselStep(curStep);
-    }
-});
-
-const nextButtons = document.querySelectorAll(".js-next");
-nextButtons.forEach((el) => {
-    el.onclick = async () => {
-        if (curStep == 0) {
-            if (!firstNameInputEl.value) {
-                alert("Введите имя!");
-                return;
-            }
-            if (!lastNameInputEl.value) {
-                alert("Введите фамилию!");
-                return;
-            }
-        } else if (curStep == 1) {
-            if (!usernameInputEl.value) {
-                alert("Введите логин!");
-                return;
-            } else {
-                let flagData = await requestCheckUsername(usernameInputEl.value);
-                if (flagData.isAlreadyTaken) {
-                    alert("Логин уже занят!");
-                    return;
-                }
-            }
-            if (!passwordInputEl.value) {
-                alert("Введите пароль!");
-                return;
-            }
-            if (passwordInputEl.value != passwordConfirmInputEl.value) {
-                alert("Пароли не совпадают!");
-                return;
-            }
-        }
-        curStep += 1;
-        setCarouselStep(curStep);
+        moveCarouselStep(-1);
     }
 });
 
 sendMailButtonEl.onclick = async () => {
     await checkEmail();
-    requestSendEmailCode(emailInputEl.value);
+    await requestSendEmailCode({email: emailInputEl.value});
+    removeInvalidClassForAllInputs();
+}
+
+function moveCarouselStep(dir=1) {
+    setCarouselStep(curStep + dir);
+}
+
+function setCarouselStep(step) {
+    curStep = step;
+    console.log("Текущий шаг -", curStep);
+    let transformValue = "translateY(-" + curStep * 100 + "%);";
+    regCarouselEl.style = "transform: " + transformValue;
+}
+
+nextButtons[0].onclick = () => {
+    removeInvalidClassForAllInputs();
+    if (!firstNameInputEl.value) {
+        setInputAsInvalidAndMessageWithThrow(firstNameInputEl, "Введите ваше имя!");
+    }
+    if (!lastNameInputEl.value) {
+        setInputAsInvalidAndMessageWithThrow(lastNameInputEl, "Введите вашу фамилию!");
+    }
+    moveCarouselStep();
+}
+
+nextButtons[1].onclick = async () => {
+    removeInvalidClassForAllInputs();
+    if (usernameInputEl.value.length < 5) {
+        setInputAsInvalidAndMessageWithThrow(usernameInputEl, "Длина логина не должна быть менее 5-ти символов!");
+    } else {
+        let flagData = await requestCheckUsername({username: usernameInputEl.value});
+        if (flagData.isAlreadyTaken) {
+            setInputAsInvalidAndMessageWithThrow(usernameInputEl, "Логин уже занят!");
+        }
+    }
+    if (passwordInputEl.value.length < 10) {
+        setInputAsInvalidAndMessageWithThrow(passwordInputEl, "Длина пароля не должна быть менее 10-ти символов!");
+    }
+    if (passwordInputEl.value != passwordConfirmInputEl.value) {
+        try {
+            setInputAsInvalidAndMessageWithThrow(passwordInputEl, "Пароли не совпадают!");
+        } catch {
+            setInputAsInvalidAndMessageWithThrow(passwordConfirmInputEl);
+        }
+    }
+    moveCarouselStep();
 }
 
 createAccountButtonEl.onclick = async () => {
-    checkEmail();
-    let flagData = await requestCheckEmailCode(mailCodeEl.value);
+    await checkEmail();
+    if (mailCodeEl.value.length < 4) {
+        setInputAsInvalidAndMessageWithThrow(mailCodeEl, "Введите 4-х значный код!");
+    }
+    let flagData = await requestCheckEmailCode({code: mailCodeEl.value});
     if (!flagData.codeIsValid) {
-        alert("Код подтверждения неверный!");
-        return;
+        setInputAsInvalidAndMessageWithThrow(mailCodeEl, "Код подтверждения неверный!");
     }
     let data = await requestRegistration({
         firstName: firstNameInputEl.value,
@@ -91,20 +101,12 @@ createAccountButtonEl.onclick = async () => {
 }
 
 async function checkEmail() {
-    if (!emailInputEl.value) {
-        alert("Введите почту!");
-        throw Error();  // FixMe: Подумать над лучшей реализацией. Однородной (выше return'ы).
+    if (!emailInputEl.value.includes("@")) {
+        setInputAsInvalidAndMessageWithThrow(emailInputEl, "Введите почту!");
     } else {
-        let flagData = await requestCheckEmail(emailInputEl.value);
+        let flagData = await requestCheckEmail({email: emailInputEl.value});
         if (flagData.isAlreadyTaken) {
-            alert("Почта уже занята!");
-            throw Error();  // FixMe: Подумать над лучшей реализацией. Однородной (выше return'ы).
+            setInputAsInvalidAndMessageWithThrow(emailInputEl, "Почта уже занята!");
         }
     }
-}
-
-function setCarouselStep(step) {
-    console.log("Текущий шаг -", step);
-    let transformValue = "translateY(-" + step * 100 + "%);";
-    regCarouselEl.style = "transform: " + transformValue;
 }
