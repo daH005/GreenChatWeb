@@ -1,10 +1,11 @@
 import { BASE_HEADERS, HTTP_ENDPOINTS_URLS } from "./_config.js";
 import { redirectToLoginPage } from "./_redirects.js";
 import { makeAuthHeaders } from "./_authTools.js";
+import { notify } from "./_notification.js";
 
 export function makeRequestingFunc(options) {
     options = {
-        STATUSES_ALERTS: {},
+        STATUSES_NOTIFICATIONS: {},
         ERROR_FUNCS: {},
         ...options,
     }
@@ -12,15 +13,15 @@ export function makeRequestingFunc(options) {
         let [fetchUrl, fetchOptions] = makeRequestingUrlAndOptions(options, data);
 
         let response = await fetch(fetchUrl, fetchOptions);
-        if (response.status in options.STATUSES_ALERTS) {
-            alert(options.STATUSES_ALERTS[response.status]);
+        if (response.status in options.STATUSES_NOTIFICATIONS) {
+            notify(options.STATUSES_NOTIFICATIONS[response.status]);
         }
 
         if (response.ok) {
             return await response.json();
         } else if (response.status in options.ERROR_FUNCS) {
             return options.ERROR_FUNCS[response.status]();
-        } else if (!(response.status in options.STATUSES_ALERTS)){
+        } else if (!(response.status in options.STATUSES_NOTIFICATIONS)){
             console.log("Неизвестная ошибка...", response.status);
         }
         throw Error;
@@ -66,7 +67,7 @@ export function makeRequestingUrlAndOptions(options, data=null) {
 export const requestRegistration = makeRequestingFunc({
     URL: HTTP_ENDPOINTS_URLS.REG,
     METHOD: "POST",
-    STATUSES_ALERTS: {
+    STATUSES_NOTIFICATIONS: {
         400: "Ошибка регистрации...",
     },
 });
@@ -87,7 +88,7 @@ export const requestCheckEmail = makeRequestingFunc({
 export const requestSendEmailCode = makeRequestingFunc({
     URL: HTTP_ENDPOINTS_URLS.SEND_EMAIL_CODE,
     METHOD: "POST",
-    STATUSES_ALERTS: {
+    STATUSES_NOTIFICATIONS: {
         200: "Код успешно отправлен!",
         409: "Вы не можете отправлять более одного кода в минуту!",
     },
@@ -103,7 +104,7 @@ export const requestCheckEmailCode = makeRequestingFunc({
 export const requestAuthByUsernameAndPassword = makeRequestingFunc({
     URL: HTTP_ENDPOINTS_URLS.AUTH,
     METHOD: "POST",
-    STATUSES_ALERTS: {
+    STATUSES_NOTIFICATIONS: {
         403: "Неверный логин или пароль!",
     },
 });
@@ -113,7 +114,7 @@ export const requestUserInfo = makeRequestingFunc({
     URL: HTTP_ENDPOINTS_URLS.USER_INFO,
     METHOD: "GET",
     IS_AUTH: true,
-    STATUSES_ALERTS: {
+    STATUSES_NOTIFICATIONS: {
         404: "Пользователь с таким ID не найден!",
     },
     ERROR_FUNCS: {

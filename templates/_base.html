@@ -14,6 +14,7 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/font_awesome/css/all.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/scrollbar.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/notification.css') }}">
 
 {% block css %}{% endblock %}
 
@@ -21,6 +22,8 @@
 <body>
 
 <main class="main">{% block main %}{% endblock %}</main>
+
+<div id="notification"></div>
 
 {% block js %}{% endblock %}
 
