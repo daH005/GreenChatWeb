@@ -117,5 +117,6 @@ GreenChat
 
 
 {% block js %}
+<script src="{{ url_for('static', filename='js/disableBackReferrer.js') }}" type="module"></script>
 <script src="{{ url_for('static', filename='js/main/init.js') }}" type="module"></script>
 {% endblock %}

@@ -5,12 +5,7 @@ import { requestUserInfo, requestUserChats, requestNewJWTToken } from "../_http.
 import { startWebSocket } from "./_websocket.js";
 import { displayUserInfo, displayUserChats, handleWebSocketMessage } from "./_html.js";
 
-window.history.pushState(null, "", window.location.href);
-window.onpopstate = function() {
-    window.history.pushState(null, "", window.location.href);
-}
-
-if (JWTTokenExist()) {
+if (!JWTTokenExist()) {
     redirectToLoginPage();
 }
 
