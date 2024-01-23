@@ -1,5 +1,6 @@
 import { dateToTimeStr, dateToDateStr, normalizeDateTimezone }  from "../_datetime.js";
 import { makeHyperlinks } from "../_strTools.js";
+import { setInputAsInvalidAndMessageWithThrow, removeInvalidClassForAllInputs } from "../_common.js";
 import { requestChatHistory, requestUserInfo } from "../_http.js";
 import { websocket } from "./_websocket.js";
 
@@ -304,10 +305,10 @@ function hideChat(chatId, showCloser=true) {
 }
 
 async function searchUserAndSwitchToChat() {
+    removeInvalidClassForAllInputs();
     let userId = Number(searchInputEl.value);
     if (!userId) {
-        alert("Введите нормальное число...");
-        return;
+        setInputAsInvalidAndMessageWithThrow(searchInputEl, "Введите нормальное число...")
     }
     let maybeChatId = interlocutorsChatsIds[userId];
     if (maybeChatId) {
@@ -315,8 +316,7 @@ async function searchUserAndSwitchToChat() {
         return;
     }
     if (userId == user.id) {
-        alert("Нельзя найти себя самого!");
-        return;
+        setInputAsInvalidAndMessageWithThrow(searchInputEl, "Нельзя найти себя самого!")
     }
 
     let interlocutor = await requestUserInfo({id: userId});
