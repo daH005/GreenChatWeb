@@ -27,25 +27,44 @@ const newChatNameEl = document.getElementById("js-new-chat-name");
 const newChatInputEl = document.getElementById("js-new-chat-input");
 const newChatButtonEl = document.getElementById("js-new-chat-button");
 newChatButtonEl.onclick = () => {
-    sendMessageToWebSocket(newChatInputEl);
+    sendMessageToWebSocketAndClearInput({
+        type: "newChat",
+        data: {
+            text: newChatInputEl.value,
+            usersIds: [user.id, newChatUserId],
+        }
+    }, newChatInputEl);
 }
 
-// Шаблоны создаваемых элементов:
 const chatLinkTempEl = document.getElementById("js-chat-link-temp");
 const chatTempEl = document.getElementById("js-chat-temp");
 const chatMessageTempEl = document.getElementById("js-chat-message-temp");
 const chatDateSepTempEl = document.getElementById("js-chat-date-sep-temp");
 
-// Объект, в котором ключи - ID чатов, а значения - вложенные объекты,
-// хранящие html-элементы, а также другие важные данные по типу объектов сообщений.
+export const newDataHandlers = {
+    "newChat": (data) => {
+        displayChat(data);
+        if (!data.isGroup) {
+            for (let index in data.users) {
+                if (data.users[index].id == newChatUserId) {
+                    switchToChat(data.id);
+                    break;
+                }
+            }
+        }
+    },
+    "newChatMessage": (data) => {
+        displayChatMessage(data);
+    }
+}
+
+const MAX_CHAT_LINK_TEXT_LENGTH = 20;
+
 var loadedChats = {}
 var newChatUserId = null;
-// Объект для сопоставления ID собеседников и ID чатов с ними.
-// Необходим для поиска уже существующего чата по ID пользователя, введенного в `searchInputEl`.
 var interlocutorsChatsIds = {}
 var user = null;
 var openedChatId = null;
-const MAX_CHAT_LINK_TEXT_LENGTH = 20;
 
 export function displayUserInfo(user_) {
     user = user_;
@@ -54,7 +73,7 @@ export function displayUserInfo(user_) {
 }
 
 export function displayUserChats(data) {
-    // Переворачиваем массив для добавления чатов в правильном порядке.
+    // for correct order
     data.chats.reverse();
     for (let index in data.chats) {
         displayChat(data.chats[index]);
@@ -95,10 +114,18 @@ export function displayChat(chat) {
 
     let chatInputEl = chatEl.querySelector("textarea");
 
-    // (Вопрос отправки сообщений на Enter решён в начале модуля).
     let chatButtonEl = chatEl.querySelector("button");
     chatButtonEl.onclick = () => {
-        sendMessageToWebSocket(chatInputEl);
+        if (!chatInputEl.value) {
+            return;
+        }
+        sendMessageToWebSocketAndClearInput({
+            type: "newChatMessage",
+            data: {
+                chatId: chat.id,
+                text: chatInputEl.value,
+            }
+        }, chatInputEl);
     }
 
     let chatLinkNode = chatLinkTempEl.content.cloneNode(true);
@@ -241,39 +268,10 @@ export function displayChatMessage(chatMessage, prepend=false) {
 
 }
 
-export function handleWebSocketMessage(message) {
-    if (message.type == "newChat") {
-        displayChat(message.data);
-        if (!message.data.isGroup) {
-            for (let index in message.data.users) {
-                if (message.data.users[index].id == newChatUserId) {
-                    switchToChat(message.data.id);
-                    break;
-                }
-            }
-        }
-    } else if (message.type == "newChatMessage") {
-        displayChatMessage(message.data);
-    }
-}
-
-export function sendMessageToWebSocket(inputEl) {
-    let text = inputEl.value;
-    if (text) {
-        let message = {type: null, data: {text}}
-        if (newChatUserId) {
-            message.type = "newChat";
-            message.data.usersIds = [user.id, newChatUserId];
-        } else {
-            message.type = "newChatMessage";
-            message.data.chatId = openedChatId;
-        }
-
-        websocket.sendJSON(message);
-
-        inputEl.value = "";
-        inputEl.style.height = "50px";
-    }
+export function sendMessageToWebSocketAndClearInput(data, inputEl) {
+    websocket.sendJSON(data);
+    inputEl.value = "";
+    inputEl.style.height = "50px";
 }
 
 async function switchToChat(chatId) {

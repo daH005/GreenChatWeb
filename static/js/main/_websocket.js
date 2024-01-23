@@ -3,7 +3,7 @@ import { getJWTToken } from "../_localStorage.js";
 
 export var websocket;
 
-export function startWebSocket(handleMessageFunc) {
+export function startWebSocket(handlers) {
     websocket = new WebSocket(WEBSOCKET_URL);
 
     websocket.onopen = (event) => {
@@ -12,9 +12,8 @@ export function startWebSocket(handleMessageFunc) {
 
     websocket.onmessage = (event) => {
         let message = JSON.parse(event.data);
-        websocket.handleMessage(message);
+        handlers[message.type](message.data);
     }
-    websocket.handleMessage = handleMessageFunc;
 
     websocket.sendJSON = (data) => {
         websocket.send(JSON.stringify(data));
