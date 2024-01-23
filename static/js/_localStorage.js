@@ -1,5 +1,9 @@
 import { JWT_TOKEN_LOCAL_STORAGE_KEY } from "./_config.js";
 
+export function JWTTokenExist() {
+    return !(["undefined", "null", undefined, null].includes(getJWTToken()));
+}
+
 export function saveJWTToken(token) {
     localStorage.setItem(JWT_TOKEN_LOCAL_STORAGE_KEY, token);
 }

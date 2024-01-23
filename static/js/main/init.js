@@ -1,4 +1,4 @@
-import { getJWTToken, saveJWTToken } from "../_localStorage.js";
+import { JWTTokenExist, saveJWTToken } from "../_localStorage.js";
 import { redirectToLoginPage } from "../_redirects.js";
 import { JWT_TOKEN_REFRESH_INTERVAL_DELAY } from "../_config.js";
 import { requestUserInfo, requestUserChats, requestNewJWTToken } from "../_http.js";
@@ -10,8 +10,7 @@ window.onpopstate = function() {
     window.history.pushState(null, "", window.location.href);
 }
 
-// Не опечатка. Из `localStorage`, как показал опыт, может вернуться именно строка, а не обычный undefined.
-if (["undefined", "null", undefined, null].includes(getJWTToken())) {
+if (JWTTokenExist()) {
     redirectToLoginPage();
 }
 
