@@ -114,6 +114,14 @@ export function displayChat(chat) {
     let chatMessagesEl = chatEl.querySelector(".chat__messages");
 
     let chatInputEl = chatEl.querySelector("textarea");
+    chatInputEl.addEventListener("input", () => {
+        websocket.sendJSON({
+            type: "newChatMessageTyping",
+            data: {
+                chatId: chat.id,
+            }
+        });
+    });
 
     let chatButtonEl = chatEl.querySelector("button");
     chatButtonEl.onclick = () => {
