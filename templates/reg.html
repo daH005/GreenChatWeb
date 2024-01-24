@@ -32,23 +32,25 @@
             <input id="js-username" placeholder="Ваш логин" maxlength="100" tabindex="-1">
 
             <small class="hint">Минимальная длина пароля - 10 символов</small>
-            <div class="input-and-inner-button-container js-password-switch">
-                <input id="js-password" class="js-password-switch-input" type="password" placeholder="Ваш пароль" maxlength="50" tabindex="-1">
-                <button class="js-password-switch-hidden" tabindex="-1">
-                    <i class="fa fa-eye-slash" aria-hidden="true"></i>
-                </button>
-                <button class="js-password-switch-showed" tabindex="-1">
-                    <i class="fa fa-eye" aria-hidden="true"></i>
-                </button>
-            </div>
-            <div class="input-and-inner-button-container js-password-switch">
-                <input id="js-password-confirm" class="js-password-switch-input" type="password" placeholder="Повтор пароля" maxlength="50" tabindex="-1">
-                <button class="js-password-switch-hidden" tabindex="-1">
-                    <i class="fa fa-eye-slash" aria-hidden="true"></i>
-                </button>
-                <button class="js-password-switch-showed" tabindex="-1">
-                    <i class="fa fa-eye" aria-hidden="true"></i>
-                </button>
+            <div class="js-password-switch">
+                <div class="input-and-inner-button-container">
+                    <input id="js-password" class="js-password-switch-input" type="password" placeholder="Ваш пароль" maxlength="50" tabindex="-1">
+                    <button class="js-password-switch-hidden" tabindex="-1">
+                        <i class="fa fa-eye-slash" aria-hidden="true"></i>
+                    </button>
+                    <button class="js-password-switch-showed" tabindex="-1">
+                        <i class="fa fa-eye" aria-hidden="true"></i>
+                    </button>
+                </div>
+                <div class="input-and-inner-button-container">
+                    <input id="js-password-confirm" class="js-password-switch-input" type="password" placeholder="Повтор пароля" maxlength="50" tabindex="-1">
+                    <button class="js-password-switch-hidden" tabindex="-1">
+                        <i class="fa fa-eye-slash" aria-hidden="true"></i>
+                    </button>
+                    <button class="js-password-switch-showed" tabindex="-1">
+                        <i class="fa fa-eye" aria-hidden="true"></i>
+                    </button>
+                </div>
             </div>
 
             <button class="js-next" tabindex="-1">Далее</button>
