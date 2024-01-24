@@ -5,7 +5,11 @@ import { requestRegistration,
          requestSendEmailCode,
          requestCheckEmailCode,
        } from "./_http.js";
-import { setInputAsInvalidAndMessageWithThrow, removeInvalidClassForAllInputs } from "./_common.js";
+import { setInputAsInvalidAndMessageWithThrow,
+         removeInvalidClassForAllInputs,
+         setNegativeTabIndexForAllInputsAndButtons,
+         delTabIndexForAllInputsAndButtonsInEl,
+       } from "./_common.js";
 
 var curStep = 0;
 
@@ -22,6 +26,14 @@ const mailCodeEl = document.getElementById("js-mail-code");
 const backButtons = document.querySelectorAll(".js-back");
 const nextButtons = document.querySelectorAll(".js-next");
 const createAccountButtonEl = document.getElementById("js-create-account");
+
+const regInputsContainersEls = document.querySelectorAll(".inputs-container");
+
+setNegativeTabIndexForAllInputsAndButtons();
+delTabIndexForAllInputsAndButtonsInEl(regInputsContainersEls[curStep]);
+regCarouselEl.addEventListener("transitionend", () => {
+    delTabIndexForAllInputsAndButtonsInEl(regInputsContainersEls[curStep]);
+});
 
 backButtons.forEach((el) => {
     el.onclick = () => {
@@ -42,13 +54,15 @@ function moveCarouselStep(dir=1) {
 function setCarouselStep(step) {
     curStep = step;
     console.log("Текущий шаг -", curStep);
+
     let transformValue = "translateY(-" + curStep * 100 + "%);";
     regCarouselEl.style = "transform: " + transformValue;
+
+    setNegativeTabIndexForAllInputsAndButtons();
+    removeInvalidClassForAllInputs();
 }
 
 nextButtons[0].onclick = () => {
-    removeInvalidClassForAllInputs();
-
     checkSpaces(firstNameInputEl, "Имя не должно");
     if (!firstNameInputEl.value) {
         setInputAsInvalidAndMessageWithThrow(firstNameInputEl, "Введите ваше имя!");
@@ -63,8 +77,6 @@ nextButtons[0].onclick = () => {
 }
 
 nextButtons[1].onclick = async () => {
-    removeInvalidClassForAllInputs();
-
     checkSpaces(usernameInputEl, "Логин не должен");
     if (usernameInputEl.value.length < 5) {
         setInputAsInvalidAndMessageWithThrow(usernameInputEl, "Длина логина не должна быть менее 5-ти символов!");
