@@ -48,17 +48,24 @@ function setCarouselStep(step) {
 
 nextButtons[0].onclick = () => {
     removeInvalidClassForAllInputs();
+
+    checkSpaces(firstNameInputEl, "Имя не должно");
     if (!firstNameInputEl.value) {
         setInputAsInvalidAndMessageWithThrow(firstNameInputEl, "Введите ваше имя!");
     }
+
+    checkSpaces(lastNameInputEl, "Фамилия не должна");
     if (!lastNameInputEl.value) {
         setInputAsInvalidAndMessageWithThrow(lastNameInputEl, "Введите вашу фамилию!");
     }
+
     moveCarouselStep();
 }
 
 nextButtons[1].onclick = async () => {
     removeInvalidClassForAllInputs();
+
+    checkSpaces(usernameInputEl, "Логин не должен");
     if (usernameInputEl.value.length < 5) {
         setInputAsInvalidAndMessageWithThrow(usernameInputEl, "Длина логина не должна быть менее 5-ти символов!");
     } else {
@@ -67,6 +74,9 @@ nextButtons[1].onclick = async () => {
             setInputAsInvalidAndMessageWithThrow(usernameInputEl, "Логин уже занят!");
         }
     }
+
+    checkSpaces(passwordInputEl, "Пароль не должен");
+    checkSpaces(passwordConfirmInputEl, "Пароль не должен");
     if (passwordInputEl.value.length < 10) {
         setInputAsInvalidAndMessageWithThrow(passwordInputEl, "Длина пароля не должна быть менее 10-ти символов!");
     }
@@ -77,18 +87,22 @@ nextButtons[1].onclick = async () => {
             setInputAsInvalidAndMessageWithThrow(passwordConfirmInputEl);
         }
     }
+
     moveCarouselStep();
 }
 
 createAccountButtonEl.onclick = async () => {
     await checkEmail();
-    if (mailCodeEl.value.length < 4) {
+
+    if (Number(mailCodeEl.value) < 1000) {
         setInputAsInvalidAndMessageWithThrow(mailCodeEl, "Введите 4-х значный код!");
     }
+
     let flagData = await requestCheckEmailCode({code: mailCodeEl.value});
     if (!flagData.codeIsValid) {
         setInputAsInvalidAndMessageWithThrow(mailCodeEl, "Код подтверждения неверный!");
     }
+
     let data = await requestRegistration({
         firstName: firstNameInputEl.value,
         lastName: lastNameInputEl.value,
@@ -101,6 +115,7 @@ createAccountButtonEl.onclick = async () => {
 }
 
 async function checkEmail() {
+    checkSpaces(emailInputEl, "Почта не должна");
     if (!emailInputEl.value.includes("@")) {
         setInputAsInvalidAndMessageWithThrow(emailInputEl, "Введите почту!");
     } else {
@@ -108,5 +123,11 @@ async function checkEmail() {
         if (flagData.isAlreadyTaken) {
             setInputAsInvalidAndMessageWithThrow(emailInputEl, "Почта уже занята!");
         }
+    }
+}
+
+function checkSpaces(inputEl, messagePart) {
+    if (inputEl.value.includes(" ")) {
+        setInputAsInvalidAndMessageWithThrow(inputEl, messagePart + " содержать пробелов!");
     }
 }
