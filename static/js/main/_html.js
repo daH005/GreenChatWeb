@@ -48,15 +48,14 @@ export const newDataHandlers = {
         if (!data.isGroup) {
             for (let index in data.users) {
                 if (data.users[index].id == newChatUserId) {
-                    switchToChat(data.id);
+                    switchToChat(loadedChats[data.id]);
                     break;
                 }
             }
         }
     },
-    "newChatMessage": (data) => {
-        displayChatMessage(data);
-    }
+    "newChatMessage": displayChatMessage,
+    "newChatMessageTyping": displayTypingHint,
 }
 
 const MAX_CHAT_LINK_TEXT_LENGTH = 20;
@@ -108,12 +107,20 @@ export function displayChat(chat) {
 
     let chatBackLinkEl = chatEl.querySelector(".chat__back-link");
     chatBackLinkEl.onclick = function() {
-        hideChat(chat.id);
+        hideChat(loadedChats[chat.id]);
     }
 
     let chatMessagesEl = chatEl.querySelector(".chat__messages");
 
     let chatInputEl = chatEl.querySelector("textarea");
+    chatInputEl.addEventListener("input", () => {
+        websocket.sendJSON({
+            type: "newChatMessageTyping",
+            data: {
+                chatId: chat.id,
+            }
+        });
+    });
 
     let chatButtonEl = chatEl.querySelector("button");
     chatButtonEl.onclick = () => {
@@ -129,21 +136,23 @@ export function displayChat(chat) {
         }, chatInputEl);
     }
 
+    let typingEl = chatEl.querySelector(".chat__interlocutor-write-hint");
+
     let chatLinkNode = chatLinkTempEl.content.cloneNode(true);
     allChatsLinksEl.append(chatLinkNode);
     let chatLinkEl = allChatsLinksEl.lastElementChild;
     chatLinkEl.onclick = async function() {
-        await switchToChat(chat.id);
+        await switchToChat(loadedChats[chat.id]);
     }
 
     let chatLinkNameEl = chatLinkEl.querySelector(".chat-link__chat-name");
     chatLinkNameEl.textContent = chatName
 
     let chatLinkLastMessageEl = chatLinkEl.querySelector(".chat-link__last-message");
-
     let chatLinkLastMessageDateEl = chatLinkEl.querySelector(".chat-link__date"); 
 
     loadedChats[chat.id] = {
+        id: chat.id,
         fullyLoaded: false,
         messages: {},
         topMessage: null,
@@ -154,6 +163,7 @@ export function displayChat(chat) {
         chatMessagesEl,
         chatInputEl,
         chatButtonEl,
+        typingEl,
         chatLinkEl,
         chatLinkNameEl,
         chatLinkLastMessageEl,
@@ -170,12 +180,14 @@ export function displayChat(chat) {
 // При `false` - в конец контейнера. В этом случае сообщение расценивается как новое
 // и обновляется также и боковая панель.
 export function displayChatMessage(chatMessage, prepend=false) {
+    let chat = loadedChats[chatMessage.chatId];
+
     chatMessage.creatingDatetime = new Date(chatMessage.creatingDatetime);
     normalizeDateTimezone(chatMessage.creatingDatetime);
 
     let timeStr = dateToTimeStr(chatMessage.creatingDatetime);
     let dateStr = dateToDateStr(chatMessage.creatingDatetime);
-    let messagesEl = loadedChats[chatMessage.chatId].chatMessagesEl;
+    let messagesEl = chat.chatMessagesEl;
 
     // Определяем флаг, обозначающий прокрутили ли мы весь чат в низ или нет. Флаг необходим для продолжения прокрутки
     // при новом сообщении. Эта проверка обязана быть перед созданием элемента-сообщения!
@@ -186,14 +198,14 @@ export function displayChatMessage(chatMessage, prepend=false) {
 
     // Формируем разделительный элемент между днями, если это требуется:
     // (это действие необходимо делать перед формированием `message`)
-    if (prepend && loadedChats[chatMessage.chatId].bottomMessage) {
-        if (loadedChats[chatMessage.chatId].bottomMessage.dateStr != dateStr) {
+    if (prepend && chat.bottomMessage) {
+        if (chat.bottomMessage.dateStr != dateStr) {
             let chatDateSepNode = chatDateSepTempEl.content.cloneNode(true);
             messagesEl.prepend(chatDateSepNode);
-            messagesEl.firstElementChild.textContent = loadedChats[chatMessage.chatId].bottomMessage.dateStr;
+            messagesEl.firstElementChild.textContent = chat.bottomMessage.dateStr;
         }
-    } else if (!prepend && loadedChats[chatMessage.chatId].topMessage) {
-        if (loadedChats[chatMessage.chatId].topMessage.dateStr != dateStr) {
+    } else if (!prepend && chat.topMessage) {
+        if (chat.topMessage.dateStr != dateStr) {
             let chatDateSepNode = chatDateSepTempEl.content.cloneNode(true);
             messagesEl.append(chatDateSepNode);
             messagesEl.lastElementChild.textContent = dateStr;
@@ -234,18 +246,18 @@ export function displayChatMessage(chatMessage, prepend=false) {
         timeStr,
         dateStr,
     }
-    loadedChats[chatMessage.chatId].messages[chatMessage.id] = message;
+    chat.messages[chatMessage.id] = message;
 
     // Записываем крайнее сообщение для последующих разделителей дней:
     // (это действие необходимо делать формирования `message`)
-    if (!loadedChats[chatMessage.chatId].topMessage && !loadedChats[chatMessage.chatId].bottomMessage) {
+    if (!chat.topMessage && !chat.bottomMessage) {
         // Если сообщение первое, то обозначим его, как крайнее и сверху и снизу.
-        loadedChats[chatMessage.chatId].topMessage = message;
-        loadedChats[chatMessage.chatId].bottomMessage = message;
+        chat.topMessage = message;
+        chat.bottomMessage = message;
     } else if (prepend) {
-        loadedChats[chatMessage.chatId].bottomMessage = message;
+        chat.bottomMessage = message;
     } else {
-        loadedChats[chatMessage.chatId].topMessage = message;
+        chat.topMessage = message;
     }
 
     if (!prepend) {
@@ -253,9 +265,9 @@ export function displayChatMessage(chatMessage, prepend=false) {
         if (text.length > MAX_CHAT_LINK_TEXT_LENGTH) {
             text = text.slice(0, MAX_CHAT_LINK_TEXT_LENGTH) + "...";
         }
-        loadedChats[chatMessage.chatId].chatLinkLastMessageEl.textContent = text;
-        loadedChats[chatMessage.chatId].chatLinkLastMessageDateEl.textContent = dateStr;
-        allChatsLinksEl.prepend(loadedChats[chatMessage.chatId].chatLinkEl);
+        chat.chatLinkLastMessageEl.textContent = text;
+        chat.chatLinkLastMessageDateEl.textContent = dateStr;
+        allChatsLinksEl.prepend(chat.chatLinkEl);
     }
 
     if (chatMessage.user.id == user.id) {
@@ -269,31 +281,44 @@ export function displayChatMessage(chatMessage, prepend=false) {
 
 }
 
+export function displayTypingHint(data) {
+    let chat = loadedChats[data.chatId];
+    if (chat.timeoutId) {
+        clearTimeout(chat.timeoutId);
+    }
+    chat.typingEl.textContent = data.user.firstName + " печатает...";
+    chat.timeoutId = setTimeout(() => {
+        chat.typingEl.textContent = "";
+        chat.timeoutId = null;
+    }, 1000);
+}
+
 export function sendMessageToWebSocketAndClearInput(data, inputEl) {
     websocket.sendJSON(data);
     inputEl.value = "";
     inputEl.style.height = "50px";
 }
 
-async function switchToChat(chatId) {
-    hideChat(openedChatId);
-    openedChatId = chatId;
-    loadedChats[chatId].chatEl.classList.remove("chat--hidden");
-    loadedChats[chatId].chatLinkEl.classList.add("chat-link--active");
+async function switchToChat(chat) {
+    hideChat(loadedChats[openedChatId]);
+    openedChatId = chat.id;
+
+    chat.chatEl.classList.remove("chat--hidden");
+    chat.chatLinkEl.classList.add("chat-link--active");
     closerEl.style = "display: none;";
 
-    if (!(loadedChats[chatId].fullyLoaded)) {
-        loadedChats[chatId].fullyLoaded = true;
-        let offsetFromEnd = Object.keys(loadedChats[chatId].messages).length;
-        displayChatHistory(await requestChatHistory({chatId, offsetFromEnd}));
-        loadedChats[chatId].chatMessagesEl.scrollTop = loadedChats[chatId].chatMessagesEl.scrollHeight;
+    if (!(chat.fullyLoaded)) {
+        chat.fullyLoaded = true;
+        let offsetFromEnd = Object.keys(chat.messages).length;
+        displayChatHistory(await requestChatHistory({chatId: chat.id, offsetFromEnd}));
+        chat.chatMessagesEl.scrollTop = chat.chatMessagesEl.scrollHeight;
     }
 }
 
-function hideChat(chatId, showCloser=true) {
-    if (chatId != null) {
-        loadedChats[chatId].chatEl.classList.add("chat--hidden");
-        loadedChats[chatId].chatLinkEl.classList.remove("chat-link--active");
+function hideChat(chat, showCloser=true) {
+    if (chat != null) {
+        chat.chatEl.classList.add("chat--hidden");
+        chat.chatLinkEl.classList.remove("chat-link--active");
     }
     if (newChatUserId) {
         newChatUserId = null;
@@ -312,7 +337,7 @@ async function searchUserAndSwitchToChat() {
     }
     let maybeChatId = interlocutorsChatsIds[userId];
     if (maybeChatId) {
-        switchToChat(maybeChatId);
+        switchToChat(loadedChats[maybeChatId]);
         return;
     }
     if (userId == user.id) {
@@ -320,7 +345,7 @@ async function searchUserAndSwitchToChat() {
     }
 
     let interlocutor = await requestUserInfo({id: userId});
-    hideChat(openedChatId, false);
+    hideChat(loadedChats[openedChatId], false);
     newChatUserId = interlocutor.id;
 
     newChatNameEl.textContent = interlocutor.firstName;
