@@ -230,6 +230,15 @@
     padding: 0.5vw 5vw;
     width: 100%;
     box-sizing: border-box;
+    position: relative;
+}
+
+.chat__input-container .chat__interlocutor-write-hint {
+    top: 0;
+    position: absolute;
+    transform: translateY(-100%);
+    color: white;
+    font-size: small;
 }
 
 .chat__input-container textarea {
@@ -238,6 +247,7 @@
     max-height: 100px;
     resize: none;
 }
+
 
 @media only screen and (max-width: 700px), only screen and
 (max-device-width: 700px){
