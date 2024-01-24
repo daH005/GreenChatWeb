@@ -54,9 +54,8 @@ export const newDataHandlers = {
             }
         }
     },
-    "newChatMessage": (data) => {
-        displayChatMessage(data);
-    }
+    "newChatMessage": displayChatMessage,
+    "newChatMessageTyping": displayTypingHint,
 }
 
 const MAX_CHAT_LINK_TEXT_LENGTH = 20;
@@ -137,6 +136,8 @@ export function displayChat(chat) {
         }, chatInputEl);
     }
 
+    let typingEl = chatEl.querySelector(".chat__interlocutor-write-hint");
+
     let chatLinkNode = chatLinkTempEl.content.cloneNode(true);
     allChatsLinksEl.append(chatLinkNode);
     let chatLinkEl = allChatsLinksEl.lastElementChild;
@@ -148,7 +149,6 @@ export function displayChat(chat) {
     chatLinkNameEl.textContent = chatName
 
     let chatLinkLastMessageEl = chatLinkEl.querySelector(".chat-link__last-message");
-
     let chatLinkLastMessageDateEl = chatLinkEl.querySelector(".chat-link__date"); 
 
     loadedChats[chat.id] = {
@@ -162,6 +162,7 @@ export function displayChat(chat) {
         chatMessagesEl,
         chatInputEl,
         chatButtonEl,
+        typingEl,
         chatLinkEl,
         chatLinkNameEl,
         chatLinkLastMessageEl,
@@ -275,6 +276,18 @@ export function displayChatMessage(chatMessage, prepend=false) {
         messagesEl.scrollTop = messagesEl.scrollHeight;
     }
 
+}
+
+export function displayTypingHint(data) {
+    let chat = loadedChats[data.chatId];
+    if (chat.timeoutId) {
+        clearTimeout(chat.timeoutId);
+    }
+    chat.typingEl.textContent = data.user.firstName + " печатает...";
+    chat.timeoutId = setTimeout(() => {
+        chat.typingEl.textContent = "";
+        chat.timeoutId = null;
+    }, 1000);
 }
 
 export function sendMessageToWebSocketAndClearInput(data, inputEl) {
