@@ -44,7 +44,7 @@ const chatTempEl = document.getElementById("js-chat-temp");
 const chatMessageTempEl = document.getElementById("js-chat-message-temp");
 const chatDateSepTempEl = document.getElementById("js-chat-date-sep-temp");
 
-export const newDataHandlers = {
+export const handlersForWebsocket = {
     "newChat": (data) => {
         displayChat(data);
         if (!data.isGroup) {

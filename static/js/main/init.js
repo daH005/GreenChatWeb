@@ -3,7 +3,7 @@ import { redirectToLoginPage } from "../_redirects.js";
 import { JWT_TOKEN_REFRESH_INTERVAL_DELAY } from "../_config.js";
 import { requestUserInfo, requestUserChats, requestNewJWTToken } from "../_http.js";
 import { startWebSocket } from "./_websocket.js";
-import { displayUserInfo, displayUserChats, newDataHandlers } from "./_html.js";
+import { displayUserInfo, displayUserChats, handlersForWebsocket } from "./_html.js";
 
 if (!JWTTokenExist()) {
     redirectToLoginPage();
@@ -22,4 +22,4 @@ console.log("Загружаем чаты...");
 displayUserChats(await requestUserChats());
 
 console.log("Запускаем веб-сокет...");
-startWebSocket(newDataHandlers);
+startWebSocket(handlersForWebsocket);
