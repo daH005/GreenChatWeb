@@ -1,4 +1,4 @@
-var _userInWindow = null;
+var _userInWindow = true;
 
 export function userInWindow() {
     return _userInWindow;
