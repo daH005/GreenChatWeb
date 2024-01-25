@@ -1,3 +1,4 @@
+import { newMessageSound } from "../_config.js";
 import { dateToTimeStr, dateToDateStr, normalizeDateTimezone }  from "../_datetime.js";
 import { makeHyperlinks } from "../_strTools.js";
 import { setInputAsInvalidAndMessageWithThrow, removeInvalidClassForAllInputs } from "../_common.js";
@@ -272,6 +273,8 @@ export function displayChatMessage(chatMessage, prepend=false) {
 
     if (chatMessage.user.id == user.id) {
         chatMessageEl.classList.add("chat__message--self");
+    } else {
+        newMessageSound.play();
     }
 
     // Если в начале выполнения функции наш чат был прокручен к низу, то продолжаем его прокручивать.

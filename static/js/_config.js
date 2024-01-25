@@ -44,3 +44,5 @@ export const JWT_TOKEN_REFRESH_INTERVAL_DELAY = 1000 * 60 * 15;
 export const BASE_HEADERS = {
 	"Content-Type": "application/json",
 }
+
+export var newMessageSound = new Audio("/static/sounds/new_message.mp3");
