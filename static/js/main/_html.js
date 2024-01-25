@@ -320,6 +320,9 @@ async function switchToChat(chat) {
 }
 
 function hideChat(chat, showCloser=true) {
+    if (openedChatId == chat.id) {
+        openedChatId = null;
+    }
     if (chat != null) {
         chat.chatEl.classList.add("chat--hidden");
         chat.chatLinkEl.classList.remove("chat-link--active");
