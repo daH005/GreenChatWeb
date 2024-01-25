@@ -1,4 +1,4 @@
-import { newMessageSound } from "../_config.js";
+import { newMessageSound } from "../_audio.js";
 import { dateToTimeStr, dateToDateStr, normalizeDateTimezone }  from "../_datetime.js";
 import { makeHyperlinks } from "../_strTools.js";
 import { setInputAsInvalidAndMessageWithThrow, removeInvalidClassForAllInputs } from "../_common.js";
