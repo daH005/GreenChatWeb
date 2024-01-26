@@ -7,18 +7,77 @@ from web._tests.common.constants import FullUrl  # noqa
 from web._tests.common.info_generation import NewUserInfo  # noqa
 
 
+def _get_my_id() -> int:
+    return int(driver.find_element(By.XPATH, '//div[@id="js-user-id"]').text.replace('ID: ', ''))
+
+
+def _get_cur_chat_el():
+    return driver.find_element(By.XPATH, '//div[@class="chat" and not(@class="chat--hidden")]')
+
+
 def test_positive_all() -> None:
+    histories = [
+        [
+            'Hello!',  # 1
+            'My name is Danil.',  # 1
+            'How are u?',  # 1
+            'Im fine',  # 2
+            'Ok, goodbye!',  # 1
+        ],
+        [
+            '1',  # 1
+            '2',  # 1
+            '3',  # 1
+            '4',  # 1
+            '5',  # 1
+            'stop it!!!',  # 2
+            'Ok, goodbye!',  # 1
+        ]
+    ]
+
     _test_positive_main_page_redirects_to_login_if_user_is_not_auth()
 
-    first_user = NewUserInfo.new_and_count()
-    _test_positive_reg(first_user)
-    _test_positive_login(first_user)
+    users = []
+    for _ in range(3):
+        user = NewUserInfo.new_and_count()
+        users.append(user)
+        _test_positive_reg(user)
 
-    second_user = NewUserInfo.new_and_count()
-    _test_positive_reg(second_user)
-    _test_positive_login(second_user)
+    _test_positive_login(users[0])
+    id_ = _get_my_id()
 
-    _test_positive_search_chat_and_send_messages()
+    _test_positive_create_new_chat(id_ + 1, histories[0][0])
+    _test_positive_send_messages_in_cur_chat(histories[0][1:2])
+    _test_positive_close_cur_chat()
+
+    _test_positive_create_new_chat(id_ + 2, histories[1][0])
+    _test_positive_send_messages_in_cur_chat(histories[1][1:5])
+
+    _test_positive_switch_to_chat_by_sidebar(users[1].first_name)
+    _test_positive_send_messages_in_cur_chat(histories[0][2:3])
+
+    _test_positive_login(users[1])
+    id_ = _get_my_id()
+
+    _test_positive_search(id_ - 1)
+    _test_positive_send_messages_in_cur_chat(histories[0][3:4])
+    _test_positive_close_cur_chat()
+
+    _test_positive_login(users[2])
+
+    _test_positive_switch_to_chat_by_sidebar(users[0].first_name)
+    _test_positive_send_messages_in_cur_chat(histories[1][5:6])
+    _test_positive_close_cur_chat()
+
+    _test_positive_login(users[0])
+
+    _test_positive_switch_to_chat_by_sidebar(users[1].first_name)
+    _test_positive_send_messages_in_cur_chat(histories[0][4:5])
+    _test_positive_history(histories[0])
+
+    _test_positive_switch_to_chat_by_sidebar(users[2].first_name)
+    _test_positive_send_messages_in_cur_chat(histories[1][6:7])
+    _test_positive_history(histories[1])
 
 
 def _test_positive_main_page_redirects_to_login_if_user_is_not_auth() -> None:
@@ -63,31 +122,47 @@ def _test_positive_login(user_info: NewUserInfo) -> None:
     assert driver.current_url == FullUrl.MAIN
 
 
-def _test_positive_search_chat_and_send_messages() -> None:
-    driver.get(FullUrl.MAIN)
+def _test_positive_create_new_chat(id_: int,
+                                   first_text_message: str,
+                                   ) -> None:
+    _test_positive_search(id_)
 
-    my_id: int = int(driver.find_element(By.XPATH, '//div[@id="js-user-id"]').text.replace('ID: ', ''))
-    driver.find_element(By.XPATH, '//input[@id="js-search-input"]').send_keys(str(my_id - 1))
-    driver.find_element(By.XPATH, '//button[@id="js-search-button"]').click()
-
-    first_text_message: str = 'Hello!'
     driver.find_element(By.XPATH, '//textarea[@id="js-new-chat-input"]').send_keys(first_text_message)
     driver.find_element(By.XPATH, '//button[@id="js-new-chat-button"]').click()
     sleep(0.5)  # wait for api chat creating
 
-    last_message_text = driver.find_element(By.XPATH,
-                                            '//div[@class="chat"]//div[@class="chat__message__text"]').text
-    assert last_message_text == first_text_message
 
-    text_messages: list[str] = ['How are you?', 'Bye!']
-    for text in text_messages:
-        driver.find_element(By.XPATH, '//div[@class="chat"]'
-                                      '//div[@class="chat__input-container"]//textarea').send_keys(text)
-        driver.find_element(By.XPATH, '//div[@class="chat"]//div[@class="chat__input-container"]//button').click()
+def _test_positive_search(id_: int) -> None:
+    input_el = driver.find_element(By.XPATH, '//input[@id="js-search-input"]')
+    input_el.clear()
+    input_el.send_keys(str(id_))
+    driver.find_element(By.XPATH, '//button[@id="js-search-button"]').click()
+    sleep(0.5)  # wait for switch and history loading
+
+
+def _test_positive_switch_to_chat_by_sidebar(interlocutor_first_name: str) -> None:
+    driver.find_element(By.XPATH, f'//div[@class="sidebar__links"]'
+                                  f'/div[@class="chat-link"]'
+                                  f'/div[@class="chat-link__chat-name"][text()="{interlocutor_first_name}"]').click()
+    sleep(0.5)  # wait for switch and history loading
+
+
+def _test_positive_send_messages_in_cur_chat(text_messages: list[str]) -> None:
+    chat_input_container_el = _get_cur_chat_el().find_element(By.XPATH, 'div[@class="chat__input-container"]')
+    input_el = chat_input_container_el.find_element(By.XPATH, './/textarea')
+    button_el = chat_input_container_el.find_element(By.XPATH, './/button')
+
+    for text_message in text_messages:
+        input_el.send_keys(text_message)
+        button_el.click()
         sleep(0.5)  # wait for api chat message creating
 
-        last_message_text = driver.find_element(By.XPATH,
-                                                '//div[@class="chat"]'
-                                                '//div[@class="chat__message chat__message--self"][last()]'
-                                                '//div[@class="chat__message__text"]').text
-        assert last_message_text == text
+
+def _test_positive_history(expected_text_messages: list[str]) -> None:
+    text_messages_els = _get_cur_chat_el().find_elements(By.XPATH, './/div[@class="chat__message__text"]')
+    for i, text_message_el in enumerate(text_messages_els):
+        assert text_message_el.text == expected_text_messages[i]
+
+
+def _test_positive_close_cur_chat() -> None:
+    _get_cur_chat_el().find_element(By.XPATH, './/div[@class="chat__back-link"]').click()
