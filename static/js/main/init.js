@@ -3,7 +3,7 @@ import { JWT_TOKEN_REFRESH_INTERVAL_DELAY } from "../_config.js";
 import { requestUserChats, requestNewJWTToken } from "../_http.js";
 import { startWebSocket } from "./_websocket.js";
 import { displayUserInfo, displayUserChats, handlersForWebsocket } from "./_html.js";
-import { user } from "./user.js";
+import { user } from "./_user.js";
 
 setInterval(async () => {
     let data = await requestNewJWTToken();
