@@ -1,0 +1,27 @@
+{% extends '_base.html' %}
+
+
+{% block title %}
+Упс...
+{% endblock %}
+
+{% block main %}
+<style>
+    main {
+        display: flex;
+    }
+    .center {
+        color: white;
+        margin: auto;
+    }
+    .center h1 {
+        font-size: 70px;
+        margin-bottom: 10px;
+    }
+</style>
+<div class="center">
+    <h1>{{ status }}</h1>
+    <small>Не знаем, как так вышло...</small>
+</div>
+
+{% endblock %}
