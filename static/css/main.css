@@ -89,6 +89,7 @@
     min-height: 100%;
     max-height: 100%;
     z-index: 2;
+    position: relative;
 }
 
 #js-cur-chat-overlay {
