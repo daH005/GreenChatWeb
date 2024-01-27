@@ -1,3 +1,4 @@
+import { choose } from "../../_random.js";
 import { requestChatHistory } from "../../_http.js";
 import { dateToDateStr, normalizeDateTimezone }  from "../../_datetime.js";
 import { newMessageSound } from "../../_audio.js";
@@ -12,6 +13,16 @@ import { AbstractChat } from "./absChat.js";
 
 const chatParentEl = document.getElementById("js-loaded-chats");
 const chatTempEl = document.getElementById("js-chat-temp");
+const PHRASES = [
+    "Что же написать...",
+    "Хм...",
+    "Короче, да...",
+    "В общем и целом...",
+    "Ваше слово?",
+    "Впиши в меня текст!",
+    "Наполни меня текстом!",
+    "Ты меня любишь, а я тебя - текст!",
+];
 
 export class Chat extends AbstractChat {
     static interlocutorsChats = {};
@@ -63,6 +74,7 @@ export class Chat extends AbstractChat {
                 }
             });
         });
+        this.childEls.input.setAttribute("placeholder", choose(PHRASES));
 
         this.childEls.sendButton = this.el.querySelector("button");
         this.childEls.sendButton.onclick = () => {
