@@ -88,6 +88,7 @@
     flex-direction: column;
     min-height: 100%;
     max-height: 100%;
+    z-index: 2;
 }
 
 #js-cur-chat-overlay {
@@ -101,7 +102,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 999;
+    z-index: 1;
     font-size: 1.5em;
 }
 
