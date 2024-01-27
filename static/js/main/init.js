@@ -1,9 +1,8 @@
 import { saveJWTToken } from "../_localStorage.js";
+import { requestNewJWTToken } from "../_http.js";
 import { JWT_TOKEN_REFRESH_INTERVAL_DELAY } from "../_config.js";
-import { requestUserChats, requestNewJWTToken } from "../_http.js";
 import { startWebSocket } from "./_websocket.js";
-import { displayUserInfo, displayUserChats, handlersForWebsocket } from "./_html.js";
-import { user } from "./_user.js";
+import { initHtml, handlersForWebsocket } from "./_html/init.js";
 
 setInterval(async () => {
     let data = await requestNewJWTToken();
@@ -11,10 +10,6 @@ setInterval(async () => {
     console.log("Токен обновлён!");
 }, JWT_TOKEN_REFRESH_INTERVAL_DELAY);
 
-displayUserInfo(user);
+initHtml();
 
-console.log("Загружаем чаты...");
-displayUserChats(await requestUserChats());
-
-console.log("Запускаем веб-сокет...");
 startWebSocket(handlersForWebsocket);
