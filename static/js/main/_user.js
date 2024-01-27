@@ -6,5 +6,4 @@ if (!JWTTokenExist()) {
     redirectToLoginPage();
 }
 
-console.log("Загружаем пользователя...");
 export const user = await requestUserInfo();
