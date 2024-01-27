@@ -164,6 +164,7 @@ export class Chat extends AbstractChat {
             this.link.update({
                 text: apiData.text,
                 dateStr,
+                isSelf,
             });
         }
     }

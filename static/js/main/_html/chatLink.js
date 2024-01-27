@@ -36,6 +36,11 @@ export class ChatLink extends AbstractChatElementFacade {
 
     update(data) {
         let text = data.text;
+
+        if (data.isSelf) {
+            text = "Вы: " + text;
+        }
+
         if (text.length > MAX_CHAT_LINK_TEXT_LENGTH) {
             text = text.slice(0, MAX_CHAT_LINK_TEXT_LENGTH) + "...";
         }
