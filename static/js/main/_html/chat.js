@@ -32,7 +32,6 @@ export class Chat extends AbstractChat {
         this.messages = [];
         this.fullyLoaded = false;
         this.datesSeps = {};
-        this.isOpened = false;
 
         this.name = null;
         this.interlocutorUser = null;
