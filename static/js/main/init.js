@@ -10,6 +10,6 @@ setInterval(async () => {
     console.log("Токен обновлён!");
 }, JWT_TOKEN_REFRESH_INTERVAL_DELAY);
 
-initHtml();
+await initHtml();  // important! wait all chats loading and other things
 
 startWebSocket(handlersForWebsocket);

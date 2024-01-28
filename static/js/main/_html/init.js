@@ -17,6 +17,12 @@ function addChat(apiData) {
 }
 
 export const handlersForWebsocket = {
+    "interlocutorsOnlineInfo": (apiData) => {
+        for (let interlocutorId in apiData) {
+            Chat.interlocutorsChats[interlocutorId].updateName(apiData[interlocutorId]);
+        }
+    },
+
     "newChat": (apiData) => {
         addChat(apiData);
         if (apiData.isGroup) {
