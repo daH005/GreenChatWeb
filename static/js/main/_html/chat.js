@@ -167,7 +167,7 @@ export class Chat extends AbstractChat {
             this.topDateStr = dateStr;
         }
 
-        if (!prepend && !isSelf && (!userInWindow() || !this.isOpened)) {
+        if (!isFirst && !prepend && !isSelf && (!userInWindow() || !this.isOpened)) {
             newMessageSound.play();
         }
 
