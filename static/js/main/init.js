@@ -1,13 +1,8 @@
-import { JWTTokenExist, saveJWTToken } from "../_localStorage.js";
-import { redirectToLoginPage } from "../_redirects.js";
+import { saveJWTToken } from "../_localStorage.js";
+import { requestNewJWTToken } from "../_http.js";
 import { JWT_TOKEN_REFRESH_INTERVAL_DELAY } from "../_config.js";
-import { requestUserInfo, requestUserChats, requestNewJWTToken } from "../_http.js";
 import { startWebSocket } from "./_websocket.js";
-import { displayUserInfo, displayUserChats, newDataHandlers } from "./_html.js";
-
-if (!JWTTokenExist()) {
-    redirectToLoginPage();
-}
+import { initHtml, handlersForWebsocket } from "./_html/init.js";
 
 setInterval(async () => {
     let data = await requestNewJWTToken();
@@ -15,11 +10,6 @@ setInterval(async () => {
     console.log("Токен обновлён!");
 }, JWT_TOKEN_REFRESH_INTERVAL_DELAY);
 
-console.log("Загружаем пользователя...");
-displayUserInfo(await requestUserInfo());
+await initHtml();  // important! wait all chats loading and other things
 
-console.log("Загружаем чаты...");
-displayUserChats(await requestUserChats());
-
-console.log("Запускаем веб-сокет...");
-startWebSocket(newDataHandlers);
+startWebSocket(handlersForWebsocket);

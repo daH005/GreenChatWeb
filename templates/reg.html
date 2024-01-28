@@ -19,53 +19,55 @@
 
     <div class="central-container">
         <div class="inputs-container">
-            <input id="js-first-name" placeholder="Ваше имя" maxlength="100" tabindex="-1">
-            <input id="js-last-name" placeholder="Ваша фамилия" maxlength="100" tabindex="-1">
-            <button class="js-next" tabindex="-1">Далее</button>
+            <input id="js-first-name" placeholder="Ваше имя" maxlength="100">
+            <input id="js-last-name" placeholder="Ваша фамилия" maxlength="100">
+            <button class="js-next">Далее</button>
         </div>
     </div>
 
     <div class="central-container">
         <div class="inputs-container">
-            <button class="js-back" tabindex="-1">Назад</button>
+            <button class="js-back">Назад</button>
             <small class="hint">Минимальная длина логина - 5 символов</small>
-            <input id="js-username" placeholder="Ваш логин" maxlength="100" tabindex="-1">
+            <input id="js-username" placeholder="Ваш логин" maxlength="100">
 
             <small class="hint">Минимальная длина пароля - 10 символов</small>
-            <div class="input-and-inner-button-container js-password-switch">
-                <input id="js-password" class="js-password-switch-input" type="password" placeholder="Ваш пароль" maxlength="50" tabindex="-1">
-                <button class="js-password-switch-hidden" tabindex="-1">
-                    <i class="fa fa-eye-slash" aria-hidden="true"></i>
-                </button>
-                <button class="js-password-switch-showed" tabindex="-1">
-                    <i class="fa fa-eye" aria-hidden="true"></i>
-                </button>
-            </div>
-            <div class="input-and-inner-button-container js-password-switch">
-                <input id="js-password-confirm" class="js-password-switch-input" type="password" placeholder="Повтор пароля" maxlength="50" tabindex="-1">
-                <button class="js-password-switch-hidden" tabindex="-1">
-                    <i class="fa fa-eye-slash" aria-hidden="true"></i>
-                </button>
-                <button class="js-password-switch-showed" tabindex="-1">
-                    <i class="fa fa-eye" aria-hidden="true"></i>
-                </button>
+            <div class="js-password-switch">
+                <div class="input-and-inner-button-container">
+                    <input id="js-password" class="js-password-switch-input" type="password" placeholder="Ваш пароль" maxlength="50">
+                    <button class="js-password-switch-hidden">
+                        <i class="fa fa-eye-slash" aria-hidden="true"></i>
+                    </button>
+                    <button class="js-password-switch-showed">
+                        <i class="fa fa-eye" aria-hidden="true"></i>
+                    </button>
+                </div>
+                <div class="input-and-inner-button-container">
+                    <input id="js-password-confirm" class="js-password-switch-input" type="password" placeholder="Повтор пароля" maxlength="50">
+                    <button class="js-password-switch-hidden">
+                        <i class="fa fa-eye-slash" aria-hidden="true"></i>
+                    </button>
+                    <button class="js-password-switch-showed">
+                        <i class="fa fa-eye" aria-hidden="true"></i>
+                    </button>
+                </div>
             </div>
 
-            <button class="js-next" tabindex="-1">Далее</button>
+            <button class="js-next">Далее</button>
         </div>
     </div>
 
     <div class="central-container">
         <div class="inputs-container">
-            <button class="js-back" tabindex="-1">Назад</button>
+            <button class="js-back">Назад</button>
             <div class="input-and-inner-button-container">
-                <input id="js-email" placeholder="Ваша почта" maxlength="200" tabindex="-1">
-                <button id="js-send-mail" tabindex="-1">
+                <input id="js-email" placeholder="Ваша почта" maxlength="200">
+                <button id="js-send-mail">
                     <small>Код</small>
                 </button>
             </div>
-            <input id="js-mail-code" placeholder="Код подтверждения" maxlength="4" tabindex="-1">
-            <button id="js-create-account" tabindex="-1">Создать аккаунт</button>
+            <input id="js-mail-code" placeholder="Код подтверждения" maxlength="4">
+            <button id="js-create-account">Создать аккаунт</button>
         </div>
     </div>
 </div>

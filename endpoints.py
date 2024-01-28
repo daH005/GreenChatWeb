@@ -23,3 +23,4 @@ class TemplateName:  # Enum вызывает ошибку...
     MAIN = 'main.html'
     REG = 'reg.html'
     LOGIN = 'login.html'
+    ERROR = 'error.html'

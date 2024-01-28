@@ -28,6 +28,7 @@ def _make_driver(webdriver_factory: Callable,
 def _make_chrome_options() -> ChromeOptions:
     options: ChromeOptions = ChromeOptions()
     options.add_argument('--remote-debugging-port=9222')  # ToDo: check on windows
+    options.add_argument("--window-size=1600,1000")
     return options
 
 

@@ -81,6 +81,7 @@
 
 .chats {
     height: calc(100vh - 50px);
+    position: relative;
 }
 
 .chat {
@@ -88,9 +89,12 @@
     flex-direction: column;
     min-height: 100%;
     max-height: 100%;
+    z-index: 2;
+    position: relative;
+    background: var(--main-2-color);
 }
 
-.closer {
+#js-cur-chat-overlay {
     top: 0;
     left: 0;
     position: absolute;
@@ -101,7 +105,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 999;
+    z-index: 1;
     font-size: 1.5em;
 }
 
@@ -249,9 +253,7 @@
     resize: none;
 }
 
-
-@media only screen and (max-width: 700px), only screen and
-(max-device-width: 700px){
+@media only screen and (max-width: 1280px), only screen and (max-device-width: 1280px) {
 
     .messenger {
         margin-top: 0;
@@ -259,11 +261,23 @@
         height: 100vh;
     }
 
+    .chats {
+        height: 100vh;
+    }
+
+}
+
+@media only screen and (max-width: 940px), only screen and (max-device-width: 940px) {
+
     .sidebar {
         position: absolute;
         z-index: 1000;
         width: 100%;
         height: 100%;
+    }
+
+    .chats {
+        height: calc(100vh - 56px);
     }
 
     .chat {
@@ -274,7 +288,7 @@
         background: var(--main-2-color);
     }
 
-    .closer {
+    #js-cur-chat-overlay {
         background: var(--main-color);
     }
 

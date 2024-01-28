@@ -40,9 +40,14 @@ class NewUserInfo(NamedTuple):
         count: int = UserNumCounting.get()
         ob = cls(username=cls._make_username(count),
                  email=cls._make_email(count),
+                 first_name=cls._make_first_name(count),
                  **kwargs)
         UserNumCounting.set(count + 1)
         return ob
+
+    @classmethod
+    def _make_first_name(cls, count: int) -> str:
+        return 'Данил' + str(count)
 
     @classmethod
     def _make_username(cls, count: int) -> str:

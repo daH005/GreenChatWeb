@@ -18,6 +18,10 @@
     src: url('../fonts/NaturalMonoAlt.ttf');
 }
 
+html {
+    overflow: hidden;
+}
+
 body {
     margin: 0;
     background: var(--background-color);
@@ -51,7 +55,7 @@ button {
     color: white;
 }
 
-button:hover {
+button:hover, button:focus {
     background: none;
 }
 
