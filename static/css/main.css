@@ -252,15 +252,19 @@
     resize: none;
 }
 
-
-@media only screen and (max-width: 780px), only screen and
-(max-device-width: 780px){
+@media only screen and (max-width: 1280px), only screen and
+(max-device-width: 1280px){
 
     .messenger {
         margin-top: 0;
         margin-bottom: 0;
         height: 100vh;
     }
+
+}
+
+@media only screen and (max-width: 940px), only screen and
+(max-device-width: 940px){
 
     .sidebar {
         position: absolute;
