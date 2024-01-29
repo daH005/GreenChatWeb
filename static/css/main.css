@@ -66,6 +66,10 @@
     font-size: small;
 }
 
+.chat-link__last-message .chat-link__self {
+    opacity: 0.5;
+}
+
 .chat-link .chat-link__date {
     position: absolute;
     right: 10px;
