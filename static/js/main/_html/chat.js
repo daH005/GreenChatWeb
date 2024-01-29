@@ -21,7 +21,6 @@ const PHRASES = [
     "Ваше слово?",
     "Впиши в меня текст!",
     "Наполни меня текстом!",
-    "Ты меня любишь, а я тебя - текст!",
 ];
 
 export class Chat extends AbstractChat {
