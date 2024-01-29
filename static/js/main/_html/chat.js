@@ -55,7 +55,10 @@ export class Chat extends AbstractChat {
 
     _makeChildEls() {
         this.childEls.name = this.el.querySelector(".chat__name");
-        this.updateName(false);
+        this.childEls.name.textContent = this.name;
+
+        this.childEls.onlineStatus = this.el.querySelector(".chat__interlocutor-online-status");
+        this.updateOnlineStatus(false);
 
         this.childEls.backLink = this.el.querySelector(".chat__back-link");
         this.childEls.backLink.onclick = () => {
@@ -242,14 +245,14 @@ export class Chat extends AbstractChat {
         }, 1000);
     }
 
-    updateName(isOnline) {
-        let newName = this.name;
+    updateOnlineStatus(isOnline) {
         if (isOnline) {
-            newName += " (в сети)";
+            this.childEls.onlineStatus.textContent = "в сети";
+            this.childEls.onlineStatus.classList.add("is-online");
         } else {
-            newName += " (не в сети)";
+            this.childEls.onlineStatus.textContent = "не в сети";
+            this.childEls.onlineStatus.classList.remove("is-online");
         }
-        this.childEls.name.textContent = newName;
     }
 
 }

@@ -144,8 +144,22 @@
     color: var(--main-3-color);
 }
 
+.chat .chat__name-wrapper {
+    display: flex;
+    align-items: center;
+}
+
 .chat .chat__name {
     padding-right: 10px;
+}
+
+.chat .chat__interlocutor-online-status {
+    color: var(--main-2-color);
+    padding: 10px;
+}
+
+.chat .chat__interlocutor-online-status.is-online {
+    color: var(--light-green-color);
 }
 
 .chat .chat__date-sep {
