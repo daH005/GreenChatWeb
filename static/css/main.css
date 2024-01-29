@@ -250,7 +250,8 @@
 }
 
 .chat__input-container {
-    padding: 0.5vw 5vw;
+    padding: 1vw 5vw;
+    padding-top: 2vw;
     width: 100%;
     box-sizing: border-box;
     position: relative;
