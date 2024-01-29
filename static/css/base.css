@@ -120,3 +120,11 @@ h1 {
 .input-and-inner-button-container button:hover {
     color: var(--main-3-color);
 }
+
+@media only screen and (max-width: 940px), only screen and (max-device-width: 940px) {
+
+    .main {
+        height: calc(100vh - 56px);;
+    }
+
+}
