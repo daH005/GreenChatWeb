@@ -135,4 +135,8 @@ GreenChat
 <script src="{{ url_for('static', filename='js/clickByPressEnter.js') }}" type="module"></script>
 <script src="{{ url_for('static', filename='js/disableBackReferrer.js') }}" type="module"></script>
 <script src="{{ url_for('static', filename='js/main/init.js') }}" type="module"></script>
+<script>
+    let addrHeight = window.screen.height - document.body.clientHeight;
+    document.documentElement.style.setProperty('--addr-height', addrHeight + "px");
+</script>
 {% endblock %}
