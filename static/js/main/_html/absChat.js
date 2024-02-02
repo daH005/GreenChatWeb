@@ -27,4 +27,14 @@ export class AbstractChat extends AbstractChatElementFacade {
         this.isOpened = false;
     }
 
+    updateOnlineStatus(isOnline) {
+        if (isOnline) {
+            this.childEls.onlineStatus.textContent = "в сети";
+            this.childEls.onlineStatus.classList.add("is-online");
+        } else {
+            this.childEls.onlineStatus.textContent = "не в сети";
+            this.childEls.onlineStatus.classList.remove("is-online");
+        }
+    }
+
 }

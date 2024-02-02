@@ -244,14 +244,4 @@ export class Chat extends AbstractChat {
         }, 1000);
     }
 
-    updateOnlineStatus(isOnline) {
-        if (isOnline) {
-            this.childEls.onlineStatus.textContent = "в сети";
-            this.childEls.onlineStatus.classList.add("is-online");
-        } else {
-            this.childEls.onlineStatus.textContent = "не в сети";
-            this.childEls.onlineStatus.classList.remove("is-online");
-        }
-    }
-
 }
