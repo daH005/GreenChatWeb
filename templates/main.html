@@ -39,10 +39,13 @@ GreenChat
 
             <div class="chat chat--hidden chat--new-fake" id="js-new-chat">
                 <div class="chat__header">
-                    <div class="chat__back-link" id="js-new-chat-back-link">
+                    <div class="chat__back-link">
                         <i class="fa fa-caret-left"></i>
                     </div>
-                    <div class="chat__name" id="js-new-chat-name"></div>
+                    <div class="chat__name-wrapper">
+                        <div class="chat__name"></div>
+                        <div class="chat__interlocutor-online-status"></div>
+                    </div>
                 </div>
                 <div class="chat__messages">
                     Отправьте сообщение для создания нового чата.
@@ -50,11 +53,10 @@ GreenChat
 
                 <div class="chat__input-container">
                     <div class="input-and-inner-button-container js-click-by-press-enter">
-			            <textarea id="js-new-chat-input"
-                                  class="js-click-by-press-enter-input"
+			            <textarea class="js-click-by-press-enter-input"
                                   placeholder="Ваше первое сообщение?..."
                                   maxlength="10000"></textarea>
-                        <button id="js-new-chat-button" class="js-click-by-press-enter-button">
+                        <button class="js-click-by-press-enter-button">
                             <i class="fa fa-play"></i>
                         </button>
                     </div>
