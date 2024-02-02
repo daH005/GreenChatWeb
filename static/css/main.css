@@ -1,9 +1,13 @@
+:root {
+    --chat-input-height: 50px;
+}
+
 .messenger {
     display: flex;
     margin: 50px auto;
     margin-bottom: 0px;
     max-width: 1280px;
-    height: calc(100vh - 50px);
+    height: calc(100vh - var(--chat-input-height));
 }
 
 .sidebar {
@@ -89,7 +93,7 @@
 }
 
 .chats {
-    height: calc(100vh - 50px);
+    height: calc(100vh - var(--chat-input-height));
     position: relative;
 }
 
@@ -309,7 +313,7 @@
     }
 
     .chats {
-        height: calc(100vh - 56px);
+        height: calc(100vh - var(--addr-height));
     }
 
     .chat {
