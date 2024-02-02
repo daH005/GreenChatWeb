@@ -19,6 +19,12 @@ function addChat(apiData) {
 export const handlersForWebsocket = {
     "interlocutorsOnlineInfo": (apiData) => {
         for (let interlocutorId in apiData) {
+            if (newFakeChat.interlocutorUser) {
+                if (interlocutorId == newFakeChat.interlocutorUser.id) {
+                    newFakeChat.updateOnlineStatus(apiData[interlocutorId]);
+                    continue;
+                }
+            }
             Chat.interlocutorsChats[interlocutorId].updateOnlineStatus(apiData[interlocutorId]);
         }
     },
