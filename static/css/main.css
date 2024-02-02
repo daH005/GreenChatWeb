@@ -139,7 +139,7 @@
     align-items: center;
 
     box-sizing: border-box;
-    height: 65px;
+    min-height: 65px;
 }
 
 .chat .chat__back-link {
