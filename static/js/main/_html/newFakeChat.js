@@ -14,15 +14,16 @@ export class NewFakeChat extends AbstractChat {
     }
 
     _makeChildEls() {
-        this.childEls.backLink = document.getElementById("js-new-chat-back-link");
+        this.childEls.backLink = document.querySelector(".chat__back-link");
         this.childEls.backLink.onclick = () => {
             this.close();
         }
 
-        this.childEls.name = document.getElementById("js-new-chat-name");
-        this.childEls.input = document.getElementById("js-new-chat-input");
+        this.childEls.name = document.querySelector(".chat__name");
+        this.childEls.onlineStatus = document.querySelector(".chat__interlocutor-online-status");
 
-        this.childEls.sendButton = document.getElementById("js-new-chat-button");
+        this.childEls.input = document.querySelector("textarea");
+        this.childEls.sendButton = document.querySelector("button");
         this.childEls.sendButton.onclick = () => {
             if (!this._textMessageIsMeaningful(this.childEls.input.value)) {
                 return;
