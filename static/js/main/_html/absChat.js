@@ -18,6 +18,8 @@ export class AbstractChat extends AbstractChatElementFacade {
         AbstractChat.curOpened = this;
 
         this.el.classList.remove("chat--hidden");
+        this.childEls.input.focus();
+
         this.isOpened = true;
     }
 
