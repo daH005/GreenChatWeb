@@ -127,8 +127,8 @@ def _test_positive_create_new_chat(id_: int,
                                    ) -> None:
     _test_positive_search(id_)
 
-    driver.find_element(By.XPATH, '//textarea[@id="js-new-chat-input"]').send_keys(first_text_message)
-    driver.find_element(By.XPATH, '//button[@id="js-new-chat-button"]').click()
+    driver.find_element(By.XPATH, '//div[@id="js-new-chat"]//textarea').send_keys(first_text_message)
+    driver.find_element(By.XPATH, '//div[@id="js-new-chat"]//button').click()
     sleep(0.5)  # wait for api chat creating
 
 
