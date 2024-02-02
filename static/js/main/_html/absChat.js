@@ -1,3 +1,4 @@
+import { isMobile } from "../../_mobDetecting.js";
 import { AbstractChatElementFacade } from "./abs.js";
 
 export class AbstractChat extends AbstractChatElementFacade {
@@ -18,7 +19,9 @@ export class AbstractChat extends AbstractChatElementFacade {
         AbstractChat.curOpened = this;
 
         this.el.classList.remove("chat--hidden");
-        this.childEls.input.focus();
+        if (!isMobile) {
+            this.childEls.input.focus();
+        }
 
         this.isOpened = true;
     }
