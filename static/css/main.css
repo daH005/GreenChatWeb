@@ -210,7 +210,8 @@
 }
 
 .chat .chat__message a {
-    color: deeppink;
+    color: darkmagenta;
+    opacity: 0.6;
 }
 
 .chat .chat__message a:hover {
