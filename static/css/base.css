@@ -7,9 +7,11 @@
     /* Основные константы дизайна. */
     --main-color: rgb(30, 30, 30);
     --main-2-color: rgb(62, 62, 62);
-    --main-3-color: rgb(71,201,175);
+    --main-3-color: rgb(71, 201, 175);
     --background-color: rgb(40, 40, 40);
     --text-color: var(--main-color);
+
+    --addr-height: 0px;
 }
 
 @font-face {
@@ -81,6 +83,7 @@ h1 {
     align-items: center;
     justify-content: center;
     height: 100%;
+    padding: 0 40px;
 }
 
 .inputs-container {
@@ -118,4 +121,12 @@ h1 {
 
 .input-and-inner-button-container button:hover {
     color: var(--main-3-color);
+}
+
+@media only screen and (max-width: 940px), only screen and (max-device-width: 940px) {
+
+    .main {
+        height: calc(100vh - var(--addr-height));
+    }
+
 }

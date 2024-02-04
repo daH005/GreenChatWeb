@@ -1,4 +1,5 @@
 import { user } from "../_user.js";
+import { websocket } from "../_websocket.js";
 import { sendMessageToWebSocketAndClearInput } from "./common.js";
 import { AbstractChat } from "./absChat.js";
 
@@ -14,15 +15,16 @@ export class NewFakeChat extends AbstractChat {
     }
 
     _makeChildEls() {
-        this.childEls.backLink = document.getElementById("js-new-chat-back-link");
+        this.childEls.backLink = this.el.querySelector(".chat__back-link");
         this.childEls.backLink.onclick = () => {
             this.close();
         }
 
-        this.childEls.name = document.getElementById("js-new-chat-name");
-        this.childEls.input = document.getElementById("js-new-chat-input");
+        this.childEls.name = this.el.querySelector(".chat__name");
+        this.childEls.onlineStatus = this.el.querySelector(".chat__interlocutor-online-status");
 
-        this.childEls.sendButton = document.getElementById("js-new-chat-button");
+        this.childEls.input = this.el.querySelector("textarea");
+        this.childEls.sendButton = this.el.querySelector("button");
         this.childEls.sendButton.onclick = () => {
             if (!this._textMessageIsMeaningful(this.childEls.input.value)) {
                 return;
@@ -39,6 +41,14 @@ export class NewFakeChat extends AbstractChat {
 
     open(interlocutorUser) {
         super.open();
+
+        websocket.sendJSON({
+            type: "newInterlocutorOnlineStatusAdding",
+            data: {
+                userId: interlocutorUser.id,
+            }
+        });
+
         this.interlocutorUser = interlocutorUser;
         this.childEls.name.textContent = this.interlocutorUser.firstName;
     }

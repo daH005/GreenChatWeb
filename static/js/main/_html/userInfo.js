@@ -1,7 +1,13 @@
-const userIdEl = document.getElementById("js-user-id");
+const userIdParentEl = document.getElementById("js-user-id");
+const userIdSpanEl = userIdParentEl.querySelector("span");
 const userNameEl = document.getElementById("js-user-name");
 
+userIdParentEl.onclick = () => {
+    navigator.clipboard.writeText(userIdSpanEl.textContent);
+    notify("ID успешно скопирован!");
+}
+
 export function updateUserInfo(user) {
-    userIdEl.textContent = "ID: " + user.id;
+    userIdSpanEl.textContent = user.id;
     userNameEl.textContent = user.firstName;
 }

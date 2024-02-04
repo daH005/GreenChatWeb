@@ -21,7 +21,6 @@ const PHRASES = [
     "Ваше слово?",
     "Впиши в меня текст!",
     "Наполни меня текстом!",
-    "Ты меня любишь, а я тебя - текст!",
 ];
 
 export class Chat extends AbstractChat {
@@ -55,7 +54,10 @@ export class Chat extends AbstractChat {
 
     _makeChildEls() {
         this.childEls.name = this.el.querySelector(".chat__name");
-        this.updateName(false);
+        this.childEls.name.textContent = this.name;
+
+        this.childEls.onlineStatus = this.el.querySelector(".chat__interlocutor-online-status");
+        this.updateOnlineStatus(false);
 
         this.childEls.backLink = this.el.querySelector(".chat__back-link");
         this.childEls.backLink.onclick = () => {
@@ -240,16 +242,6 @@ export class Chat extends AbstractChat {
             this.childEls.typing.textContent = "";
             this.typingTimeoutId = null;
         }, 1000);
-    }
-
-    updateName(isOnline) {
-        let newName = this.name;
-        if (isOnline) {
-            newName += " (в сети)";
-        } else {
-            newName += " (не в сети)";
-        }
-        this.childEls.name.textContent = newName;
     }
 
 }

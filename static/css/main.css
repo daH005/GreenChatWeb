@@ -1,9 +1,13 @@
+:root {
+    --chat-input-height: 50px;
+}
+
 .messenger {
     display: flex;
     margin: 50px auto;
     margin-bottom: 0px;
     max-width: 1280px;
-    height: calc(100vh - 50px);
+    height: calc(100vh - var(--chat-input-height));
 }
 
 .sidebar {
@@ -15,22 +19,27 @@
 }
 
 .sidebar .sidebar__title {
-    padding: 15px;
+    padding: 17px;
     color: white;
     background: var(--main-color);
-    border-bottom: 2px solid var(--main-2-color);
     display: flex;
     align-items: center;
+
+    box-sizing: border-box;
+    min-height: 65px;
 }
 
 .sidebar .sidebar__id {
+    font-size: small;
     background: var(--main-2-color);
     border-radius: 7px;
     padding: 5px 10px;
     margin-left: 10px;
+    cursor: pointer;
 }
 
 .sidebar .sidebar__search {
+    border-top: 2px solid var(--main-2-color);
     padding: 10px;
 }
 
@@ -66,6 +75,10 @@
     font-size: small;
 }
 
+.chat-link__last-message .chat-link__self {
+    opacity: 0.5;
+}
+
 .chat-link .chat-link__date {
     position: absolute;
     right: 10px;
@@ -80,7 +93,7 @@
 }
 
 .chats {
-    height: calc(100vh - 50px);
+    height: calc(100vh - var(--chat-input-height));
     position: relative;
 }
 
@@ -129,6 +142,9 @@
     color: white;
     box-sizing: border-box;
     align-items: center;
+
+    box-sizing: border-box;
+    min-height: 65px;
 }
 
 .chat .chat__back-link {
@@ -140,8 +156,23 @@
     color: var(--main-3-color);
 }
 
+.chat .chat__name-wrapper {
+    display: flex;
+    align-items: center;
+}
+
 .chat .chat__name {
     padding-right: 10px;
+}
+
+.chat .chat__interlocutor-online-status {
+    color: var(--main-2-color);
+    padding: 10px;
+    font-size: small;
+}
+
+.chat .chat__interlocutor-online-status.is-online {
+    color: var(--light-green-color);
 }
 
 .chat .chat__date-sep {
@@ -164,6 +195,10 @@
     margin-bottom: 10px;
 }
 
+.chat.chat--new-fake .chat__messages {
+    text-align: center;
+}
+
 .chat .chat__messages > .chat__message:first-child {
     margin-top: auto;
 }
@@ -175,7 +210,8 @@
 }
 
 .chat .chat__message a {
-    color: deeppink;
+    color: darkmagenta;
+    opacity: 0.6;
 }
 
 .chat .chat__message a:hover {
@@ -232,7 +268,8 @@
 }
 
 .chat__input-container {
-    padding: 0.5vw 5vw;
+    padding: 1vw 5vw;
+    padding-top: 2vw;
     width: 100%;
     box-sizing: border-box;
     position: relative;
@@ -277,7 +314,7 @@
     }
 
     .chats {
-        height: calc(100vh - 56px);
+        height: calc(100vh - var(--addr-height));
     }
 
     .chat {

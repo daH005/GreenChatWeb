@@ -18,7 +18,9 @@ GreenChat
     <div class="sidebar">
         <div class="sidebar__title">
             <div class="sidebar__name" id="js-user-name">Загрузка...</div>
-            <div class="sidebar__id" id="js-user-id">ID: ...</div>
+            <div class="sidebar__id" id="js-user-id">
+                ID: <span>...</span>
+            </div>
         </div>
         <div class="sidebar__search">
             <div class="input-and-inner-button-container js-click-by-press-enter">
@@ -39,10 +41,13 @@ GreenChat
 
             <div class="chat chat--hidden chat--new-fake" id="js-new-chat">
                 <div class="chat__header">
-                    <div class="chat__back-link" id="js-new-chat-back-link">
+                    <div class="chat__back-link">
                         <i class="fa fa-caret-left"></i>
                     </div>
-                    <div class="chat__name" id="js-new-chat-name"></div>
+                    <div class="chat__name-wrapper">
+                        <div class="chat__name"></div>
+                        <div class="chat__interlocutor-online-status"></div>
+                    </div>
                 </div>
                 <div class="chat__messages">
                     Отправьте сообщение для создания нового чата.
@@ -50,11 +55,10 @@ GreenChat
 
                 <div class="chat__input-container">
                     <div class="input-and-inner-button-container js-click-by-press-enter">
-			            <textarea id="js-new-chat-input"
-                                  class="js-click-by-press-enter-input"
+			            <textarea class="js-click-by-press-enter-input"
                                   placeholder="Ваше первое сообщение?..."
                                   maxlength="10000"></textarea>
-                        <button id="js-new-chat-button" class="js-click-by-press-enter-button">
+                        <button class="js-click-by-press-enter-button">
                             <i class="fa fa-play"></i>
                         </button>
                     </div>
@@ -75,7 +79,10 @@ GreenChat
 <template id="js-chat-link-temp">
     <div class="chat-link">
         <div class="chat-link__chat-name"></div>
-        <div class="chat-link__last-message"></div>
+        <div class="chat-link__last-message">
+            <span class="chat-link__self">Вы: </span>
+            <span class="chat-link__text"></span>
+        </div>
         <div class="chat-link__date"></div>
     </div>
 </template>
@@ -86,7 +93,10 @@ GreenChat
             <div class="chat__back-link">
                 <i class="fa fa-caret-left"></i>
             </div>
-            <div class="chat__name"></div>
+            <div class="chat__name-wrapper">
+                <div class="chat__name"></div>
+                <div class="chat__interlocutor-online-status"></div>
+            </div>
         </div>
         <div class="chat__messages"></div>
 
