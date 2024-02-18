@@ -58,7 +58,10 @@ export class NewFakeChat extends AbstractChat {
     close() {
         super.close();
 
-        AbstractChat.interlocutorsChats[this.interlocutorUser.id] = null;
+        if (AbstractChat.interlocutorsChats[this.interlocutorUser.id] == this) {
+            AbstractChat.interlocutorsChats[this.interlocutorUser.id] = null;
+        }
+
         this.interlocutorUser = null;
     }
 
