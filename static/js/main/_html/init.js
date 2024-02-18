@@ -28,6 +28,7 @@ export const handlersForWebsocket = {
 
     "newChat": (apiData) => {
         addChat(apiData);
+
         if (apiData.isGroup) {
             return;
         }
