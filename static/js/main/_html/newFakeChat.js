@@ -49,12 +49,16 @@ export class NewFakeChat extends AbstractChat {
             }
         });
 
+        AbstractChat.interlocutorsChats[interlocutorUser.id] = this;
+
         this.interlocutorUser = interlocutorUser;
         this.childEls.name.textContent = this.interlocutorUser.firstName;
     }
 
     close() {
         super.close();
+
+        AbstractChat.interlocutorsChats[interlocutorUser.id] = null;
         this.interlocutorUser = null;
     }
 
