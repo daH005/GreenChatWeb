@@ -2,6 +2,7 @@ import { updateUserInfo } from "./userInfo.js";
 import { requestUserChats } from "../../_http.js";
 import { user } from "../_user.js";
 import { Chat } from "./chat.js";
+import { AbstractChat } from "./absChat.js";
 import { newFakeChat } from "./newFakeChat.js";
 import "./search.js";  // init inside module
 
@@ -19,10 +20,18 @@ function addChat(apiData) {
 export const handlersForWebsocket = {
     "interlocutorsOnlineInfo": (apiData) => {
         for (let interlocutorId in apiData) {
-            if (!Chat.interlocutorsChats[interlocutorId]) {
-                continue;
+
+            // Может быть так, что объект `Chat` ещё не сформирован, а данные уже пришли.
+            // Делаем такую паузу.
+            // FixMe: Изменить, если появятся идеи.
+            let waitForChatHtmlCreating = 0;
+            if (!AbstractChat.interlocutorsChats[interlocutorId]) {
+                waitForChatHtmlCreating = 1000;
             }
-            Chat.interlocutorsChats[interlocutorId].updateOnlineStatus(apiData[interlocutorId]);
+
+            setTimeout(() => {
+                AbstractChat.interlocutorsChats[interlocutorId].updateOnlineStatus(apiData[interlocutorId]);
+            }, waitForChatHtmlCreating);
         }
     },
 
@@ -34,7 +43,7 @@ export const handlersForWebsocket = {
         }
         for (let i in apiData.users) {
             if (apiData.users[i].id == newFakeChat.interlocutorUser.id) {
-                Chat.interlocutorsChats[apiData.users[i].id].open();
+                AbstractChat.interlocutorsChats[apiData.users[i].id].open();
                 break;
             }
         }
