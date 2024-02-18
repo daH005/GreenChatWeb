@@ -29,7 +29,7 @@ export class AbstractChat extends AbstractChatElementFacade {
 
     close() {
         this.el.classList.add("chat--hidden");
-        AbstractChat._curOpened = null;
+        AbstractChat.curOpened = null;
         this.isOpened = false;
     }
 
