@@ -3,6 +3,7 @@ import { AbstractChatElementFacade } from "./abs.js";
 
 export class AbstractChat extends AbstractChatElementFacade {
     static curOpened = null;
+    static interlocutorsChats = {};
 
     _init() {
         this.isOpened = false;

@@ -24,7 +24,6 @@ const PHRASES = [
 ];
 
 export class Chat extends AbstractChat {
-    static interlocutorsChats = {};
 
     _init() {
         super._init();
@@ -117,7 +116,7 @@ export class Chat extends AbstractChat {
         for (let i in this.data.fromApi.users) {
             if (this.data.fromApi.users[i].id != user.id) {
                 this.interlocutorUser = this.data.fromApi.users[i];
-                Chat.interlocutorsChats[this.interlocutorUser.id] = this;
+                AbstractChat.interlocutorsChats[this.interlocutorUser.id] = this;
                 break;
             }
         }
