@@ -18,7 +18,7 @@ function addChat(apiData) {
 }
 
 export const handlersForWebsocket = {
-    "interlocutorsOnlineInfo": (apiData) => {
+    "interlocutorsOnlineStatuses": (apiData) => {
         for (let interlocutorId in apiData) {
 
             // Может быть так, что объект `Chat` ещё не сформирован, а данные уже пришли.

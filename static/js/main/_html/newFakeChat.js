@@ -43,7 +43,7 @@ export class NewFakeChat extends AbstractChat {
         super.open();
 
         websocket.sendJSON({
-            type: "newInterlocutorOnlineStatusAdding",
+            type: "onlineStatusTracingAdding",
             data: {
                 userId: interlocutorUser.id,
             }
