@@ -5,6 +5,7 @@ from time import sleep
 from web._tests.common.drivers import driver  # noqa
 from web._tests.common.constants import FullUrl  # noqa
 from web._tests.common.info_generation import NewUserInfo  # noqa
+from web._tests.all_test_data import *  # noqa
 
 
 def _get_my_id() -> int:
@@ -16,25 +17,6 @@ def _get_cur_chat_el():
 
 
 def test_positive_all() -> None:
-    histories = [
-        [
-            'Hello!',  # 1
-            'My name is Danil.',  # 1
-            'How are u?',  # 1
-            'Im fine',  # 2
-            'Ok, goodbye!',  # 1
-        ],
-        [
-            '1',  # 1
-            '2',  # 1
-            '3',  # 1
-            '4',  # 1
-            '5',  # 1
-            'stop it!!!',  # 2
-            'Ok, goodbye!',  # 1
-        ]
-    ]
-
     _test_positive_main_page_redirects_to_login_if_user_is_not_auth()
 
     users = []
@@ -46,38 +28,38 @@ def test_positive_all() -> None:
     _test_positive_login(users[0])
     id_ = _get_my_id()
 
-    _test_positive_create_new_chat(id_ + 1, histories[0][0])
-    _test_positive_send_messages_in_cur_chat(histories[0][1:2])
+    _test_positive_create_new_chat(id_ + 1, HISTORIES[0][0])
+    _test_positive_send_messages_in_cur_chat(HISTORIES[0][1:2])
     _test_positive_close_cur_chat()
 
-    _test_positive_create_new_chat(id_ + 2, histories[1][0])
-    _test_positive_send_messages_in_cur_chat(histories[1][1:5])
+    _test_positive_create_new_chat(id_ + 2, HISTORIES[1][0])
+    _test_positive_send_messages_in_cur_chat(HISTORIES[1][1:5])
 
     _test_positive_switch_to_chat_by_sidebar(users[1].first_name)
-    _test_positive_send_messages_in_cur_chat(histories[0][2:3])
+    _test_positive_send_messages_in_cur_chat(HISTORIES[0][2:3])
 
     _test_positive_login(users[1])
     id_ = _get_my_id()
 
     _test_positive_search(id_ - 1)
-    _test_positive_send_messages_in_cur_chat(histories[0][3:4])
+    _test_positive_send_messages_in_cur_chat(HISTORIES[0][3:4])
     _test_positive_close_cur_chat()
 
     _test_positive_login(users[2])
 
     _test_positive_switch_to_chat_by_sidebar(users[0].first_name)
-    _test_positive_send_messages_in_cur_chat(histories[1][5:6])
+    _test_positive_send_messages_in_cur_chat(HISTORIES[1][5:6])
     _test_positive_close_cur_chat()
 
     _test_positive_login(users[0])
 
     _test_positive_switch_to_chat_by_sidebar(users[1].first_name)
-    _test_positive_send_messages_in_cur_chat(histories[0][4:5])
-    _test_positive_history(histories[0])
+    _test_positive_send_messages_in_cur_chat(HISTORIES[0][4:5])
+    _test_positive_history(HISTORIES[0])
 
     _test_positive_switch_to_chat_by_sidebar(users[2].first_name)
-    _test_positive_send_messages_in_cur_chat(histories[1][6:7])
-    _test_positive_history(histories[1])
+    _test_positive_send_messages_in_cur_chat(HISTORIES[1][6:7])
+    _test_positive_history(HISTORIES[1])
 
 
 def _test_positive_main_page_redirects_to_login_if_user_is_not_auth() -> None:
