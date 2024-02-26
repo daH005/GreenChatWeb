@@ -110,7 +110,10 @@ createAccountButtonEl.onclick = async () => {
         setInputAsInvalidAndMessageWithThrow(mailCodeEl, "Введите 4-х значный код!");
     }
 
-    let flagData = await requestCheckEmailCode({code: mailCodeEl.value});
+    let flagData = await requestCheckEmailCode({
+        email: emailInputEl.value,
+        code: mailCodeEl.value,
+    });
     if (!flagData.codeIsValid) {
         setInputAsInvalidAndMessageWithThrow(mailCodeEl, "Код подтверждения неверный!");
     }
