@@ -1,13 +1,14 @@
 import { updateUserInfo } from "./userInfo.js";
 import { requestUserChats } from "../../_http.js";
 import { user } from "../_user.js";
+import { addUserToApiData, addUsersToApiData } from "../_apiDataAdding.js";
 import { Chat } from "./chat.js";
 import { AbstractChat } from "./absChat.js";
 import { newFakeChat } from "./newFakeChat.js";
 import "./search.js";  // init inside module
 
 export const handlersForWebsocket = {
-    "interlocutorsOnlineStatuses": (apiData) => {
+    "interlocutorsOnlineStatuses": async (apiData) => {
         for (let interlocutorId in apiData) {
 
             // Может быть так, что объект `Chat` ещё не сформирован, а данные уже пришли.
@@ -24,8 +25,8 @@ export const handlersForWebsocket = {
         }
     },
 
-    "newChat": (apiData) => {
-        let chat = addChat(apiData);
+    "newChat": async (apiData) => {
+        let chat = await addChat(apiData);
 
         if (apiData.isGroup) {
             return;
@@ -35,24 +36,30 @@ export const handlersForWebsocket = {
         }
     },
 
-    "newChatMessage": (apiData) => {
+    "newChatMessage": async (apiData) => {
+        await addUserToApiData(apiData);
         allChats[apiData.chatId].addMessage(apiData);
     },
 
-    "newChatMessageTyping": (apiData) => {
+    "newChatMessageTyping": async (apiData) => {
+        await addUserToApiData(apiData);
         allChats[apiData.chatId].updateTyping(apiData);
     },
 }
 
 var allChats = {};
 
-function addChat(apiData) {
+async function addChat(apiData) {
+    await addUsersToApiData(apiData);
+    await addUserToApiData(apiData.lastMessage);
+
     let chat = new Chat({
         data: {
             fromApi: apiData,
         },
     });
     allChats[chat.id] = chat;
+
     return chat;
 }
 
@@ -62,7 +69,7 @@ export async function initHtml() {
     let data = await requestUserChats();
     data.chats.reverse();
     for (let i in data.chats) {
-        addChat(data.chats[i]);
+        await addChat(data.chats[i]);
     }
 
 }

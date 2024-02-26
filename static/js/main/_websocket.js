@@ -10,9 +10,9 @@ export function startWebSocket(handlers) {
         websocket.send(getJWTToken());
     }
 
-    websocket.onmessage = (event) => {
+    websocket.onmessage = async (event) => {
         let message = JSON.parse(event.data);
-        handlers[message.type](message.data);
+        await handlers[message.type](message.data);
     }
 
     websocket.sendJSON = (data) => {

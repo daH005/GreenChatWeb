@@ -4,6 +4,7 @@ import { dateToDateStr, normalizeDateTimezone }  from "../../_datetime.js";
 import { newMessageSound } from "../../_audio.js";
 import { userInWindow } from "../../_userInWindowChecking.js";
 import { user } from "../_user.js";
+import { addUserToApiData } from "../_apiDataAdding.js";
 import { ChatMessage } from "./chatMessage.js";
 import { ChatLink } from "./chatLink.js";
 import { DateSep } from "./dateSep.js";
@@ -208,19 +209,20 @@ export class Chat extends AbstractChat {
         }
     }
 
-    _loadFull() {
+    async _loadFull() {
         let offsetFromEnd = Object.keys(this.messages).length;
-        requestChatHistory({
+        let apiData = await requestChatHistory({
             chatId: this.id, offsetFromEnd,
-        }).then((apiData) => {
-            this._fillChatHistory(apiData.messages);
-            this._scrollToBottom();
-            this.fullyLoaded = true;
         });
+
+        this._fillChatHistory(apiData.messages);
+        this._scrollToBottom();
+        this.fullyLoaded = true;
     }
 
-    _fillChatHistory(messages) {
+    async _fillChatHistory(messages) {
         for (let i in messages) {
+            await addUserToApiData(messages[i]);
             this.addMessage(messages[i], true);
         }
     }
