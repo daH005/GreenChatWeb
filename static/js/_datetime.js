@@ -17,7 +17,7 @@ export function nowDate() {
     return new Date();
 }
 
-export function setNowDate(newFunc) {
+export function setNowDate(newFunc) {  // for tests
     nowDate = newFunc;
 }
 
