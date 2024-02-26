@@ -20,8 +20,8 @@ function testPositiveMakeHighlights() {
     let data = [
         ["`anytext`",
          "<span class=\"highlighted-text\">anytext</span>"],
-        ["`anytext` hihi `anytext`",
-         "<span class=\"highlighted-text\">anytext</span> hihi <span class=\"highlighted-text\">anytext</span>"],
+        ["`any text` hihi `anytext`",
+         "<span class=\"highlighted-text\">any text</span> hihi <span class=\"highlighted-text\">anytext</span>"],
         ["anytext hihi ```",
          "anytext hihi ```"],
     ];
