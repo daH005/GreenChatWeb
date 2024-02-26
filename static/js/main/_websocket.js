@@ -1,5 +1,5 @@
 import { WEBSOCKET_URL } from "../_config.js";
-import { getJWTToken } from "../_localStorage.js";
+import { JWTToken } from "../_localStorage.js";
 
 export var websocket;
 
@@ -7,7 +7,7 @@ export function startWebSocket(handlers) {
     websocket = new WebSocket(WEBSOCKET_URL);
 
     websocket.onopen = (event) => {
-        websocket.send(getJWTToken());
+        websocket.send(JWTToken.get());
     }
 
     websocket.onmessage = async (event) => {

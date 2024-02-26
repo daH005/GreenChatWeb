@@ -1,17 +1,23 @@
-import { JWT_TOKEN_LOCAL_STORAGE_KEY } from "./_config.js";
+class LocalStorageItemFacade {
 
-export function JWTTokenExist() {
-    return !(["undefined", "null", undefined, null].includes(getJWTToken()));
+    constructor(key) {
+        this.key = key;
+    }
+
+    get() {
+        return localStorage.getItem(this.key);
+    }
+
+    set(value) {
+        return localStorage.setItem(this.key, value);
+    }
+
+    exist() {
+        return !(["undefined", "null", undefined, null].includes(this.get()));
+    }
+
 }
 
-export function saveJWTToken(token) {
-    localStorage.setItem(JWT_TOKEN_LOCAL_STORAGE_KEY, token);
-}
+export var JWTToken = new LocalStorageItemFacade("JWTToken");
 
-export function getJWTToken() {
-    return localStorage.getItem(JWT_TOKEN_LOCAL_STORAGE_KEY);  // may be strings - "undefined" / "null".
-}
-
-export function setGetJWTToken(newFunc) {
-    getJWTToken = newFunc;
-}
+export var EmailCodeKey = new LocalStorageItemFacade("EmailCodeKey");
