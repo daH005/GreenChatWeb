@@ -2,7 +2,7 @@ import { requestUserInfo } from "../_http.js";
 
 var users = {}
 
-export async function userInfoById(id) {
+export async function userFromCashById(id) {
     if (!users[id]) {
         users[id] = await requestUserInfo({id});
     }
