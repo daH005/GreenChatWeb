@@ -15,6 +15,7 @@ function addChat(apiData) {
         },
     });
     allChats[chat.id] = chat;
+    return chat;
 }
 
 export const handlersForWebsocket = {
@@ -36,16 +37,13 @@ export const handlersForWebsocket = {
     },
 
     "newChat": (apiData) => {
-        addChat(apiData);
+        let chat = addChat(apiData);
 
         if (apiData.isGroup) {
             return;
         }
-        for (let i in apiData.users) {
-            if (apiData.users[i].id == newFakeChat.interlocutorUser.id) {
-                AbstractChat.interlocutorsChats[apiData.users[i].id].open();
-                break;
-            }
+        if (chat.interlocutorUser.id == newFakeChat.interlocutorUser.id) {
+            chat.open();
         }
     },
 
