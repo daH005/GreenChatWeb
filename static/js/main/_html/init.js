@@ -6,18 +6,6 @@ import { AbstractChat } from "./absChat.js";
 import { newFakeChat } from "./newFakeChat.js";
 import "./search.js";  // init inside module
 
-var allChats = {};
-
-function addChat(apiData) {
-    let chat = new Chat({
-        data: {
-            fromApi: apiData,
-        },
-    });
-    allChats[chat.id] = chat;
-    return chat;
-}
-
 export const handlersForWebsocket = {
     "interlocutorsOnlineStatuses": (apiData) => {
         for (let interlocutorId in apiData) {
@@ -54,6 +42,18 @@ export const handlersForWebsocket = {
     "newChatMessageTyping": (apiData) => {
         allChats[apiData.chatId].updateTyping(apiData);
     },
+}
+
+var allChats = {};
+
+function addChat(apiData) {
+    let chat = new Chat({
+        data: {
+            fromApi: apiData,
+        },
+    });
+    allChats[chat.id] = chat;
+    return chat;
 }
 
 export async function initHtml() {
