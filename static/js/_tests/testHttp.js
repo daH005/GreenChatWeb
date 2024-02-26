@@ -12,11 +12,11 @@ import { makeRequestingUrlAndOptions,
          requestChatHistory,
          requestNewJWTToken,
        } from "../_http.js";
-import { setGetJWTToken } from "../_localStorage.js";
+import { JWTToken } from "../_localStorage.js";
 
-setGetJWTToken(() => {
+JWTToken.get = () => {
     return "testToken";
-});
+}
 
 function testPositiveMakeRequestingUrlAndOptions() {
     let data = [
