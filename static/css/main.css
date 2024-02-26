@@ -252,6 +252,12 @@
     border-top-left-radius: 10px;
 }
 
+.chat .chat__message .chat__message__text .highlighted-text {
+    backdrop-filter: brightness(95%);
+    padding: 5px;
+    border-radius: 10px;
+}
+
 .chat .chat__message .chat__message__text-wrapper {
     position: relative;
 }
