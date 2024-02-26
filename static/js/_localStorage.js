@@ -19,5 +19,3 @@ class LocalStorageItemFacade {
 }
 
 export var JWTToken = new LocalStorageItemFacade("JWTToken");
-
-export var EmailCodeKey = new LocalStorageItemFacade("EmailCodeKey");
