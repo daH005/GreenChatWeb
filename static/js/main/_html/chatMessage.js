@@ -1,5 +1,5 @@
 import { dateToTimeStr }  from "../../_datetime.js";
-import { makeHyperlinks } from "../../_strTools.js";
+import { makeHyperlinks, makeHighlights } from "../../_strTools.js";
 import { AbstractChatElementFacade } from "./abs.js";
 
 const chatMessageTempEl = document.getElementById("js-chat-message-temp");
@@ -31,6 +31,7 @@ export class ChatMessage extends AbstractChatElementFacade {
 
     _formattedTextMessageHtml(html) {
         html = makeHyperlinks(html);
+        html = makeHighlights(html);
         return html;
     }
 
