@@ -200,13 +200,13 @@ export class Chat extends AbstractChat {
         });
     }
 
-    open() {
+    async open() {
+        if (!(this.fullyLoaded)) {
+            await this._loadFull();
+        }
+
         super.open();
         this.link.el.classList.add("chat-link--active");
-
-        if (!(this.fullyLoaded)) {
-            this._loadFull();
-        }
     }
 
     async _loadFull() {
