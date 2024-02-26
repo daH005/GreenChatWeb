@@ -11,24 +11,22 @@ export const handlersForWebsocket = {
     "interlocutorsOnlineStatuses": async (apiData) => {
         for (let interlocutorId in apiData) {
 
-            // Может быть так, что объект `Chat` ещё не сформирован, а данные уже пришли.
-            // Делаем такую паузу.
-            // FixMe: Изменить, если появятся идеи.
-            let waitForChatHtmlCreating = 0;
-            if (!AbstractChat.interlocutorsChats[interlocutorId]) {
-                waitForChatHtmlCreating = 1000;
+            let chat = AbstractChat.interlocutorsChats[interlocutorId];
+            if (!chat || chat == newFakeChat) {
+                interlocutorsOnlineStatusesForUncreatedChats[interlocutorId] = apiData[interlocutorId];
             }
 
-            setTimeout(() => {
+            if (chat) {
                 AbstractChat.interlocutorsChats[interlocutorId].updateOnlineStatus(apiData[interlocutorId]);
-            }, waitForChatHtmlCreating);
+            }
+
         }
     },
 
     "newChat": async (apiData) => {
         let chat = await addChat(apiData);
 
-        if (apiData.isGroup) {
+        if (apiData.isGroup || !newFakeChat.interlocutorUser) {
             return;
         }
         if (chat.interlocutorUser.id == newFakeChat.interlocutorUser.id) {
@@ -47,6 +45,8 @@ export const handlersForWebsocket = {
     },
 }
 
+var interlocutorsOnlineStatusesForUncreatedChats = {};
+
 var allChats = {};
 
 async function addChat(apiData) {
@@ -58,6 +58,10 @@ async function addChat(apiData) {
             fromApi: apiData,
         },
     });
+
+    let onlineStatus = interlocutorsOnlineStatusesForUncreatedChats[chat.interlocutorUser.id];
+    chat.updateOnlineStatus(onlineStatus);
+
     allChats[chat.id] = chat;
 
     return chat;
