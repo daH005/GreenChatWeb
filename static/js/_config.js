@@ -38,7 +38,6 @@ if (!WEBSOCKET_URL) {
     console.log("WEBSOCKET_URL -", WEBSOCKET_URL);
 }
 
-export const JWT_TOKEN_LOCAL_STORAGE_KEY = "JWTToken";
 export const JWT_TOKEN_REFRESH_INTERVAL_DELAY = 1000 * 60 * 15;
 
 export const BASE_HEADERS = {
