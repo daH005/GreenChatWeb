@@ -1,5 +1,5 @@
 import { assert } from "./common.js";
-import { makeHyperlinks } from "../_strTools.js";
+import { makeHyperlinks, makeHighlights } from "../_strTools.js";
 
 function testPositiveMakeHyperLinks() {
     let data = [
@@ -15,3 +15,18 @@ function testPositiveMakeHyperLinks() {
     }
 }
 testPositiveMakeHyperLinks();
+
+function testPositiveMakeHighlights() {
+    let data = [
+        ["`anytext`",
+         "<span class=\"highlighted-text\">anytext</span>"],
+        ["`anytext` hihi `anytext`",
+         "<span class=\"highlighted-text\">anytext</span> hihi <span class=\"highlighted-text\">anytext</span>"],
+        ["anytext hihi ```",
+         "anytext hihi ```"],
+    ];
+    for (let i in data) {
+        assert(makeHighlights(data[i][0]) === data[i][1]);
+    }
+}
+testPositiveMakeHighlights();
