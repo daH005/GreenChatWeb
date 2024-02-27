@@ -96,6 +96,10 @@
     font-size: smaller;
 }
 
+.chat-link .chat-link__count:empty {
+    display: none;
+}
+
 .cur-chat {
     flex: 80%;
     background: var(--main-2-color);
