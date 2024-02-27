@@ -86,6 +86,16 @@
     font-size: small;
 }
 
+.chat-link .chat-link__count {
+    position: absolute;
+    bottom: 22px;
+    right: 22px;
+    padding: 5px 10px;
+    border-radius: 10px;
+    backdrop-filter: brightness(60%);
+    font-size: smaller;
+}
+
 .cur-chat {
     flex: 80%;
     background: var(--main-2-color);
