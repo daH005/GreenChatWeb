@@ -6,6 +6,10 @@ const chatMessageTempEl = document.getElementById("js-chat-message-temp");
 
 export class ChatMessage extends AbstractChatElementFacade {
 
+    _init() {
+        this.isRead = this.data.fromApi.isRead;
+    }
+
     get tempEl() {
         return chatMessageTempEl;
     }
