@@ -66,7 +66,7 @@ export class ChatLink extends AbstractChatElementFacade {
     }
 
     updateOnlineStatus(status) {
-        this.childEls.onlineStatus.toggle("is-active", status);
+        this.childEls.onlineStatus.toggle("is-online", status);
     }
 
 }
