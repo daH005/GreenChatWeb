@@ -46,11 +46,11 @@ export const handlersForWebsocket = {
 
     "newUnreadCount": async (apiData) => {
         allChats[apiData.chatId].link.updateUnreadCount(apiData.unreadCount);
-    }
+    },
 
     "readChatMessages": async (apiData) => {
         allChats[apiData.chatId].setMessagesAsRead(apiData.chatMessagesIds);
-    }
+    },
 
 }
 
