@@ -1,5 +1,6 @@
 import { dateToTimeStr }  from "../../_datetime.js";
 import { makeHyperlinks, makeHighlights } from "../../_strTools.js";
+import { user } from "../_user.js";
 import { AbstractChatElementFacade } from "./abs.js";
 
 const chatMessageTempEl = document.getElementById("js-chat-message-temp");
@@ -9,7 +10,7 @@ export class ChatMessage extends AbstractChatElementFacade {
     _init() {
         this.id = this.data.fromApi.id;
         this.isRead = this.data.fromApi.isRead;
-        this.isSelf = this.data.isSelf;
+        this.isSelf = user.id == this.data.fromApi.user.id;
     }
 
     get tempEl() {

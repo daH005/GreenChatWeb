@@ -41,6 +41,7 @@ export class Chat extends AbstractChat {
         this.topDateStr = null;
         this.bottomDateStr = null;
         this.typingTimeoutId = null;
+        this._lastReadMessageY = 0;
 
         this._defineInterlocutorUser();
         this._defineName();
@@ -152,15 +153,14 @@ export class Chat extends AbstractChat {
             scrollingIsBottom = true;
         }
 
-        let isSelf = user.id == apiData.user.id;
-        this.messages[apiData.id] = new ChatMessage({
+        let message = new ChatMessage({
             parentEl: this.childEls.messages,
             prepend,
             data: {
                 fromApi: apiData,
-                isSelf,
             },
         });
+        this.messages[apiData.id] = message;
 
         if (scrollingIsBottom) {
             this._scrollToBottom();
@@ -175,7 +175,7 @@ export class Chat extends AbstractChat {
             this.topDateStr = dateStr;
         }
 
-        if (!isFirst && !prepend && !isSelf && (!userInWindow() || !this.isOpened)) {
+        if (!isFirst && !prepend && !message.isSelf && (!userInWindow() || !this.isOpened)) {
             newMessageSound.play();
         }
 
@@ -183,8 +183,13 @@ export class Chat extends AbstractChat {
             this.link.update({
                 text: apiData.text,
                 dateStr,
-                isSelf,
+                isSelf: message.isSelf,
             });
+
+            if (!message.isSelf && message.isRead) {
+                this._lastReadMessageY = message.el.getBoundingClientRect().bottom;
+            }
+
         }
     }
 
@@ -224,7 +229,7 @@ export class Chat extends AbstractChat {
         });
 
         this._fillChatHistory(apiData.messages);
-        this._scrollToBottom();
+        this._scrollToLastReadMessage();
         this.fullyLoaded = true;
     }
 
@@ -233,6 +238,10 @@ export class Chat extends AbstractChat {
             await addUserToApiData(messages[i]);
             this.addMessage(messages[i], true);
         }
+    }
+
+    _scrollToLastReadMessage() {
+        this.childEls.messages.scrollTop = this._lastReadMessageY - this.childEls.messages.clientHeight;
     }
 
     close() {
