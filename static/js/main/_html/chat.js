@@ -67,6 +67,9 @@ export class Chat extends AbstractChat {
         }
 
         this.childEls.messages = this.el.querySelector(".chat__messages");
+        this.childEls.messages.addEventListener("scroll", () => {
+            this._read();
+        });
 
         this.childEls.input = this.el.querySelector("textarea");
         this.childEls.input.addEventListener("input", () => {
@@ -210,6 +213,8 @@ export class Chat extends AbstractChat {
 
         super.open();
         this.link.el.classList.add("chat-link--active");
+
+        this._read();
     }
 
     async _loadFull() {
@@ -246,6 +251,10 @@ export class Chat extends AbstractChat {
             this.childEls.typing.textContent = "";
             this.typingTimeoutId = null;
         }, 1000);
+    }
+
+    _read() {
+        console.log(this.childEls.messages.scrollTop);
     }
 
 }
