@@ -224,7 +224,11 @@ export class Chat extends AbstractChat {
         });
 
         await this._fillChatHistory(apiData.messages);
-        this._scrollToLastReadMessage();
+
+        setTimeout(() => {
+            this._scrollToLastReadMessage();
+        }, 10);  // for `marginTop` in `_messagesElHeight()`
+
         this.fullyLoaded = true;
     }
 
@@ -236,10 +240,11 @@ export class Chat extends AbstractChat {
     }
 
     _scrollToLastReadMessage() {
-        this.childEls.messages.scrollTop = this._lastReadMessageY() - this.childEls.messages.clientHeight;
+        this.childEls.messages.scrollTop = this._lastReadMessageY() - this._messagesElHeight();
     }
 
     _lastReadMessageY() {
+        let scrollTop = this.childEls.messages.scrollTop;
         let y = 0;
 
         let ids = this._sortedMessagesIds();
@@ -248,7 +253,7 @@ export class Chat extends AbstractChat {
 
             let curMessage = this.messages[id];
             if ((!curMessage.isSelf && curMessage.isRead) || curMessage.isSelf) {
-                y = curMessage.el.getBoundingClientRect().bottom;
+                y = curMessage.el.getBoundingClientRect().bottom + scrollTop;
             } else if (!curMessage.isSelf && !curMessage.isRead) {
                 break;
             }
@@ -258,7 +263,9 @@ export class Chat extends AbstractChat {
 
     _sortedMessagesIds() {
         let ids = Object.keys(this.messages);
-        ids.sort();
+        ids.sort((a, b) => {
+            return a - b;
+        });
         return ids;
     }
 
