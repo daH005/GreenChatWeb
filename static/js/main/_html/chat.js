@@ -41,7 +41,6 @@ export class Chat extends AbstractChat {
         this.topDateStr = null;
         this.bottomDateStr = null;
         this.typingTimeoutId = null;
-        this._lastReadMessageY = 0;
 
         this._defineInterlocutorUser();
         this._defineName();
@@ -186,10 +185,6 @@ export class Chat extends AbstractChat {
                 isSelf: message.isSelf,
             });
 
-            if (!message.isSelf && message.isRead) {
-                this._lastReadMessageY = message.el.getBoundingClientRect().bottom;
-            }
-
         }
     }
 
@@ -228,7 +223,7 @@ export class Chat extends AbstractChat {
             chatId: this.id, offsetFromEnd,
         });
 
-        this._fillChatHistory(apiData.messages);
+        await this._fillChatHistory(apiData.messages);
         this._scrollToLastReadMessage();
         this.fullyLoaded = true;
     }
@@ -241,7 +236,31 @@ export class Chat extends AbstractChat {
     }
 
     _scrollToLastReadMessage() {
-        this.childEls.messages.scrollTop = this._lastReadMessageY - this.childEls.messages.clientHeight;
+        console.log(this._lastReadMessageY(), this.childEls.messages.clientHeight);
+        this.childEls.messages.scrollTop = this._lastReadMessageY() - this.childEls.messages.clientHeight;
+    }
+
+    _lastReadMessageY() {
+        let y = 0;
+
+        let ids = this._sortedMessagesIds();
+        for (let i in ids) {
+            let id = ids[i];
+
+            let curMessage = this.messages[id];
+            if ((!curMessage.isSelf && curMessage.isRead) || curMessage.isSelf) {
+                y = curMessage.el.getBoundingClientRect().bottom;
+            } else if (!curMessage.isSelf && !curMessage.isRead) {
+                break;
+            }
+        }
+        return y;
+    }
+
+    _sortedMessagesIds() {
+        let ids = Object.keys(this.messages);
+        ids.sort();
+        return ids;
     }
 
     close() {
@@ -279,11 +298,15 @@ export class Chat extends AbstractChat {
     _lastVisibleMessage() {
         let scrollTop = this.childEls.messages.scrollTop;
         let h = this.childEls.messages.clientHeight;
-        for (let i in this.messages) {
-            let rect = this.messages[i].el.getBoundingClientRect();
+
+        let ids = this._sortedMessagesIds();
+        for (let i in ids) {
+            let id = ids[i];
+
+            let rect = this.messages[id].el.getBoundingClientRect();
             let y = rect.bottom + scrollTop;
             if (y >= scrollTop + h) {
-                return this.messages[i];
+                return this.messages[id];
             }
         }
     }
