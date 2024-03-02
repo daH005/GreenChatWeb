@@ -49,4 +49,8 @@ export class ChatMessage extends AbstractChatElementFacade {
         return dateToTimeStr(this.data.fromApi.creatingDatetime);
     }
 
+    setAsRead() {
+        this.el.classList.remove("chat__message--unread");
+    }
+
 }
