@@ -278,4 +278,11 @@ export class Chat extends AbstractChat {
         }
     }
 
+    setMessagesAsRead(messagesIds) {
+        for (let i in messagesIds) {
+            let id = messagesIds[i];
+            this.messages[id].setAsRead();
+        }
+    }
+
 }
