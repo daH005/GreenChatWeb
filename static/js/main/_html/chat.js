@@ -254,7 +254,28 @@ export class Chat extends AbstractChat {
     }
 
     _read() {
-        console.log(this.childEls.messages.scrollTop);
+        let message = this._lastVisibleMessage();
+        if (!message.isRead) {
+            websocket.sendJSON({
+                type: "chatMessageWasRead",
+                data: {
+                    chatId: this.id,
+                    chatMessageId: message.id;
+                }
+            });
+        }
+    }
+
+    _lastVisibleMessage() {
+        let scrollTop = this.childEls.messages.scrollTop;
+        let h = this.childEls.messages.clientHeight;
+        for (let i in this.messages) {
+            let rect = this.messages[i].el.getBoundingClientRect();
+            let y = rect.bottom + scrollTop;
+            if (y >= scrollTop + h) {
+                return this.messages[i];
+            }
+        }
     }
 
 }
