@@ -115,7 +115,7 @@ export class Chat extends AbstractChat {
         if (this.data.fromApi.isGroup) {
             this.name = this.data.fromApi.name;
         } else {
-            this.name = this.interlocutorUser.firstName;
+            this.name = this.interlocutorUser.firstName + " " + this.interlocutorUser.lastName;
         }
     }
 
