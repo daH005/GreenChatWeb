@@ -255,7 +255,8 @@ export class Chat extends AbstractChat {
 
     _read() {
         let message = this._lastVisibleMessage();
-        if (!message.isRead) {
+        if (!message.isRead && !message.isSelf) {
+            message.isRead = true;
             websocket.sendJSON({
                 type: "chatMessageWasRead",
                 data: {
