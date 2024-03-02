@@ -33,6 +33,8 @@ export class ChatLink extends AbstractChatElementFacade {
         this.childEls.self = this.el.querySelector(".chat-link__last-message .chat-link__self");
         this.childEls.text = this.el.querySelector(".chat-link__last-message .chat-link__text");
         this.childEls.lastMessageDate = this.el.querySelector(".chat-link__date");
+
+        this.childEls.unreadCount = this.el.querySelector(".chat-link__count");
     }
 
     update(data) {
@@ -51,6 +53,14 @@ export class ChatLink extends AbstractChatElementFacade {
         this.childEls.lastMessageDate.textContent = data.dateStr;
 
         this.parentEl.prepend(this.el);
+    }
+
+    updateUnreadCount(count) {
+        let result = String(count);
+        if (!count) {
+            result = "";
+        }
+        this.childEls.unreadCount.textContent = result;
     }
 
 }
