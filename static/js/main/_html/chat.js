@@ -296,7 +296,7 @@ export class Chat extends AbstractChat {
 
     _lastVisibleMessage() {
         let scrollTop = this.childEls.messages.scrollTop;
-        let h = this.childEls.messages.clientHeight;
+        let h = this._messagesElHeight();
 
         let ids = this._sortedMessagesIds();
         for (let i in ids) {
@@ -308,6 +308,12 @@ export class Chat extends AbstractChat {
                 return this.messages[id];
             }
         }
+    }
+
+    _messagesElHeight() {
+        let marginTop = window.getComputedStyle(this.childEls.messages).marginTop;
+        marginTop = parseInt(marginTop);
+        return this.childEls.messages.clientHeight + marginTop;
     }
 
     setMessagesAsRead(messagesIds) {
