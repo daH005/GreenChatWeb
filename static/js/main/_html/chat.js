@@ -153,14 +153,14 @@ export class Chat extends AbstractChat {
         }
 
         let isSelf = user.id == apiData.user.id;
-        this.messages.push(new ChatMessage({
+        this.messages[apiData.id] = new ChatMessage({
             parentEl: this.childEls.messages,
             prepend,
             data: {
                 fromApi: apiData,
                 isSelf,
             },
-        }));
+        });
 
         if (scrollingIsBottom) {
             this._scrollToBottom();
