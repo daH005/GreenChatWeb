@@ -9,6 +9,7 @@ export class ChatMessage extends AbstractChatElementFacade {
     _init() {
         this.id = this.data.fromApi.id;
         this.isRead = this.data.fromApi.isRead;
+        this.isSelf = this.data.isSelf;
     }
 
     get tempEl() {
@@ -17,7 +18,7 @@ export class ChatMessage extends AbstractChatElementFacade {
 
     _makeEl() {
         super._makeEl();
-        if (this.data.isSelf) {
+        if (this.isSelf) {
             this.el.classList.add("chat__message--self");
 
             if (!this.data.fromApi.isRead) {
