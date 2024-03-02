@@ -237,7 +237,7 @@
 }
 
 .chat .chat__message.chat__message--unread {
-    backdrop-filter: brightness(95%);
+    opacity: 0.75;
 }
 
 .chat .chat__message .chat__message__name {
