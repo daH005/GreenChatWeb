@@ -69,7 +69,9 @@ async function addChat(apiData) {
     });
 
     let onlineStatus = interlocutorsOnlineStatusesForUncreatedChats[chat.interlocutorUser.id];
-    chat.updateOnlineStatus(onlineStatus);
+    if (onlineStatus) {
+        chat.updateOnlineStatus(onlineStatus);
+    }
 
     allChats[chat.id] = chat;
 
