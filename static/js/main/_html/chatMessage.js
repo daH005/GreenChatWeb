@@ -7,6 +7,7 @@ const chatMessageTempEl = document.getElementById("js-chat-message-temp");
 export class ChatMessage extends AbstractChatElementFacade {
 
     _init() {
+        this.id = this.data.fromApi.id;
         this.isRead = this.data.fromApi.isRead;
     }
 
