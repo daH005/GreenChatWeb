@@ -32,15 +32,16 @@ export class Chat extends AbstractChat {
         this.fullyLoaded = false;
         this.datesSeps = {};
 
-        this.name = null;
+        this.id = this.data.fromApi.id;
         this.unreadCount = this.data.fromApi.unreadCount;
+
+        this.name = null;
         this.interlocutorUser = null;
         this.link = null;
         this.topDateStr = null;
         this.bottomDateStr = null;
         this.typingTimeoutId = null;
 
-        this.id = this.data.fromApi.id;
         this._defineInterlocutorUser();
         this._defineName();
     }
