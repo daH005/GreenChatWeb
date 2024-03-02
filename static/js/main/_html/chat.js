@@ -33,6 +33,7 @@ export class Chat extends AbstractChat {
         this.datesSeps = {};
 
         this.name = null;
+        this.unreadCount = this.data.fromApi.unreadCount;
         this.interlocutorUser = null;
         this.link = null;
         this.topDateStr = null;
@@ -99,6 +100,7 @@ export class Chat extends AbstractChat {
                 name: this.name,
             },
         });
+        this.link.updateUnreadCount(this.unreadCount);
 
         if (this.data.fromApi.lastMessage) {
             this.addMessage(this.data.fromApi.lastMessage, false, true);
