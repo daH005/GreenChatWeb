@@ -9,5 +9,5 @@ userIdParentEl.onclick = () => {
 
 export function updateUserInfo(user) {
     userIdSpanEl.textContent = user.id;
-    userNameEl.textContent = user.firstName;
+    userNameEl.textContent = user.firstName + " " + user.lastName;
 }
