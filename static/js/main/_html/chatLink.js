@@ -30,6 +30,8 @@ export class ChatLink extends AbstractChatElementFacade {
         this.childEls.name = this.el.querySelector(".chat-link__chat-name");
         this.childEls.name.textContent = this.data.name;
 
+        this.childEls.onlineStatus = this.el.querySelector(".chat-link__online-status);
+
         this.childEls.self = this.el.querySelector(".chat-link__last-message .chat-link__self");
         this.childEls.text = this.el.querySelector(".chat-link__last-message .chat-link__text");
         this.childEls.lastMessageDate = this.el.querySelector(".chat-link__date");
@@ -61,6 +63,10 @@ export class ChatLink extends AbstractChatElementFacade {
             result = "";
         }
         this.childEls.unreadCount.textContent = result;
+    }
+
+    updateOnlineStatus(status) {
+        this.childEls.onlineStatus.toggle("is-active", status);
     }
 
 }
