@@ -66,17 +66,29 @@
     border-bottom: 2px solid var(--main-3-color);
 }
 
-.chat-link__chat-name {
+.chat-link .chat-link__chat-name {
     padding: 5px;
     font-size: small;
 }
 
-.chat-link__last-message {
+.chat-link .chat-link__online-status {
+    height: 5px;
+    width: 5px;
+    background: var(--gray-color);
+    display: inline-block;
+    border-radius: 5px;
+}
+
+.chat-link .chat-link__online-status.is-active {
+    background: var(--light-green-color);
+}
+
+.chat-link .chat-link__last-message {
     padding: 5px;
     font-size: small;
 }
 
-.chat-link__last-message .chat-link__self {
+.chat-link .chat-link__last-message .chat-link__self {
     opacity: 0.5;
 }
 
