@@ -79,7 +79,7 @@
     border-radius: 5px;
 }
 
-.chat-link .chat-link__online-status.is-active {
+.chat-link .chat-link__online-status.is-online {
     background: var(--light-green-color);
 }
 
