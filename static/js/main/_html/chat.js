@@ -260,7 +260,7 @@ export class Chat extends AbstractChat {
                 type: "chatMessageWasRead",
                 data: {
                     chatId: this.id,
-                    chatMessageId: message.id;
+                    chatMessageId: message.id,
                 }
             });
         }
