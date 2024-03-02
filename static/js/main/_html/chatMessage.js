@@ -14,6 +14,11 @@ export class ChatMessage extends AbstractChatElementFacade {
         super._makeEl();
         if (this.data.isSelf) {
             this.el.classList.add("chat__message--self");
+
+            if (!this.data.fromApi.isRead) {
+                this.el.classList.add("chat__message--unread");
+            }
+
         }
     }
 
