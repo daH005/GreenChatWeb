@@ -68,6 +68,7 @@
 
 .chat-link__chat-name {
     padding: 5px;
+    font-size: small;
 }
 
 .chat-link__last-message {
