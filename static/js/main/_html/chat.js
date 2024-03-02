@@ -236,7 +236,6 @@ export class Chat extends AbstractChat {
     }
 
     _scrollToLastReadMessage() {
-        console.log(this._lastReadMessageY(), this.childEls.messages.clientHeight);
         this.childEls.messages.scrollTop = this._lastReadMessageY() - this.childEls.messages.clientHeight;
     }
 
