@@ -254,7 +254,7 @@ export class Chat extends AbstractChat {
 
             let curMessage = this.messages[id];
             if ((!curMessage.isSelf && curMessage.isRead) || curMessage.isSelf) {
-                y = curMessage.el.getBoundingClientRect().bottom + scrollTop;
+                y = curMessage.el.getBoundingClientRect().top + scrollTop;
             } else if (!curMessage.isSelf && !curMessage.isRead) {
                 break;
             }
