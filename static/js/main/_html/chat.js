@@ -110,6 +110,9 @@ export class Chat extends AbstractChat {
         }
 
         this.updateOnlineStatus(false);
+
+        this.childEls.header = this.el.querySelector(".chat__header");
+        this.childEls.inputContainer = this.el.querySelector(".chat__input-container");
     }
 
     _defineName() {
@@ -225,11 +228,7 @@ export class Chat extends AbstractChat {
         });
 
         await this._fillChatHistory(apiData.messages);
-
-        setTimeout(() => {
-            this._scrollToLastReadMessage();
-        }, 10);  // for `marginTop` in `_messagesElHeight()`
-
+        this._scrollToLastReadMessage();
         this.fullyLoaded = true;
     }
 
@@ -241,25 +240,36 @@ export class Chat extends AbstractChat {
     }
 
     _scrollToLastReadMessage() {
-        this.childEls.messages.scrollTop = this._lastReadMessageY() - this._messagesElHeight();
+        this.childEls.messages.scrollTop = this._scrollTopForLastReadMessageY();
     }
 
-    _lastReadMessageY() {
-        let scrollTop = this.childEls.messages.scrollTop;
-        let y = 0;
+    _scrollTopForLastReadMessageY() {
+        let message = this._lastReadMessage();
+        if (!message) {
+            return 0;
+        }
 
+        let scrollTop = this.childEls.messages.scrollTop;
+        let messageBottomAbsY = message.el.getBoundingClientRect().bottom + scrollTop;
+        let messagesContainerBottomAbsY = this.childEls.messages.getBoundingClientRect().bottom;
+        let resultY = messageBottomAbsY - messagesContainerBottomAbsY;
+        return resultY;
+    }
+
+    _lastReadMessage() {
+        let message = null;
         let ids = this._sortedMessagesIds();
         for (let i in ids) {
             let id = ids[i];
 
             let curMessage = this.messages[id];
             if ((!curMessage.isSelf && curMessage.isRead) || curMessage.isSelf) {
-                y = curMessage.el.getBoundingClientRect().top + scrollTop;
+                message = curMessage;
             } else if (!curMessage.isSelf && !curMessage.isRead) {
                 break;
             }
         }
-        return y;
+        return message;
     }
 
     _sortedMessagesIds() {
@@ -303,25 +313,26 @@ export class Chat extends AbstractChat {
     }
 
     _lastVisibleMessage() {
-        let scrollTop = this.childEls.messages.scrollTop;
-        let h = this._messagesElHeight();
+        let lineY = this._messagesLineBottomY();
 
         let ids = this._sortedMessagesIds();
+        let message = null;
         for (let i in ids) {
             let id = ids[i];
 
-            let rect = this.messages[id].el.getBoundingClientRect();
-            let y = rect.bottom + scrollTop;
-            if (y >= scrollTop + h) {
-                return this.messages[id];
+            let messageBottomY = this.messages[id].el.getBoundingClientRect().bottom;
+            if (messageBottomY <= lineY) {
+                message = this.messages[id];
+            } else {
+                break;
             }
         }
+
+        return message;
     }
 
-    _messagesElHeight() {
-        let marginTop = window.getComputedStyle(this.childEls.messages).marginTop;
-        marginTop = parseInt(marginTop);
-        return this.childEls.messages.clientHeight + marginTop;
+    _messagesLineBottomY() {
+        return this.childEls.messages.getBoundingClientRect().bottom;
     }
 
     setMessagesAsRead(messagesIds) {
