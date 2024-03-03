@@ -25,6 +25,7 @@ const PHRASES = [
 ];
 
 export class Chat extends AbstractChat {
+    static WAITING_FOR_CHAT_LOADING = 30;
 
     _init() {
         super._init();
@@ -228,7 +229,11 @@ export class Chat extends AbstractChat {
         });
 
         await this._fillChatHistory(apiData.messages);
-        this._scrollToLastReadMessage();
+
+        setTimeout(() => {
+            this._scrollToLastReadMessage();
+        }, Chat.WAITING_FOR_CHAT_LOADING)
+
         this.fullyLoaded = true;
     }
 
@@ -244,7 +249,7 @@ export class Chat extends AbstractChat {
     }
 
     _scrollTopForLastReadMessageY() {
-        let message = this._lastReadMessage();
+        let message = this._lastReadOrSelfMessage();
         if (!message) {
             return 0;
         }
@@ -256,7 +261,7 @@ export class Chat extends AbstractChat {
         return resultY;
     }
 
-    _lastReadMessage() {
+    _lastReadOrSelfMessage() {
         let message = null;
         let ids = this._sortedMessagesIds();
         for (let i in ids) {
@@ -313,7 +318,7 @@ export class Chat extends AbstractChat {
     }
 
     _lastVisibleMessage() {
-        let lineY = this._messagesLineBottomY();
+        let lineAbsY = this._messagesLineBottomAbsY();
 
         let ids = this._sortedMessagesIds();
         let message = null;
@@ -321,7 +326,7 @@ export class Chat extends AbstractChat {
             let id = ids[i];
 
             let messageBottomY = this.messages[id].el.getBoundingClientRect().bottom;
-            if (messageBottomY <= lineY) {
+            if (messageBottomY <= lineAbsY) {
                 message = this.messages[id];
             } else {
                 break;
@@ -331,7 +336,7 @@ export class Chat extends AbstractChat {
         return message;
     }
 
-    _messagesLineBottomY() {
+    _messagesLineBottomAbsY() {
         return this.childEls.messages.getBoundingClientRect().bottom;
     }
 
