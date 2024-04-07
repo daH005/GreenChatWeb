@@ -34,12 +34,7 @@ export class AbstractChat extends AbstractChatElementFacade {
     }
 
     updateOnlineStatus(status) {
-        if (status) {
-            this.childEls.onlineStatus.textContent = "в сети";
-        } else {
-            this.childEls.onlineStatus.textContent = "не в сети";
-        }
-        this.childEls.onlineStatus.classList.toggle("is-online", status);
+        this.childEls.onlineStatus.classList.toggle("avatar--active", status);
     }
 
 }

@@ -59,7 +59,7 @@ export class Chat extends AbstractChat {
         this.childEls.name = this.el.querySelector(".chat__name");
         this.childEls.name.textContent = this.name;
 
-        this.childEls.onlineStatus = this.el.querySelector(".chat__interlocutor-online-status");
+        this.childEls.onlineStatus = this.el.querySelector(".avatar");
 
         this.childEls.backLink = this.el.querySelector(".chat__back-link");
         this.childEls.backLink.onclick = () => {

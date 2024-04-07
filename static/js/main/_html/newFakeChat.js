@@ -21,7 +21,7 @@ export class NewFakeChat extends AbstractChat {
         }
 
         this.childEls.name = this.el.querySelector(".chat__name");
-        this.childEls.onlineStatus = this.el.querySelector(".chat__interlocutor-online-status");
+        this.childEls.onlineStatus = this.el.querySelector(".avatar");
 
         this.childEls.input = this.el.querySelector("textarea");
         this.childEls.sendButton = this.el.querySelector("button");
