@@ -84,10 +84,6 @@
     margin-right: 7px;
 }
 
-.chat-link .chat-link__online-status.is-online {
-    background: var(--light-green-color);
-}
-
 .chat-link .chat-link__last-message {
     padding: 5px;
     font-size: small;
@@ -194,16 +190,6 @@
 
 .chat .chat__name {
     padding-right: 10px;
-}
-
-.chat .chat__interlocutor-online-status {
-    color: var(--main-2-color);
-    padding: 10px;
-    font-size: small;
-}
-
-.chat .chat__interlocutor-online-status.is-online {
-    color: var(--light-green-color);
 }
 
 .chat .chat__date-sep {
