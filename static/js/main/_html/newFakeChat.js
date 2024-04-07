@@ -52,7 +52,7 @@ export class NewFakeChat extends AbstractChat {
         AbstractChat.interlocutorsChats[interlocutorUser.id] = this;
 
         this.interlocutorUser = interlocutorUser;
-        this.childEls.name.textContent = this.interlocutorUser.firstName;
+        this.childEls.name.textContent = this.interlocutorUser.firstName + " " + this.interlocutorUser.lastName;
     }
 
     close() {
