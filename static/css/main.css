@@ -97,7 +97,7 @@
     position: absolute;
     right: 10px;
     top: 10px;
-    font-size: small;
+    font-size: x-small;
 }
 
 .chat-link .chat-link__count {
