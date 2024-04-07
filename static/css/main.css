@@ -324,7 +324,7 @@
 }
 
 .avatar.avatar--active {
-    border: 1px solid var(--light-green-color);
+    outline: 2px solid var(--light-green-color);
 }
 
 .sidebar__links .avatar {
