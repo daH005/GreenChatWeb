@@ -19,7 +19,6 @@
 }
 
 .sidebar .sidebar__title {
-    padding: 17px;
     color: white;
     background: var(--main-color);
     display: flex;
@@ -170,7 +169,6 @@
 .chat .chat__header {
     display: flex;
     justify-content: space-between;
-    padding: 10px;
     background: var(--main-color);
     color: white;
     box-sizing: border-box;
@@ -331,6 +329,21 @@
     min-height: 50px;
     max-height: 100px;
     resize: none;
+}
+
+.avatar {
+    max-width: 50px;
+    margin: 0 10px;
+    border-radius: 50%;
+}
+
+.avatar.avatar--active {
+    border: 1px solid var(--light-green-color);
+}
+
+.sidebar__links .avatar {
+    max-width: 30px;
+    margin: 0 5px;
 }
 
 @media only screen and (max-width: 1280px), only screen and (max-device-width: 1280px) {
