@@ -332,6 +332,12 @@
     margin: 0 5px;
 }
 
+.cut-long-text {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
 @media only screen and (max-width: 1280px), only screen and (max-device-width: 1280px) {
 
     .messenger {

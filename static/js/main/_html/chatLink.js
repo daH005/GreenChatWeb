@@ -40,18 +40,13 @@ export class ChatLink extends AbstractChatElementFacade {
     }
 
     update(data) {
-        let text = data.text;
-
         if (data.isSelf) {
             this.childEls.self.style = "";
         } else {
             this.childEls.self.style = "display: none;";
         }
 
-        if (text.length > MAX_CHAT_LINK_TEXT_LENGTH) {
-            text = text.slice(0, MAX_CHAT_LINK_TEXT_LENGTH) + "...";
-        }
-        this.childEls.text.textContent = text;
+        this.childEls.text.textContent = data.text;
         this.childEls.lastMessageDate.textContent = data.dateStr;
 
         this.parentEl.prepend(this.el);
