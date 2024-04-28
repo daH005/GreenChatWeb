@@ -20,11 +20,6 @@ def handle_exception(exception: HTTPException) -> str:
     return render_template(TemplateName.ERROR, status=exception.code)
 
 
-@app.route(Url.REG, endpoint=EndpointName.REG, methods=[HTTPMethod.GET])
-def reg() -> str:
-    return render_template(TemplateName.REG)
-
-
 @app.route(Url.LOGIN, endpoint=EndpointName.LOGIN, methods=[HTTPMethod.GET])
 def login() -> str:
     return render_template(TemplateName.LOGIN)

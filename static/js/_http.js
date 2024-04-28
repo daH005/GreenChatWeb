@@ -62,21 +62,6 @@ export function makeRequestingUrlAndOptions(options, data=null) {
     return [fetchUrl, fetchOptions];
 }
 
-// Returns - {JWTToken}
-export const requestRegistration = makeRequestingFunc({
-    URL: HTTP_ENDPOINTS_URLS.REG,
-    METHOD: "POST",
-    STATUSES_NOTIFICATIONS: {
-        400: "Ошибка регистрации...",
-    },
-});
-
-// Returns - {isAlreadyTaken}
-export const requestCheckUsername = makeRequestingFunc({
-    URL: HTTP_ENDPOINTS_URLS.CHECK_USERNAME,
-    METHOD: "GET",
-});
-
 // Returns - {isAlreadyTaken}
 export const requestCheckEmail = makeRequestingFunc({
     URL: HTTP_ENDPOINTS_URLS.CHECK_EMAIL,
@@ -97,10 +82,13 @@ export const requestSendEmailCode = makeRequestingFunc({
 export const requestCheckEmailCode = makeRequestingFunc({
     URL: HTTP_ENDPOINTS_URLS.CHECK_EMAIL_CODE,
     METHOD: "GET",
+    STATUSES_NOTIFICATIONS: {
+        400: "Код не был отправлен!",
+    },
 });
 
 // Returns - {JWTToken}
-export const requestAuthByUsernameAndPassword = makeRequestingFunc({
+export const requestAuth = makeRequestingFunc({
     URL: HTTP_ENDPOINTS_URLS.AUTH,
     METHOD: "POST",
     STATUSES_NOTIFICATIONS: {

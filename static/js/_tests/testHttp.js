@@ -1,12 +1,10 @@
 import { assertEqualsObjects } from "./common.js";
 import { HTTP_BASE_URL } from "../_config.js";
 import { makeRequestingUrlAndOptions,
-         requestRegistration,
-         requestCheckUsername,
          requestCheckEmail,
          requestSendEmailCode,
          requestCheckEmailCode,
-         requestAuthByUsernameAndPassword,
+         requestAuth,
          requestUserInfo,
          requestUserChats,
          requestChatHistory,
@@ -20,57 +18,6 @@ JWTToken.get = () => {
 
 function testPositiveMakeRequestingUrlAndOptions() {
     let data = [
-        [
-            // in
-            [
-                requestRegistration.options,
-                {
-                    username: "dan005",
-                    password: "Mypass",
-                    firstName: "Danil",
-                    lastName: "Shevelev",
-                    email: "email.123@mail.ru",
-                    code: 5150,
-                }
-            ],
-            // out
-            [
-                "http://localhost:5181/user/new",
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        username: "dan005",
-                        password: "Mypass",
-                        firstName: "Danil",
-                        lastName: "Shevelev",
-                        email: "email.123@mail.ru",
-                        code: 5150,
-                    })
-                }
-            ]
-        ],
-        [
-            // in
-            [
-                requestCheckUsername.options,
-                {
-                    username: "dan005",
-                }
-            ],
-            // out
-            [
-                "http://localhost:5181/user/new/check/username?username=dan005",
-                {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                }
-            ]
-        ],
         [
             // in
             [
@@ -134,7 +81,7 @@ function testPositiveMakeRequestingUrlAndOptions() {
         [
             // in
             [
-                requestAuthByUsernameAndPassword.options,
+                requestAuth.options,
                 {
                     username: "dan005",
                     password: "Mypass",

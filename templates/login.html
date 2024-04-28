@@ -18,18 +18,17 @@
 <div class="central-container">
     <div class="inputs-container">
         <h1 align="center">GreenChat</h1>
-        <input id="js-username" name="username" type="text" placeholder="Логин" maxlength="100">
-        <div class="input-and-inner-button-container js-password-switch">
-            <input id="js-password" class="js-password-switch-input" name="password" type="password" placeholder="Пароль" maxlength="50">
-            <button class="js-password-switch-hidden">
-                <i class="fa fa-eye-slash" aria-hidden="true"></i>
-            </button>
-            <button class="js-password-switch-showed">
-                <i class="fa fa-eye" aria-hidden="true"></i>
+
+        <div class="input-and-inner-button-container">
+            <input id="js-email" placeholder="Ваша почта" maxlength="200">
+            <button id="js-send-email-code">
+                <small>Код</small>
             </button>
         </div>
-        <button id="js-button">Войти</button>
-        <a class="reg-link" href="{{ url_for('reg') }}">Не зарегистрированы? Перейдите сюда.</a>
+
+        <input id="js-email-code" placeholder="Код подтверждения" maxlength="4">
+
+        <button id="js-button">Вход & Регистрация</button>
     </div>
 </div>
 
