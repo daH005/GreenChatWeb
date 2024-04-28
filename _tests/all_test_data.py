@@ -1,18 +1,32 @@
+CHANGE_MARK = '---'
+
 HISTORIES = [
         [
-            'Hello!',  # 1
-            'My name is Danil.',  # 1
-            'How are u?',  # 1
-            'Im fine',  # 2
-            'Ok, goodbye!',  # 1
+            'Hello!',
+            'My name is Danil.',
+            'How are u?',
+            CHANGE_MARK,
+            'Im fine',
+            CHANGE_MARK,
+            'Ok, goodbye!',
         ],
         [
-            '1',  # 1
-            '2',  # 1
-            '3',  # 1
-            '4',  # 1
-            '5',  # 1
-            'stop it!!!',  # 2
-            'Ok, goodbye!',  # 1
+            '1',
+            '2',
+            '3',
+            '4',
+            '5',
+            CHANGE_MARK,
+            'stop it!!!',
+            CHANGE_MARK,
+            'Ok, goodbye!',
+        ],
+        [
+            'Hello!',
+            CHANGE_MARK,
+            'Hi!',
+            'How are u?',
+            CHANGE_MARK,
+            'Batman!',
         ]
     ]

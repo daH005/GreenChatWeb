@@ -28,20 +28,19 @@ class UserNumCounting:
 
 
 class NewUserInfo(NamedTuple):
-    username: str
+    id: int
     email: str
-    first_name: str = 'Данил'
+    first_name: str
     last_name: str = 'Шевелёв'
-    password: str = 'password123'
     code: str = '9999'
 
     @classmethod
-    def new_and_count(cls, **kwargs) -> NewUserInfo:
+    def new_and_count(cls) -> NewUserInfo:
         count: int = UserNumCounting.get()
-        ob = cls(username=cls._make_username(count),
+        ob = cls(id=count,
                  email=cls._make_email(count),
                  first_name=cls._make_first_name(count),
-                 **kwargs)
+                 )
         UserNumCounting.set(count + 1)
         return ob
 
@@ -50,12 +49,8 @@ class NewUserInfo(NamedTuple):
         return 'Данил' + str(count)
 
     @classmethod
-    def _make_username(cls, count: int) -> str:
-        return 'username' + str(count)
-
-    @classmethod
     def _make_email(cls, count: int) -> str:
-        return 'dan005' + str(count) + '@mail.ru'
+        return 'testEmail' + str(count) + '@mail.ru'
 
 
 if __name__ == '__main__':
