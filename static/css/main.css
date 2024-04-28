@@ -19,6 +19,8 @@
 }
 
 .sidebar .sidebar__title {
+    position: relative;
+
     color: white;
     background: var(--main-color);
     display: flex;
@@ -29,12 +31,11 @@
 }
 
 .sidebar .sidebar__id {
-    font-size: small;
-    background: var(--main-2-color);
-    border-radius: 7px;
-    padding: 5px 10px;
-    margin-left: 10px;
-    cursor: pointer;
+    position: absolute;
+    right: 5px;
+    font-size: x-small;
+    top: 5px;
+    text-decoration: underline;
 }
 
 .sidebar .sidebar__search {
