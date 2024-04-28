@@ -1,4 +1,4 @@
-import { requestAuth, requestCheckEmail, requestCheckEmailCode, requestSendEmailCode } from "./_http.js";
+import { requestAuth, requestCheckEmailCode, requestSendEmailCode } from "./_http.js";
 import { saveJWTTokenAndRedirect } from "./_authTools.js";
 import { setInputAsInvalidAndMessageWithThrow, removeInvalidClassForAllInputs } from "./_common.js";
 
@@ -28,11 +28,6 @@ buttonEl.onclick = async () => {
 async function checkEmail() {
     if (!emailInputEl.value.includes("@")) {
         setInputAsInvalidAndMessageWithThrow(emailInputEl, "Введите почту!");
-    } else {
-        let flagData = await requestCheckEmail({email: emailInputEl.value});
-        if (flagData.isAlreadyTaken) {
-            setInputAsInvalidAndMessageWithThrow(emailInputEl, "Почта уже занята!");
-        }
     }
 }
 
