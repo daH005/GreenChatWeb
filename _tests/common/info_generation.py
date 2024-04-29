@@ -43,6 +43,7 @@ class UserInfo:
     email: str
     first_name: str
     last_name: str = 'Шевелёв'
+    id: int = 0
 
     @classmethod
     def new(cls) -> UserInfo:
