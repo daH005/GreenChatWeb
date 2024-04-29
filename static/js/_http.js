@@ -82,9 +82,6 @@ export const requestSendEmailCode = makeRequestingFunc({
 export const requestCheckEmailCode = makeRequestingFunc({
     URL: HTTP_ENDPOINTS_URLS.CHECK_EMAIL_CODE,
     METHOD: "GET",
-    STATUSES_NOTIFICATIONS: {
-        400: "Код не был отправлен!",
-    },
 });
 
 // Returns - {JWTToken}

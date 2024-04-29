@@ -32,6 +32,11 @@ async function checkEmail() {
 }
 
 async function checkEmailCode() {
+    if (!emailCodeInputEl.value) {
+        setInputAsInvalidAndMessageWithThrow(emailCodeInputEl, "Введите код!");
+        return;
+    }
+
     let flagData = await requestCheckEmailCode({
         email: emailInputEl.value,
         code: emailCodeInputEl.value,
