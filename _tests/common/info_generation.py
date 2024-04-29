@@ -5,53 +5,61 @@ from pathlib import Path
 from web.config import BASE_DIR
 
 __all__ = (
-    'NewUserInfo',
+    'UserInfo',
 )
 
 
 class UserNumCounting:
     FILE_PATH: Final[Path] = BASE_DIR.joinpath('./_tests/common/count')
 
+    cur: int
+
     @classmethod
-    def get(cls) -> int:
+    def update(cls) -> None:
         try:
             with open(cls.FILE_PATH, 'r') as f:
-                return int(f.read())
+                cls.cur = int(f.read())
         except FileNotFoundError:
             cls.set(0)
-            return 0
+            cls.cur = 0
+
+    @classmethod
+    def increment(cls) -> None:
+        cls.set(cls.cur + 1)
 
     @classmethod
     def set(cls, count: int) -> None:
         with open(cls.FILE_PATH, 'w') as f:
             f.write(str(count))
+        cls.cur = count
 
 
-class NewUserInfo(NamedTuple):
-    id: int
+UserNumCounting.update()
+
+
+class UserInfo(NamedTuple):
     email: str
     first_name: str
     last_name: str = 'Шевелёв'
-    code: str = '9999'
 
     @classmethod
-    def new_and_count(cls) -> NewUserInfo:
-        count: int = UserNumCounting.get()
-        ob = cls(id=count,
-                 email=cls._make_email(count),
-                 first_name=cls._make_first_name(count),
+    def new(cls) -> UserInfo:
+        ob = cls(email=cls._make_email(),
+                 first_name=cls._make_first_name(),
                  )
-        UserNumCounting.set(count + 1)
+        UserNumCounting.increment()
         return ob
 
     @classmethod
-    def _make_first_name(cls, count: int) -> str:
-        return 'Данил' + str(count)
+    def _make_first_name(cls) -> str:
+        return 'Данил' + str(UserNumCounting.cur)
 
     @classmethod
-    def _make_email(cls, count: int) -> str:
-        return 'testEmail' + str(count) + '@mail.ru'
+    def _make_email(cls) -> str:
+        return 'testEmail' + str(UserNumCounting.cur) + '@mail.ru'
 
 
 if __name__ == '__main__':
-    print(NewUserInfo.new_and_count())
+    print(UserInfo.new())
+    print(UserInfo.new())
+    print(UserInfo.new())
