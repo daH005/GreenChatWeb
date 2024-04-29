@@ -1,3 +1,5 @@
+USERS_COUNT = 3
+
 CHANGE_MARK = '---'
 
 HISTORIES = [
