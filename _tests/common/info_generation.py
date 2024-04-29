@@ -1,6 +1,7 @@
 from __future__ import annotations
-from typing import NamedTuple, Final
+from typing import Final
 from pathlib import Path
+from dataclasses import dataclass
 
 from web.config import BASE_DIR
 
@@ -37,7 +38,8 @@ class UserNumCounting:
 UserNumCounting.update()
 
 
-class UserInfo(NamedTuple):
+@dataclass
+class UserInfo:
     email: str
     first_name: str
     last_name: str = 'Шевелёв'
