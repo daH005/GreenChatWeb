@@ -1,11 +1,14 @@
 from __future__ import annotations
 from selenium.webdriver.common.by import By
+from selenium.webdriver import Chrome
 from time import sleep
 
-from web._tests.common.drivers import driver  # noqa
+from web._tests.common.drivers import new_chrome_driver  # noqa
 from web._tests.common.constants import FullUrl  # noqa
 from web._tests.common.info_generation import NewUserInfo  # noqa
 from web._tests.all_test_data import *  # noqa
+
+driver: Chrome = new_chrome_driver()
 
 
 def test_positive_all() -> None:
