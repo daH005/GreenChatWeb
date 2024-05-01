@@ -1,5 +1,5 @@
 import { requestAuth, requestCheckEmailCode, requestSendEmailCode } from "./_http.js";
-import { saveJWTTokenAndRedirect } from "./_authTools.js";
+import { saveJWTAndRedirect } from "./_authTools.js";
 import { setInputAsInvalidAndMessageWithThrow, removeInvalidClassForAllInputs } from "./_common.js";
 
 const emailInputEl = document.getElementById("js-email");
@@ -22,7 +22,7 @@ buttonEl.onclick = async () => {
         email: emailInputEl.value,
         code: emailCodeInputEl.value,
     });
-    saveJWTTokenAndRedirect(data.JWTToken);
+    saveJWTAndRedirect(data.JWT);
 }
 
 async function checkEmail() {

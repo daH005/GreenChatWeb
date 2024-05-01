@@ -1,15 +1,15 @@
 import { BASE_HEADERS } from "./_config.js";
-import { JWTToken } from "./_localStorage.js";
+import { JWT } from "./_localStorage.js";
 import { redirectToMainPage } from "./_redirects.js";
 
 export function makeAuthHeaders() {
     return {
         ...BASE_HEADERS,
-        Authorization: `Bearer ${JWTToken.get()}`,
+        Authorization: `Bearer ${JWT.get()}`,
     }
 }
 
-export function saveJWTTokenAndRedirect(token) {
-    JWTToken.set(token);
+export function saveJWTAndRedirect(token) {
+    JWT.set(token);
     redirectToMainPage();
 }

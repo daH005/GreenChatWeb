@@ -8,11 +8,11 @@ import { makeRequestingUrlAndOptions,
          requestUserInfo,
          requestUserChats,
          requestChatHistory,
-         requestNewJWTToken,
+         requestNewJWT,
        } from "../_http.js";
-import { JWTToken } from "../_localStorage.js";
+import { JWT } from "../_localStorage.js";
 
-JWTToken.get = () => {
+JWT.get = () => {
     return "testToken";
 }
 
@@ -182,7 +182,7 @@ function testPositiveMakeRequestingUrlAndOptions() {
         [
             // in
             [
-                requestNewJWTToken.options,
+                requestNewJWT.options,
                 null
             ],
             // out

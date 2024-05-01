@@ -84,7 +84,7 @@ export const requestCheckEmailCode = makeRequestingFunc({
     METHOD: "GET",
 });
 
-// Returns - {JWTToken}
+// Returns - {JWT}
 export const requestAuth = makeRequestingFunc({
     URL: HTTP_ENDPOINTS_URLS.AUTH,
     METHOD: "POST",
@@ -127,8 +127,8 @@ export const requestChatHistory = makeRequestingFunc({
     },
 });
 
-// Returns - {JWTToken}
-export const requestNewJWTToken = makeRequestingFunc({
+// Returns - {JWT}
+export const requestNewJWT = makeRequestingFunc({
     URL: HTTP_ENDPOINTS_URLS.REFRESH_TOKEN,
     METHOD: "POST",
     IS_AUTH: true,
