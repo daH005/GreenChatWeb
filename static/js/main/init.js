@@ -2,7 +2,7 @@ import { JWT } from "../_localStorage.js";
 import { requestNewJWT } from "../_http.js";
 import { JWT_TOKEN_REFRESH_INTERVAL_DELAY } from "../_config.js";
 import { startWebSocket } from "./_websocket.js";
-import { initHtml, handlersForWebsocket } from "./_html/init.js";
+import { initHtml, handlersForWebsocket } from "./_messaging/init.js";
 import "./_userSettings.js";
 
 async function updateJWT() {
