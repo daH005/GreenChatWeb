@@ -22,6 +22,7 @@ GreenChat
             <div class="sidebar__name cut-long-text" id="js-user-name">Загрузка...</div>
             <div class="sidebar__id" id="js-user-id-parent">ID: <span id="js-user-id">загрузка...</span></div>
         </div>
+
         <div class="sidebar__search">
             <div class="input-and-inner-button-container js-click-by-press-enter">
                 <input id="js-search-input" class="js-click-by-press-enter-input" placeholder="Введите ID..." maxlength="100">
@@ -33,6 +34,23 @@ GreenChat
 
         <div class="sidebar__links" id="js-all-chats-links"></div>
 
+        <div class="sidebar__user-settings sidebar__user-settings--hidden">
+            <div class="sidebar__user-settings__avatar">
+                <img class="avatar avatar--active"
+                     src="https://igroutka.ru/uploads/posts/2016-12/thumbs/1482665794_igra-tachki-gvido-velikolepniy.jpg">
+                <button>Изменить</button>
+            </div>
+
+            <div class="sidebar__user-settings__id">
+                Ваш ID: <span id="js-settings-user-id">228</span>
+            </div>
+
+            <input value="Данил" id="js-settings-first-name">
+            <input value="Шевелёв" id="js-settings-last-name">
+
+            <button class="sidebar__user-settings__save" id="js-settings-save">Сохранить изменения</button>
+            <button class="sidebar__user-settings__close" id="js-settings-close">Закрыть</button>
+        </div>
     </div>
 
     <div class="cur-chat">
@@ -84,10 +102,12 @@ GreenChat
                  src="https://igroutka.ru/uploads/posts/2016-12/thumbs/1482665794_igra-tachki-gvido-velikolepniy.jpg">
             <div class="chat-link__chat-name"></div>
         </div>
+
         <div class="chat-link__last-message cut-long-text">
             <span class="chat-link__self">Вы: </span>
             <span class="chat-link__text"></span>
         </div>
+
         <div class="chat-link__date"></div>
         <div class="chat-link__count"></div>
     </div>
@@ -105,6 +125,7 @@ GreenChat
                      src="https://igroutka.ru/uploads/posts/2016-12/thumbs/1482665794_igra-tachki-gvido-velikolepniy.jpg">
             </div>
         </div>
+
         <div class="chat__messages"></div>
 
         <div class="chat__input-container">

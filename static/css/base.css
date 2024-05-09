@@ -11,6 +11,9 @@
     --background-color: rgb(40, 40, 40);
     --text-color: var(--main-color);
 
+    --success-color: #9ACD32;
+    --cancel-color: #8B0000;
+
     --addr-height: 0px;
 }
 
@@ -49,6 +52,7 @@ button, input, textarea {
     border-radius: 10px;
     font-size: medium;
     box-sizing: border-box;
+    max-width: 100%;
 }
 
 button {
@@ -58,7 +62,7 @@ button {
 }
 
 button:hover, button:focus {
-    background: none;
+    background: none !important;
 }
 
 input:hover, input:focus, textarea:hover, textarea:focus {

@@ -16,6 +16,7 @@
     display: flex;
     flex-direction: column;
     overflow-x: hidden;
+    position: relative;
 }
 
 .sidebar .sidebar__title {
@@ -46,6 +47,46 @@
 
 .sidebar .sidebar__search input {
     font-size: small;
+}
+
+.sidebar .sidebar__user-settings {
+    position: absolute;
+    background: var(--main-color);
+    height: 100%;
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.sidebar .sidebar__user-settings.sidebar__user-settings--hidden {
+    display: none;
+}
+
+.sidebar .sidebar__user-settings__avatar {
+    display: flex;
+    align-items: center;
+}
+
+.sidebar .sidebar__user-settings__avatar button {
+    margin-left: 20px;
+}
+
+.sidebar .sidebar__user-settings__id {
+    margin: 20px 0;
+    color: white;
+}
+
+.sidebar .sidebar__user-settings > input, .sidebar .sidebar__user-settings > button {
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+.sidebar .sidebar__user-settings__save {
+    background: var(--success-color);
+}
+
+.sidebar .sidebar__user-settings__close {
+    background: var(--cancel-color);
 }
 
 .sidebar .sidebar__links {
