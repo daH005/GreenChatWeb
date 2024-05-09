@@ -58,6 +58,10 @@
     box-sizing: border-box;
 }
 
+.sidebar__user-settings input[type="file"] {
+    display: none;
+}
+
 .sidebar__user-settings.sidebar__user-settings--hidden {
     display: none;
 }
