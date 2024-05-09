@@ -18,6 +18,8 @@ GreenChat
     <div class="sidebar">
         <div class="sidebar__title">
             <img class="avatar avatar--active"
+                 id="js-user-settings-opener"
+                 role="button"
                  src="https://igroutka.ru/uploads/posts/2016-12/thumbs/1482665794_igra-tachki-gvido-velikolepniy.jpg">
             <div class="sidebar__name cut-long-text" id="js-user-name">Загрузка...</div>
             <div class="sidebar__id" id="js-user-id-parent">ID: <span id="js-user-id">загрузка...</span></div>
@@ -38,18 +40,19 @@ GreenChat
             <div class="sidebar__user-settings__avatar">
                 <img class="avatar avatar--active"
                      src="https://igroutka.ru/uploads/posts/2016-12/thumbs/1482665794_igra-tachki-gvido-velikolepniy.jpg">
-                <button>Изменить</button>
+                <input type="file" id="js-user-settings-avatar-input">
+                <button id="js-user-settings-avatar-button">Изменить</button>
             </div>
 
             <div class="sidebar__user-settings__id">
-                Ваш ID: <span id="js-settings-user-id">228</span>
+                Ваш ID: <span id="js-user-settings-id">228</span>
             </div>
 
-            <input value="Данил" id="js-settings-first-name">
-            <input value="Шевелёв" id="js-settings-last-name">
+            <input value="Данил" id="js-user-settings-first-name">
+            <input value="Шевелёв" id="js-user-settings-last-name">
 
-            <button class="sidebar__user-settings__save" id="js-settings-save">Сохранить изменения</button>
-            <button class="sidebar__user-settings__close" id="js-settings-close">Закрыть</button>
+            <button class="sidebar__user-settings__save" id="js-user-settings-save">Сохранить изменения</button>
+            <button class="sidebar__user-settings__close" id="js-user-settings-close">Закрыть</button>
         </div>
     </div>
 
