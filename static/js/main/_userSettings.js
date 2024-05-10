@@ -8,12 +8,16 @@ settingsOpenButtonEl.onclick = () => {
     settingsEl.classList.toggle(SETTINGS_HIDDEN_CLASS);
 }
 
-const avatarLoadingButton = document.getElementById("js-user-settings-avatar");
-avatarLoadingButton.onclick = () => {
+const avatarLoadingImageEl = document.getElementById("js-user-settings-avatar");
+avatarLoadingImageEl.onclick = () => {
     avatarInputEl.click();
 }
 
 const avatarInputEl = document.getElementById("js-user-settings-avatar-input");
+avatarInputEl.oninput = () => {
+    let imageFile = URL.createObjectURL(avatarInputEl.files[0]);
+    avatarLoadingImageEl.setAttribute("src", imageFile);
+}
 
 const firstNameInputEl = document.getElementById("js-user-settings-first-name");
 firstNameInputEl.value = user.firstName;
