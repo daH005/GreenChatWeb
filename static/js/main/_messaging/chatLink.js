@@ -1,3 +1,4 @@
+import { setAvatar } from "../_avatars.js";
 import { AbstractChatElementFacade } from "./abs.js";
 
 const chatLinkParentEl = document.getElementById("js-all-chats-links");
@@ -27,6 +28,9 @@ export class ChatLink extends AbstractChatElementFacade {
     }
 
     _makeChildEls() {
+        this.childEls.avatar = this.el.querySelector(".avatar");
+        setAvatar(this.childEls.avatar, this.data.interlocutor.id);
+
         this.childEls.name = this.el.querySelector(".chat-link__chat-name");
         this.childEls.name.textContent = this.data.name;
 

@@ -5,10 +5,11 @@ import { newMessageSound } from "../../_audio.js";
 import { userInWindow } from "../../_userInWindowChecking.js";
 import { user } from "../_user.js";
 import { addUserToApiData } from "../_apiDataAdding.js";
+import { websocket } from "../_websocket.js";
+import { setAvatar } from "../_avatars.js";
 import { ChatMessage } from "./chatMessage.js";
 import { ChatLink } from "./chatLink.js";
 import { DateSep } from "./dateSep.js";
-import { websocket } from "../_websocket.js";
 import { sendMessageToWebSocketAndClearInput } from "./common.js";
 import { AbstractChat } from "./absChat.js";
 
@@ -56,6 +57,9 @@ export class Chat extends AbstractChat {
     }
 
     _makeChildEls() {
+        this.childEls.avatar = this.el.querySelector(".avatar");
+        setAvatar(this.childEls.avatar, this.interlocutorUser.id);
+
         this.childEls.name = this.el.querySelector(".chat__name");
         this.childEls.name.textContent = this.name;
 
@@ -102,6 +106,7 @@ export class Chat extends AbstractChat {
             parentChat: this,
             data: {
                 name: this.name,
+                interlocutor: this.interlocutorUser,
             },
         });
         this.link.updateUnreadCount(this.unreadCount);
