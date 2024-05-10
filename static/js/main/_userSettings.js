@@ -35,9 +35,12 @@ lastNameInputEl.oninput = () => {
 
 const saveButtonEl = document.getElementById("js-user-settings-save");
 saveButtonEl.onclick = async () => {
+    let updatingWas = false;
+
     if (avatarInputEl.files.length) {
         await requestUserEditAvatar(avatarInputEl.files[0]);
         avatarInputEl.value = "";
+        updatingWas = true;
     }
 
     if (user.firstName != firstNameInputEl.value || user.lastName != lastNameInputEl.value) {
@@ -48,9 +51,13 @@ saveButtonEl.onclick = async () => {
             firstName: firstNameInputEl.value,
             lastName: lastNameInputEl.value,
         });
+
+        updatingWas = true;
     }
 
-    notify("Данные успешно обновлены!");
+    if (updatingWas) {
+        notify("Данные успешно обновлены!");
+    }
 }
 
 const closeButtonEl = document.getElementById("js-user-settings-close");
