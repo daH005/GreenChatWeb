@@ -53,6 +53,7 @@ class TestAll:
         user: UserInfo = UserInfo.new()
         cls.users.append(user)
         cls._login(user)  # as registration
+        cls._set_full_name()
 
     @classmethod
     def _login(cls, user: UserInfo) -> None:
@@ -70,6 +71,20 @@ class TestAll:
     @classmethod
     def _get_my_id(cls) -> int:
         return int(cls.driver.find_element(By.XPATH, '//span[@id="js-user-id"]').text)
+
+    @classmethod
+    def _set_full_name(cls) -> None:
+        cls.driver.find_element(By.XPATH, '//div[@id="js-user-settings-open"]').click()
+
+        first_name_input_el = cls.driver.find_element(By.XPATH, '//input[@id="js-user-settings-first-name"]')
+        first_name_input_el.clear()
+        first_name_input_el.send_keys(cls.cur_user.first_name)
+
+        last_name_input_el = cls.driver.find_element(By.XPATH, '//input[@id="js-user-settings-last-name"]')
+        last_name_input_el.clear()
+        last_name_input_el.send_keys(cls.cur_user.last_name)
+
+        cls.driver.find_element(By.XPATH, '//button[@id="js-user-settings-save"]').click()
 
     @classmethod
     def _test_positive_redirect_to_main_after_login(cls, user: UserInfo) -> None:
@@ -134,11 +149,9 @@ class TestAll:
         except NoSuchElementException:
             pass
 
-    # FixMe: Вернуть прогон теста после того, как сделаем редактирование имени и фамилии
     @classmethod
     def _switch_to_chat_by_sidebar(cls, interlocutor_full_name: str) -> None:
-        cls.driver.find_element(By.XPATH, f'//div[@class="sidebar__links"]'
-                                          f'/div[@class="chat-link"]'
+        cls.driver.find_element(By.XPATH, f'//div[@id="js-all-chats-links"]'
                                           f'//div[@class="chat-link__chat-name"]'
                                           f'[text()="{interlocutor_full_name}"]').click()
         sleep(0.5)  # wait for switch and history loading
@@ -169,6 +182,7 @@ class TestAll:
         cls._close_cur_chat()
         cls._login(new_user)
         cls._search_interlocutor(old_user.id)
+        cls._switch_to_chat_by_sidebar(old_user.full_name)
 
     @classmethod
     def _close_cur_chat(cls) -> None:
