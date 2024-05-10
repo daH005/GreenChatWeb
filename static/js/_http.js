@@ -123,6 +123,7 @@ export const requestUserAvatar = makeRequestingFunc({
     URL: HTTP_ENDPOINTS_URLS.USER_AVATAR,
     METHOD: "GET",
     IS_AUTH: true,
+    REQUEST_BODY_IS_JSON: false,
     RESPONSE_TYPE: RESPONSE_TYPES.BLOB,
 });
 
