@@ -1,4 +1,3 @@
-import { updateUserInfo } from "./userInfo.js";
 import { requestUserChats } from "../../_http.js";
 import { user } from "../_user.js";
 import { addUserToApiData, addUsersToApiData } from "../_apiDataAdding.js";
@@ -79,8 +78,6 @@ async function addChat(apiData) {
 }
 
 export async function initHtml() {
-    updateUserInfo(user);
-
     let data = await requestUserChats();
     data.chats.reverse();
     for (let i in data.chats) {
