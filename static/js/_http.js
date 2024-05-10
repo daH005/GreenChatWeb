@@ -41,7 +41,10 @@ export function makeRequestingUrlAndOptions(options, data=null) {
     let fetchUrl = options.URL;
     let fetchOptions = {
         method: options.METHOD,
-        headers: BASE_HEADERS,
+    }
+
+    if (options.REQUEST_BODY_IS_JSON) {
+        fetchOptions.headers = BASE_HEADERS;
     }
 
     if (options.URL_DATA_NAMES) {
