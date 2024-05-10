@@ -2,10 +2,16 @@ import { BASE_HEADERS, HTTP_ENDPOINTS_URLS } from "./_config.js";
 import { redirectToLoginPage } from "./_redirects.js";
 import { makeAuthHeaders } from "./_authTools.js";
 
+const RESPONSE_TYPES = {
+    JSON: "json",
+    BLOB: "blob",
+}
+
 export function makeRequestingFunc(options) {
     options = {
         STATUSES_NOTIFICATIONS: {},
         ERROR_FUNCS: {},
+        RESPONSE_TYPE: RESPONSE_TYPES.JSON,
         ...options,
     }
     async function request(data) {
@@ -17,7 +23,7 @@ export function makeRequestingFunc(options) {
         }
 
         if (response.ok) {
-            return await response.json();
+            return await response[options.RESPONSE_TYPE]();
         } else if (response.status in options.ERROR_FUNCS) {
             return options.ERROR_FUNCS[response.status]();
         } else if (!(response.status in options.STATUSES_NOTIFICATIONS)){
@@ -93,7 +99,7 @@ export const requestAuth = makeRequestingFunc({
     },
 });
 
-// Returns - {id, firstName, lastName, ?username, ?email}
+// Returns - {id, firstName, lastName, ?email}
 export const requestUserInfo = makeRequestingFunc({
     URL: HTTP_ENDPOINTS_URLS.USER_INFO,
     METHOD: "GET",
@@ -106,7 +112,15 @@ export const requestUserInfo = makeRequestingFunc({
     },
 });
 
-// Returns - {chats: [{id, name, isGroup, lastMessage, users}, ...]}
+// Returns image file
+export const requestUserAvatar = makeRequestingFunc({
+    URL: HTTP_ENDPOINTS_URLS.USER_AVATAR,
+    METHOD: "GET",
+    IS_AUTH: true,
+    RESPONSE_TYPE: RESPONSE_TYPES.BLOB,
+});
+
+// Returns - {chats: [{id, name, isGroup, lastMessage, usersIds}, ...]}
 export const requestUserChats = makeRequestingFunc({
     URL: HTTP_ENDPOINTS_URLS.USER_CHATS,
     METHOD: "GET",
@@ -116,7 +130,7 @@ export const requestUserChats = makeRequestingFunc({
     },
 });
 
-// Returns - {messages: [{id, chatId, text, creatingDatetime, user}, ...]}
+// Returns - {messages: [{id, chatId, text, creatingDatetime, userId}, ...]}
 export const requestChatHistory = makeRequestingFunc({
     URL: HTTP_ENDPOINTS_URLS.CHAT_HISTORY,
     URL_DATA_NAMES: ["chatId"],
