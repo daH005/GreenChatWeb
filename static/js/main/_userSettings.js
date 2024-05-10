@@ -5,7 +5,7 @@ const settingsEl = document.getElementById("js-user-settings");
 
 const settingsOpenButtonEl = document.getElementById("js-user-settings-opener");
 settingsOpenButtonEl.onclick = () => {
-    settingsEl.classList.remove(SETTINGS_HIDDEN_CLASS);
+    settingsEl.classList.toggle(SETTINGS_HIDDEN_CLASS);
 }
 
 const avatarImageEl = document.getElementById("js-user-settings-avatar");
