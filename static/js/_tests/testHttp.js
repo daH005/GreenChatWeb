@@ -6,6 +6,9 @@ import { makeRequestingUrlAndOptions,
          requestCheckEmailCode,
          requestAuth,
          requestUserInfo,
+         requestUserAvatar,
+         requestUserEditInfo,
+         requestUserEditAvatar,
          requestUserChats,
          requestChatHistory,
          requestNewJWT,
@@ -28,7 +31,7 @@ function testPositiveMakeRequestingUrlAndOptions() {
             ],
             // out
             [
-                "http://localhost:5181/user/new/check/email?email=dan005%40mail.ru",  // @ = %40
+                "http://localhost:5181/user/new/check/email?email=dan005%40mail.ru",  // %40 = @
                 {
                     method: "GET",
                     headers: {
@@ -137,6 +140,68 @@ function testPositiveMakeRequestingUrlAndOptions() {
                         "Authorization": "Bearer testToken",
                         "Content-Type": "application/json",
                     },
+                }
+            ]
+        ],
+        [
+            // in
+            [
+                requestUserAvatar.options,
+                {
+                    userId: 1,
+                }
+            ],
+            // out
+            [
+                "http://localhost:5181/user/avatar?userId=1",
+                {
+                    method: "GET",
+                    headers: {
+                        "Authorization": "Bearer testToken",
+                    },
+                }
+            ]
+        ],
+        [
+            // in
+            [
+                requestUserEditInfo.options,
+                {
+                    firstName: "dan",
+                    lastName: "shev",
+                }
+            ],
+            // out
+            [
+                "http://localhost:5181/user/edit/info",
+                {
+                    method: "PUT",
+                    headers: {
+                        "Authorization": "Bearer testToken",
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        firstName: "dan",
+                        lastName: "shev",
+                    }),
+                }
+            ]
+        ],
+        [
+            // in
+            [
+                requestUserEditAvatar.options,
+                new File(["foo"], "file.jpg"),
+            ],
+            // out
+            [
+                "http://localhost:5181/user/edit/avatar",
+                {
+                    method: "PUT",
+                    headers: {
+                        "Authorization": "Bearer testToken",
+                    },
+                    body: new File(["foo"], "file.jpg"),
                 }
             ]
         ],
