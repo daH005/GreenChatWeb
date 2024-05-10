@@ -16,8 +16,8 @@ avatarLoadingImageEl.onclick = () => {
 
 const avatarInputEl = document.getElementById("js-user-settings-avatar-input");
 avatarInputEl.oninput = () => {
-    let imageFile = URL.createObjectURL(avatarInputEl.files[0]);
-    avatarLoadingImageEl.setAttribute("src", imageFile);
+    let imageFileURL = URL.createObjectURL(avatarInputEl.files[0]);
+    avatarLoadingImageEl.src = imageFileURL;
 }
 
 const firstNameInputEl = document.getElementById("js-user-settings-first-name");
