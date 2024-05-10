@@ -9,6 +9,10 @@ settingsOpenButtonEl.onclick = () => {
 }
 
 const avatarLoadingButton = document.getElementById("js-user-settings-avatar");
+avatarLoadingButton.onclick = () => {
+    avatarInputEl.click();
+}
+
 const avatarInputEl = document.getElementById("js-user-settings-avatar-input");
 
 const firstNameInputEl = document.getElementById("js-user-settings-first-name");
