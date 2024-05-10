@@ -1,4 +1,5 @@
 import { user } from "./_user.js";
+import { updateUserFullName } from "./_userInfo.js";
 
 const SETTINGS_HIDDEN_CLASS = "sidebar__user-settings--hidden";
 const settingsEl = document.getElementById("js-user-settings");
@@ -21,12 +22,22 @@ avatarInputEl.oninput = () => {
 
 const firstNameInputEl = document.getElementById("js-user-settings-first-name");
 firstNameInputEl.value = user.firstName;
+firstNameInputEl.oninput = () => {
+    updateUserFullNameWrap();
+}
 
 const lastNameInputEl = document.getElementById("js-user-settings-last-name");
 lastNameInputEl.value = user.lastName;
+lastNameInputEl.oninput = () => {
+    updateUserFullNameWrap();
+}
 
 const saveButtonEl = document.getElementById("js-user-settings-save");
 const closeButtonEl = document.getElementById("js-user-settings-close");
 closeButtonEl.onclick = () => {
     settingsEl.classList.add(SETTINGS_HIDDEN_CLASS);
+}
+
+function updateUserFullNameWrap() {
+    updateUserFullName(firstNameInputEl.value + " " + lastNameInputEl.value);
 }
