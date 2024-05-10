@@ -58,9 +58,11 @@
 .sidebar__user-settings {
     position: absolute;
     background: var(--main-color);
-    height: 100%;
+    height: calc(100% - 67px);
     width: 100%;
     padding: 10px;
+    box-sizing: border-box;
+    top: 67px;
     box-sizing: border-box;
 }
 
