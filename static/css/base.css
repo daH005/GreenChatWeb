@@ -53,6 +53,7 @@ button, input, textarea {
     font-size: medium;
     box-sizing: border-box;
     max-width: 100%;
+    font-size: small;
 }
 
 button {
