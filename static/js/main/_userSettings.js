@@ -1,6 +1,6 @@
 import { user } from "./_user.js";
 import { updateUserFullName } from "./_userInfo.js";
-import { requestUserEditAvatar } from "../_http.js";
+import { requestUserEditInfo, requestUserEditAvatar } from "../_http.js";
 
 const SETTINGS_HIDDEN_CLASS = "sidebar__user-settings--hidden";
 const settingsEl = document.getElementById("js-user-settings");
@@ -37,9 +37,20 @@ const saveButtonEl = document.getElementById("js-user-settings-save");
 saveButtonEl.onclick = async () => {
     if (avatarInputEl.files.length) {
         await requestUserEditAvatar(avatarInputEl.files[0]);
-
         avatarInputEl.value = "";
     }
+
+    if (user.firstName != firstNameInputEl.value || user.lastName != lastNameInputEl.value) {
+        user.firstName = firstNameInputEl.value;
+        user.lastName = lastNameInputEl.value;
+
+        await requestUserEditInfo({
+            firstName: firstNameInputEl.value,
+            lastName: lastNameInputEl.value,
+        });
+    }
+
+    notify("Данные успешно обновлены!");
 }
 
 const closeButtonEl = document.getElementById("js-user-settings-close");

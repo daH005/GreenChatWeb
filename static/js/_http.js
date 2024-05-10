@@ -124,6 +124,13 @@ export const requestUserAvatar = makeRequestingFunc({
 });
 
 // Returns - {status}
+export const requestUserEditInfo = makeRequestingFunc({
+    URL: HTTP_ENDPOINTS_URLS.USER_EDIT_INFO,
+    METHOD: "PUT",
+    IS_AUTH: true,
+});
+
+// Returns - {status}
 export const requestUserEditAvatar = makeRequestingFunc({
     URL: HTTP_ENDPOINTS_URLS.USER_EDIT_AVATAR,
     METHOD: "PUT",
