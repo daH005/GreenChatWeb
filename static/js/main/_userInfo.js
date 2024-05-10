@@ -1,5 +1,5 @@
 import { user } from "./_user.js";
-import { requestUserAvatar } from "../_http.js";
+import { setAvatar } from "./_avatars.js";
 
 const avatarImageEl = document.getElementById("js-user-avatar");
 
@@ -16,10 +16,7 @@ export async function updateUserInfo(user) {
     updateUserFullName(user.firstName + " " + user.lastName);
     userIdEl.textContent = user.id;
 
-    let avatarFile = await requestUserAvatar({
-        userId: user.id,
-    });
-    avatarImageEl.src = URL.createObjectURL(avatarFile);
+    await setAvatar(avatarImageEl, user.id);
 }
 
 export function updateUserFullName(fullName) {
