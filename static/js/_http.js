@@ -12,6 +12,7 @@ export function makeRequestingFunc(options) {
         STATUSES_NOTIFICATIONS: {},
         ERROR_FUNCS: {},
         RESPONSE_TYPE: RESPONSE_TYPES.JSON,
+        REQUEST_BODY_IS_JSON: true,
         ...options,
     }
     async function request(data) {
@@ -56,8 +57,10 @@ export function makeRequestingUrlAndOptions(options, data=null) {
         if (options.METHOD == "GET") {
             let queryParamsStr = "?" + new URLSearchParams(data).toString();
             fetchUrl += queryParamsStr;
-        } else {
+        } else if (options.REQUEST_BODY_IS_JSON) {
             fetchOptions.body = JSON.stringify(data);
+        } else {
+            fetchOptions.body = data;
         }
     }
 
@@ -118,6 +121,14 @@ export const requestUserAvatar = makeRequestingFunc({
     METHOD: "GET",
     IS_AUTH: true,
     RESPONSE_TYPE: RESPONSE_TYPES.BLOB,
+});
+
+// Returns - {status}
+export const requestUserEditAvatar = makeRequestingFunc({
+    URL: HTTP_ENDPOINTS_URLS.USER_EDIT_AVATAR,
+    METHOD: "PUT",
+    IS_AUTH: true,
+    REQUEST_BODY_IS_JSON: false,
 });
 
 // Returns - {chats: [{id, name, isGroup, lastMessage, usersIds}, ...]}
