@@ -1,5 +1,6 @@
 import { user } from "../_user.js";
 import { websocket } from "../_websocket.js";
+import { setAvatar } from "../_avatars.js";
 import { sendMessageToWebSocketAndClearInput } from "./common.js";
 import { AbstractChat } from "./absChat.js";
 
@@ -20,6 +21,7 @@ export class NewFakeChat extends AbstractChat {
             this.close();
         }
 
+        this.childEls.avatar = this.el.querySelector(".avatar");
         this.childEls.name = this.el.querySelector(".chat__name");
         this.childEls.onlineStatus = this.el.querySelector(".avatar");
 
@@ -53,6 +55,7 @@ export class NewFakeChat extends AbstractChat {
 
         this.interlocutorUser = interlocutorUser;
         this.childEls.name.textContent = this.interlocutorUser.firstName + " " + this.interlocutorUser.lastName;
+        setAvatar(this.childEls.avatar, this.interlocutorUser.id);
     }
 
     close() {
