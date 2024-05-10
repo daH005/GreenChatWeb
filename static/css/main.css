@@ -29,6 +29,12 @@
 
     box-sizing: border-box;
     min-height: 65px;
+
+    cursor: pointer;
+}
+
+.sidebar__title:hover {
+    background: var(--main-3-color);
 }
 
 .sidebar__id {
