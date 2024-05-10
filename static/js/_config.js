@@ -18,6 +18,9 @@ export const HTTP_ENDPOINTS_URLS = {
     AUTH: HTTP_BASE_URL + "/user/auth",
     REFRESH_TOKEN: HTTP_BASE_URL + "/user/refreshToken",
     USER_INFO: HTTP_BASE_URL + "/user/info",
+    USER_AVATAR: HTTP_BASE_URL + "/user/avatar",
+    USER_EDIT_INFO: HTTP_BASE_URL + "/user/edit/info",
+    USER_EDIT_AVATAR: HTTP_BASE_URL + "/user/edit/avatar",
     USER_CHATS: HTTP_BASE_URL + "/user/chats",
     CHAT_HISTORY: HTTP_BASE_URL + "/chats/{chatId}/history",
 }
