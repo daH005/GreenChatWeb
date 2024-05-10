@@ -68,7 +68,10 @@ export function makeRequestingUrlAndOptions(options, data=null) {
     }
 
     if (options.IS_AUTH) {
-        fetchOptions.headers = makeAuthHeaders();
+        fetchOptions.headers = {
+            ...fetchOptions.headers,
+            ...makeAuthHeaders(),
+        }
     }
 
     return [fetchUrl, fetchOptions];
