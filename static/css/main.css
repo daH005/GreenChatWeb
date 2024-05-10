@@ -33,10 +33,6 @@
     cursor: pointer;
 }
 
-.sidebar__title:hover {
-    background: var(--main-3-color);
-}
-
 .sidebar__id {
     cursor: pointer;
     position: absolute;
