@@ -9,7 +9,7 @@ settingsOpenButtonEl.onclick = () => {
     settingsEl.classList.remove(SETTINGS_HIDDEN_CLASS);
 }
 
-const avatarLoadingImageEl = document.getElementById("js-user-settings-avatar");
+const avatarLoadingImageEl = document.getElementById("js-user-avatar");
 avatarLoadingImageEl.onclick = () => {
     avatarInputEl.click();
 }
