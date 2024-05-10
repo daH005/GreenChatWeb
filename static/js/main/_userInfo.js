@@ -1,6 +1,6 @@
 const userNameEl = document.getElementById("js-user-name");
 const userIdParentEl = document.getElementById("js-user-id-parent");
-userIdParentEl.onclick = (e) => {
+userIdParentEl.onclick = () => {
     navigator.clipboard.writeText(userIdEl.textContent);
     notify("ID успешно скопирован!");
 }

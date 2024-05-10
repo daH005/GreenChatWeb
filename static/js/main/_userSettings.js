@@ -6,7 +6,7 @@ const settingsEl = document.getElementById("js-user-settings");
 
 const settingsOpenButtonEl = document.getElementById("js-user-settings-open");
 settingsOpenButtonEl.onclick = () => {
-    settingsEl.classList.toggle(SETTINGS_HIDDEN_CLASS);
+    settingsEl.classList.remove(SETTINGS_HIDDEN_CLASS);
 }
 
 const avatarLoadingImageEl = document.getElementById("js-user-settings-avatar");
