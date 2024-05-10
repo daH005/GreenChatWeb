@@ -3,17 +3,13 @@ import { user } from "./_user.js";
 const SETTINGS_HIDDEN_CLASS = "sidebar__user-settings--hidden";
 const settingsEl = document.getElementById("js-user-settings");
 
-const settingsOpenButtonEl = document.getElementById("js-user-settings-opener");
+const settingsOpenButtonEl = document.getElementById("js-user-settings-open");
 settingsOpenButtonEl.onclick = () => {
     settingsEl.classList.toggle(SETTINGS_HIDDEN_CLASS);
 }
 
-const avatarImageEl = document.getElementById("js-user-settings-avatar");
+const avatarLoadingButton = document.getElementById("js-user-settings-avatar");
 const avatarInputEl = document.getElementById("js-user-settings-avatar-input");
-const avatarButtonEl = document.getElementById("js-user-settings-avatar-button");
-
-const userIdEl = document.getElementById("js-user-settings-id");
-userIdEl.textContent = user.id;
 
 const firstNameInputEl = document.getElementById("js-user-settings-first-name");
 firstNameInputEl.value = user.firstName;

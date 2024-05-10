@@ -16,8 +16,10 @@ GreenChat
 <div class="messenger">
 
     <div class="sidebar">
-        <div class="sidebar__title" id="js-user-settings-opener">
+        <div class="sidebar__title" id="js-user-settings-open">
             <img class="avatar avatar--active"
+                 id="js-user-settings-avatar"
+                 role="button"
                  src="https://igroutka.ru/uploads/posts/2016-12/thumbs/1482665794_igra-tachki-gvido-velikolepniy.jpg">
             <div class="sidebar__name cut-long-text" id="js-user-name">Загрузка...</div>
             <div class="sidebar__id" id="js-user-id-parent">ID: <span id="js-user-id">загрузка...</span></div>
@@ -35,17 +37,7 @@ GreenChat
         <div class="sidebar__links" id="js-all-chats-links"></div>
 
         <div class="sidebar__user-settings sidebar__user-settings--hidden" id="js-user-settings">
-            <div class="sidebar__user-settings__avatar">
-                <img class="avatar avatar--active"
-                     id="js-user-settings-avatar"
-                     src="https://igroutka.ru/uploads/posts/2016-12/thumbs/1482665794_igra-tachki-gvido-velikolepniy.jpg">
-                <input type="file" id="js-user-settings-avatar-input">
-                <button id="js-user-settings-avatar-button">Изменить</button>
-            </div>
-
-            <div class="sidebar__user-settings__id">
-                Ваш ID: <span id="js-user-settings-id">Загрузка...</span>
-            </div>
+            <input type="file" id="js-user-settings-avatar-input">
 
             <input value="Загрузка..." id="js-user-settings-first-name">
             <input value="Загрузка..." id="js-user-settings-last-name">
