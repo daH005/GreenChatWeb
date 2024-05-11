@@ -20,7 +20,7 @@ export const HTTP_ENDPOINTS_URLS = {
     USER_EDIT_INFO: HTTP_BASE_URL + "/user/edit/info",
     USER_EDIT_AVATAR: HTTP_BASE_URL + "/user/edit/avatar",
     USER_CHATS: HTTP_BASE_URL + "/user/chats",
-    CHAT_HISTORY: HTTP_BASE_URL + "/chats/{chatId}/history",
+    CHAT_HISTORY: HTTP_BASE_URL + "/chat/history",
 }
 
 export var WEBSOCKET_URL = "";  // <- WEBSOCKET_URL

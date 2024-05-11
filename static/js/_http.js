@@ -145,7 +145,7 @@ export const requestUserEditAvatar = makeRequestingFunc({
     REQUEST_BODY_IS_JSON: false,
 });
 
-// Returns - {chats: [{id, name, isGroup, lastMessage, usersIds}, ...]}
+// Returns - {chats: [{id, name, isGroup, lastMessage, usersIds, unreadCount}, ...]}
 export const requestUserChats = makeRequestingFunc({
     URL: HTTP_ENDPOINTS_URLS.USER_CHATS,
     METHOD: "GET",
@@ -155,10 +155,9 @@ export const requestUserChats = makeRequestingFunc({
     },
 });
 
-// Returns - {messages: [{id, chatId, text, creatingDatetime, userId}, ...]}
+// Returns - {messages: [{id, chatId, text, creatingDatetime, userId, isRead}, ...]}
 export const requestChatHistory = makeRequestingFunc({
     URL: HTTP_ENDPOINTS_URLS.CHAT_HISTORY,
-    URL_DATA_NAMES: ["chatId"],
     METHOD: "GET",
     AUTHORIZATION_IS_REQUIRED: true,
     ERROR_FUNCS: {

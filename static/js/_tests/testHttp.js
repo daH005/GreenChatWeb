@@ -234,7 +234,7 @@ function testPositiveMakeRequestingUrlAndOptions() {
             ],
             // out
             [
-                "http://localhost:5181/chats/1/history?chatId=1&offsetFromEnd=1",
+                "http://localhost:5181/chat/history?chatId=1&offsetFromEnd=1",
                 {
                     method: "GET",
                     headers: {
