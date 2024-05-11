@@ -8,7 +8,7 @@ export class NewFakeChat extends AbstractChat {
 
     _init(args) {
         super._init(args);
-        this.interlocutorUser = null;
+        this.interlocutor = null;
     }
 
     _makeEl() {
@@ -35,37 +35,37 @@ export class NewFakeChat extends AbstractChat {
                 type: "newChat",
                 data: {
                     text: this.childEls.input.value,
-                    usersIds: [user.id, this.interlocutorUser.id],
+                    usersIds: [user.id, this.interlocutor.id],
                 }
             }, this.childEls.input);
         }
     }
 
-    open(interlocutorUser) {
+    open(interlocutor) {
         super.open();
 
         websocket.sendJSON({
             type: "onlineStatusTracingAdding",
             data: {
-                userId: interlocutorUser.id,
+                userId: interlocutor.id,
             }
         });
 
-        AbstractChat.interlocutorsChats[interlocutorUser.id] = this;
+        AbstractChat.interlocutorsChats[interlocutor.id] = this;
 
-        this.interlocutorUser = interlocutorUser;
-        this.childEls.name.textContent = this.interlocutorUser.firstName + " " + this.interlocutorUser.lastName;
-        setAvatar(this.childEls.avatar, this.interlocutorUser.id);
+        this.interlocutor = interlocutor;
+        this.childEls.name.textContent = this.interlocutor.firstName + " " + this.interlocutor.lastName;
+        setAvatar(this.childEls.avatar, this.interlocutor.id);
     }
 
     close() {
         super.close();
 
-        if (AbstractChat.interlocutorsChats[this.interlocutorUser.id] == this) {
-            AbstractChat.interlocutorsChats[this.interlocutorUser.id] = null;
+        if (AbstractChat.interlocutorsChats[this.interlocutor.id] == this) {
+            AbstractChat.interlocutorsChats[this.interlocutor.id] = null;
         }
 
-        this.interlocutorUser = null;
+        this.interlocutor = null;
     }
 
 }

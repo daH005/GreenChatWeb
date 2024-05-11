@@ -28,7 +28,7 @@ async function searchUserAndSwitchToChat() {
         return;
     }
 
-    let interlocutorUser = await requestUserInfo({userId});
-    newFakeChat.open(interlocutorUser);
+    let interlocutor = await requestUserInfo({userId});
+    newFakeChat.open(interlocutor);
 
 }

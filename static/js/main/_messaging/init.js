@@ -25,10 +25,10 @@ export const handlersForWebsocket = {
     "newChat": async (apiData) => {
         let chat = await addChat(apiData);
 
-        if (apiData.isGroup || !newFakeChat.interlocutorUser) {
+        if (apiData.isGroup || !newFakeChat.interlocutor) {
             return;
         }
-        if (chat.interlocutorUser.id == newFakeChat.interlocutorUser.id) {
+        if (chat.interlocutor.id == newFakeChat.interlocutor.id) {
             chat.open();
         }
     },
@@ -67,7 +67,7 @@ async function addChat(apiData) {
         },
     });
 
-    let onlineStatus = interlocutorsOnlineStatusesForUncreatedChats[chat.interlocutorUser.id];
+    let onlineStatus = interlocutorsOnlineStatusesForUncreatedChats[chat.interlocutor.id];
     if (onlineStatus) {
         chat.updateOnlineStatus(onlineStatus);
     }

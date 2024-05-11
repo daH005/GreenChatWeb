@@ -38,13 +38,13 @@ export class Chat extends AbstractChat {
         this.unreadCount = this.data.fromApi.unreadCount;
 
         this.name = null;
-        this.interlocutorUser = null;
+        this.interlocutor = null;
         this.link = null;
         this.topDateStr = null;
         this.bottomDateStr = null;
         this.typingTimeoutId = null;
 
-        this._defineInterlocutorUser();
+        this._defineinterlocutor();
         this._defineName();
     }
 
@@ -58,7 +58,7 @@ export class Chat extends AbstractChat {
 
     _makeChildEls() {
         this.childEls.avatar = this.el.querySelector(".avatar");
-        setAvatar(this.childEls.avatar, this.interlocutorUser.id);
+        setAvatar(this.childEls.avatar, this.interlocutor.id);
 
         this.childEls.name = this.el.querySelector(".chat__name");
         this.childEls.name.textContent = this.name;
@@ -106,7 +106,7 @@ export class Chat extends AbstractChat {
             parentChat: this,
             data: {
                 name: this.name,
-                interlocutor: this.interlocutorUser,
+                interlocutor: this.interlocutor,
             },
         });
         this.link.updateUnreadCount(this.unreadCount);
@@ -125,15 +125,15 @@ export class Chat extends AbstractChat {
         if (this.data.fromApi.isGroup) {
             this.name = this.data.fromApi.name;
         } else {
-            this.name = this.interlocutorUser.firstName + " " + this.interlocutorUser.lastName;
+            this.name = this.interlocutor.firstName + " " + this.interlocutor.lastName;
         }
     }
 
-    _defineInterlocutorUser() {
+    _defineinterlocutor() {
         for (let i in this.data.fromApi.users) {
             if (this.data.fromApi.users[i].id != user.id) {
-                this.interlocutorUser = this.data.fromApi.users[i];
-                AbstractChat.interlocutorsChats[this.interlocutorUser.id] = this;
+                this.interlocutor = this.data.fromApi.users[i];
+                AbstractChat.interlocutorsChats[this.interlocutor.id] = this;
                 break;
             }
         }
