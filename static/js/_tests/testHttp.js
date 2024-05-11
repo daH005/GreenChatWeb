@@ -110,12 +110,12 @@ function testPositiveMakeRequestingUrlAndOptions() {
             [
                 requestUserInfo.options,
                 {
-                    id: 100
+                    userId: 100
                 }
             ],
             // out
             [
-                "http://localhost:5181/user/info?id=100",
+                "http://localhost:5181/user/info?userId=100",
                 {
                     method: "GET",
                     headers: {
