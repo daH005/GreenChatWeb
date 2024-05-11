@@ -1,6 +1,6 @@
 import { BASE_HEADERS, HTTP_ENDPOINTS_URLS } from "./_config.js";
 import { redirectToLoginPage } from "./_redirects.js";
-import { makeAuthHeaders } from "./_authTools.js";
+import { makeAuthorizationHeaders } from "./_authorizationTools.js";
 
 const RESPONSE_TYPES = {
     JSON: "json",
@@ -67,10 +67,10 @@ export function makeRequestingUrlAndOptions(options, data=null) {
         }
     }
 
-    if (options.IS_AUTH) {
+    if (options.AUTHORIZATION_IS_REQUIRED) {
         fetchOptions.headers = {
             ...fetchOptions.headers,
-            ...makeAuthHeaders(),
+            ...makeAuthorizationHeaders(),
         }
     }
 
@@ -100,8 +100,8 @@ export const requestCheckEmailCode = makeRequestingFunc({
 });
 
 // Returns - {JWT}
-export const requestAuth = makeRequestingFunc({
-    URL: HTTP_ENDPOINTS_URLS.AUTH,
+export const requestLogin = makeRequestingFunc({
+    URL: HTTP_ENDPOINTS_URLS.LOGIN,
     METHOD: "POST",
     STATUSES_NOTIFICATIONS: {
         403: "Неверный логин или пароль!",
@@ -112,7 +112,7 @@ export const requestAuth = makeRequestingFunc({
 export const requestUserInfo = makeRequestingFunc({
     URL: HTTP_ENDPOINTS_URLS.USER_INFO,
     METHOD: "GET",
-    IS_AUTH: true,
+    AUTHORIZATION_IS_REQUIRED: true,
     STATUSES_NOTIFICATIONS: {
         404: "Пользователь с таким ID не найден!",
     },
@@ -125,7 +125,7 @@ export const requestUserInfo = makeRequestingFunc({
 export const requestUserAvatar = makeRequestingFunc({
     URL: HTTP_ENDPOINTS_URLS.USER_AVATAR,
     METHOD: "GET",
-    IS_AUTH: true,
+    AUTHORIZATION_IS_REQUIRED: true,
     REQUEST_BODY_IS_JSON: false,
     RESPONSE_TYPE: RESPONSE_TYPES.BLOB,
 });
@@ -134,14 +134,14 @@ export const requestUserAvatar = makeRequestingFunc({
 export const requestUserEditInfo = makeRequestingFunc({
     URL: HTTP_ENDPOINTS_URLS.USER_EDIT_INFO,
     METHOD: "PUT",
-    IS_AUTH: true,
+    AUTHORIZATION_IS_REQUIRED: true,
 });
 
 // Returns - {status}
 export const requestUserEditAvatar = makeRequestingFunc({
     URL: HTTP_ENDPOINTS_URLS.USER_EDIT_AVATAR,
     METHOD: "PUT",
-    IS_AUTH: true,
+    AUTHORIZATION_IS_REQUIRED: true,
     REQUEST_BODY_IS_JSON: false,
 });
 
@@ -149,7 +149,7 @@ export const requestUserEditAvatar = makeRequestingFunc({
 export const requestUserChats = makeRequestingFunc({
     URL: HTTP_ENDPOINTS_URLS.USER_CHATS,
     METHOD: "GET",
-    IS_AUTH: true,
+    AUTHORIZATION_IS_REQUIRED: true,
     ERROR_FUNCS: {
         401: redirectToLoginPage,
     },
@@ -160,7 +160,7 @@ export const requestChatHistory = makeRequestingFunc({
     URL: HTTP_ENDPOINTS_URLS.CHAT_HISTORY,
     URL_DATA_NAMES: ["chatId"],
     METHOD: "GET",
-    IS_AUTH: true,
+    AUTHORIZATION_IS_REQUIRED: true,
     ERROR_FUNCS: {
         401: redirectToLoginPage,
     },
@@ -170,7 +170,7 @@ export const requestChatHistory = makeRequestingFunc({
 export const requestNewJWT = makeRequestingFunc({
     URL: HTTP_ENDPOINTS_URLS.REFRESH_TOKEN,
     METHOD: "POST",
-    IS_AUTH: true,
+    AUTHORIZATION_IS_REQUIRED: true,
     ERROR_FUNCS: {
         401: redirectToLoginPage,
     },

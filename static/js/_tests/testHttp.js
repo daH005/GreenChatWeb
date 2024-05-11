@@ -4,7 +4,7 @@ import { makeRequestingUrlAndOptions,
          requestCheckEmail,
          requestSendEmailCode,
          requestCheckEmailCode,
-         requestAuth,
+         requestLogin,
          requestUserInfo,
          requestUserAvatar,
          requestUserEditInfo,
@@ -31,7 +31,7 @@ function testPositiveMakeRequestingUrlAndOptions() {
             ],
             // out
             [
-                "http://localhost:5181/user/new/check/email?email=dan005%40mail.ru",  // %40 = @
+                "http://localhost:5181/user/login/email/check?email=dan005%40mail.ru",  // %40 = @
                 {
                     method: "GET",
                     headers: {
@@ -50,7 +50,7 @@ function testPositiveMakeRequestingUrlAndOptions() {
             ],
             // out
             [
-                "http://localhost:5181/user/new/code/send",
+                "http://localhost:5181/user/login/code/send",
                 {
                     method: "POST",
                     headers: {
@@ -72,7 +72,7 @@ function testPositiveMakeRequestingUrlAndOptions() {
             ],
             // out
             [
-                "http://localhost:5181/user/new/code/check?code=1122",
+                "http://localhost:5181/user/login/code/check?code=1122",
                 {
                     method: "GET",
                     headers: {
@@ -84,7 +84,7 @@ function testPositiveMakeRequestingUrlAndOptions() {
         [
             // in
             [
-                requestAuth.options,
+                requestLogin.options,
                 {
                     username: "dan005",
                     password: "Mypass",
@@ -92,7 +92,7 @@ function testPositiveMakeRequestingUrlAndOptions() {
             ],
             // out
             [
-                "http://localhost:5181/user/auth",
+                "http://localhost:5181/user/login",
                 {
                     method: "POST",
                     headers: {
@@ -264,6 +264,8 @@ function testPositiveMakeRequestingUrlAndOptions() {
         ],
     ];
     for (let i in data) {
+        console.log(data[i][1][0]);
+
         let outputData = makeRequestingUrlAndOptions(...data[i][0]);
         assertEqualsObjects(outputData, data[i][1]);
     }

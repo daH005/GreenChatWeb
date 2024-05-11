@@ -10,12 +10,10 @@ if (!HTTP_BASE_URL) {
 }
 
 export const HTTP_ENDPOINTS_URLS = {
-    REG: HTTP_BASE_URL + "/user/new",
-    CHECK_USERNAME: HTTP_BASE_URL + "/user/new/check/username",
-    CHECK_EMAIL: HTTP_BASE_URL + "/user/new/check/email",
-    SEND_EMAIL_CODE: HTTP_BASE_URL + "/user/new/code/send",
-    CHECK_EMAIL_CODE: HTTP_BASE_URL + "/user/new/code/check",
-    AUTH: HTTP_BASE_URL + "/user/auth",
+    CHECK_EMAIL: HTTP_BASE_URL + "/user/login/email/check",
+    SEND_EMAIL_CODE: HTTP_BASE_URL + "/user/login/code/send",
+    CHECK_EMAIL_CODE: HTTP_BASE_URL + "/user/login/code/check",
+    LOGIN: HTTP_BASE_URL + "/user/login",
     REFRESH_TOKEN: HTTP_BASE_URL + "/user/refreshToken",
     USER_INFO: HTTP_BASE_URL + "/user/info",
     USER_AVATAR: HTTP_BASE_URL + "/user/avatar",

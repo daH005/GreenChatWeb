@@ -29,7 +29,7 @@ class TestAll:
 
     @classmethod
     def test_positive_all(cls) -> None:
-        cls._test_negative_redirect_to_login_if_not_auth()
+        cls._test_negative_redirect_to_login_if_is_not_authorized()
 
         cls._register_all()
         cls._test_positive_redirect_to_main_after_login(cls.users[0])
@@ -38,7 +38,7 @@ class TestAll:
         cls._make_chats_and_check_histories()
 
     @classmethod
-    def _test_negative_redirect_to_login_if_not_auth(cls) -> None:
+    def _test_negative_redirect_to_login_if_is_not_authorized(cls) -> None:
         cls.driver.get(FullUrl.MAIN)
         sleep(0.1)
         assert cls.driver.current_url == FullUrl.LOGIN

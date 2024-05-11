@@ -1,5 +1,5 @@
-import { requestAuth, requestCheckEmailCode, requestSendEmailCode } from "./_http.js";
-import { saveJWTAndRedirect } from "./_authTools.js";
+import { requestLogin, requestCheckEmailCode, requestSendEmailCode } from "./_http.js";
+import { saveJWTAndRedirect } from "./_authorizationTools.js";
 import { setInputAsInvalidAndMessageWithThrow, removeInvalidClassForAllInputs } from "./_common.js";
 
 const emailInputEl = document.getElementById("js-email");
@@ -18,7 +18,7 @@ buttonEl.onclick = async () => {
     await checkEmail();
     await checkEmailCode();
     
-    let data = await requestAuth({
+    let data = await requestLogin({
         email: emailInputEl.value,
         code: emailCodeInputEl.value,
     });
