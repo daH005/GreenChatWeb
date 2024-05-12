@@ -173,7 +173,7 @@ function testPositiveMakeRequestingUrlAndOptions() {
             ],
             // out
             [
-                "http://localhost:5181/user/edit/info",
+                "http://localhost:5181/user/info/edit",
                 {
                     method: "PUT",
                     headers: {
@@ -195,7 +195,7 @@ function testPositiveMakeRequestingUrlAndOptions() {
             ],
             // out
             [
-                "http://localhost:5181/user/edit/avatar",
+                "http://localhost:5181/user/avatar/edit",
                 {
                     method: "PUT",
                     headers: {
