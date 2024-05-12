@@ -34,12 +34,18 @@
 }
 
 .sidebar__id {
+    z-index: 1;
+    color: white;
     cursor: pointer;
     position: absolute;
     right: 5px;
     font-size: x-small;
     top: 5px;
     text-decoration: underline;
+}
+
+.sidebar__id:hover + .sidebar__title {
+    pointer-events: none;
 }
 
 .sidebar__search {
