@@ -76,11 +76,16 @@ input.invalid {
 
 h1 {
     color: white;
+    margin-top: 0;
 }
 
 .main {
     height: 100vh;
     overflow-y: hidden;
+
+    background: url('../images/background.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 
 .central-container {
@@ -98,6 +103,8 @@ h1 {
     width: 350px;
     max-width: 300px;
     border-radius: 15px;
+
+    backdrop-filter: blur(10px);
 }
 
 .inputs-container > input, .inputs-container > button, .inputs-container .input-and-inner-button-container, .inputs-container > textarea {
