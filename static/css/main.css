@@ -12,11 +12,12 @@
 
 .sidebar {
     flex: 20%;
-    background: var(--main-color);
     display: flex;
     flex-direction: column;
     overflow-x: hidden;
     position: relative;
+
+    backdrop-filter: blur(40px);
 }
 
 .sidebar__title {
@@ -49,7 +50,7 @@
 }
 
 .sidebar__search {
-    border-top: 2px solid var(--main-2-color);
+    border-top: 2px solid var(--main-4-color);
     padding: 10px;
 }
 
@@ -112,8 +113,7 @@
     cursor: pointer;
     color: white;
     padding: 20px;
-    border-bottom: 2px solid var(--main-2-color);
-    background: var(--main-color);
+    border-bottom: 2px solid var(--main-4-color);
     position: relative;
 }
 
@@ -130,15 +130,6 @@
 .chat-link__chat-name-wrapper {
     display: flex;
     align-items: center;
-}
-
-.chat-link__online-status {
-    height: 5px;
-    width: 5px;
-    background: var(--gray-color);
-    display: inline-block;
-    border-radius: 5px;
-    margin-right: 7px;
 }
 
 .chat-link__last-message {
@@ -173,7 +164,6 @@
 
 .cur-chat {
     flex: 80%;
-    background: var(--main-2-color);
     position: relative;
 }
 
@@ -189,22 +179,28 @@
     max-height: 100%;
     z-index: 2;
     position: relative;
-    background: var(--main-2-color);
+
+    backdrop-filter: blur(60px);
 }
 
-#js-cur-chat-overlay {
+.cur-chat-overlay {
     top: 0;
     left: 0;
     position: absolute;
     width: 100%;
     height: 100%;
     color: white;
-    background: var(--main-2-color);
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 1;
     font-size: 1.5em;
+
+    backdrop-filter: blur(60px);
+}
+
+.chats:has(.chat:not(.chat--hidden)) + .cur-chat-overlay {
+    display: none;
 }
 
 .chat.chat--hidden {
@@ -260,7 +256,6 @@
     overflow-y: auto;
     padding: 20px 5vw;
     padding-bottom: 0;
-    background: var(--main-2-color);
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
@@ -382,7 +377,7 @@
 }
 
 .avatar.avatar--active {
-    outline: 2px solid var(--light-green-color);
+    outline: 2px solid var(--online-color);
 }
 
 .sidebar__links .avatar {
@@ -429,11 +424,10 @@
         position: absolute;
         width: 100%;
         height: 100%;
-        background: var(--main-2-color);
     }
 
-    #js-cur-chat-overlay {
-        background: var(--main-color);
+    .cur-chat-overlay {
+        display: none;
     }
 
 }
