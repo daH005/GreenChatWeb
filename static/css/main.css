@@ -60,7 +60,7 @@
 
 .sidebar__user-settings {
     position: absolute;
-    backdrop-filter: blur(40px);
+    background: rgba(0, 0, 0, 0.6);
     height: calc(100% - 67px);
     width: 100%;
     padding: 10px;
