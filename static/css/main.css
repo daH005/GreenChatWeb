@@ -194,7 +194,7 @@
     align-items: center;
     justify-content: center;
     z-index: 1;
-    font-size: 1.5em;
+    font-size: large;
 
     backdrop-filter: blur(60px);
 }
@@ -312,7 +312,7 @@
     background: white;
     padding: 20px;
     width: fit-content;
-    min-width: 200px;
+    min-width: 100px;
     border-radius: 0 10px 10px 10px;
     color: var(--text-color);
     font-size: 0.9em;
@@ -339,7 +339,7 @@
     position: absolute;
     right: 5px;
     bottom: 3px;
-    font-size: 0.7rem;
+    font-size: xx-small;
 }
 
 .chat__message.chat__message--self .chat__message__time {
