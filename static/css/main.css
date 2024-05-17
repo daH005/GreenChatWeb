@@ -301,6 +301,7 @@
     padding: 10px 20px;
     width: fit-content;
     border-top-right-radius: 10px;
+    margin-right: 10px;
 }
 
 .chat__message.chat__message--self .chat__message__name {
@@ -311,8 +312,9 @@
     white-space: pre-line;
     background: white;
     padding: 20px;
-    width: fit-content;
     min-width: 100px;
+    width: 100%;
+    box-sizing: border-box;
     border-radius: 0 10px 10px 10px;
     color: var(--text-color);
     font-size: 0.9em;
