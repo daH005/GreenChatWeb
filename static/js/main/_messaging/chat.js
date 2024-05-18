@@ -172,7 +172,7 @@ export class Chat extends AbstractChat {
         });
         this.messages[apiData.id] = message;
 
-        if (scrollingIsBottom) {
+        if (scrollingIsBottom && !prepend) {
             this._scrollToBottom();
         }
 
@@ -185,8 +185,14 @@ export class Chat extends AbstractChat {
             this.topDateStr = dateStr;
         }
 
-        if (!isFirst && !prepend && !message.isSelf && (!userInWindow() || !this.isOpened)) {
+        let itIsNewInterlocutorMessage = !message.isSelf && !prepend && !isFirst;
+
+        if (itIsNewInterlocutorMessage && (!userInWindow() || !this.isOpened)) {
             newMessageSound.play();
+        }
+
+        if (itIsNewInterlocutorMessage && userInWindow() && this.isOpened) {
+            this._read();
         }
 
         if (!prepend) {
@@ -196,10 +202,6 @@ export class Chat extends AbstractChat {
                 isSelf: message.isSelf,
             });
 
-        }
-
-        if (!message.isSelf) {
-            this._read();
         }
 
     }
