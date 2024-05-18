@@ -158,10 +158,7 @@ export class Chat extends AbstractChat {
             }
         }
 
-        let scrollingIsBottom = false;
-        if (this._scrollingIsBottom()) {
-            scrollingIsBottom = true;
-        }
+        let scrolledToBottomBackupBeforeMessageAdding = this._scrolledToBottom()
 
         let message = new ChatMessage({
             parentEl: this.childEls.messages,
@@ -172,7 +169,7 @@ export class Chat extends AbstractChat {
         });
         this.messages[apiData.id] = message;
 
-        if (scrollingIsBottom && !prepend) {
+        if (scrolledToBottomBackupBeforeMessageAdding && !prepend) {
             this._scrollToBottom();
         }
 
@@ -206,7 +203,7 @@ export class Chat extends AbstractChat {
 
     }
 
-    _scrollingIsBottom() {
+    _scrolledToBottom() {
         return this.childEls.messages.scrollHeight - this.childEls.messages.scrollTop - this.childEls.messages.clientHeight < 100;
     }
 
