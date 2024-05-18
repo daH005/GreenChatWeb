@@ -3,6 +3,7 @@ import { requestChatHistory } from "../../_http.js";
 import { dateToDateStr, normalizeDateTimezone }  from "../../_datetime.js";
 import { newMessageSound } from "../../_audio.js";
 import { userInWindow } from "../../_userInWindowChecking.js";
+import { isMobile } from "../../_mobDetecting.js";
 import { user } from "../_user.js";
 import { addUserToApiData } from "../_apiDataAdding.js";
 import { websocket } from "../_websocket.js";
@@ -236,7 +237,15 @@ export class Chat extends AbstractChat {
         await this._fillChatHistory(apiData.messages);
 
         setTimeout(() => {
-            this._scrollToLastReadOrSelfMessage();
+            if (!isMobile) {
+                this._scrollToLastReadOrSelfMessage();
+                return;
+            }
+
+            this.el.addEventListener("transitionend", () => {
+                this._scrollToLastReadOrSelfMessage();
+            }, {once: true});
+
         }, Chat.WAITING_FOR_CHAT_LOADING)
 
         this.fullyLoaded = true;
