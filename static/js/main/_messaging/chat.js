@@ -241,15 +241,7 @@ export class Chat extends AbstractChat {
         await this._fillChatHistory(apiData.messages);
 
         setTimeout(() => {
-            if (!isMobile) {
-                this._scrollToLastReadOrSelfMessage();
-                return;
-            }
-
-            this.el.addEventListener("transitionend", () => {
-                this._scrollToLastReadOrSelfMessage();
-            }, {once: true});
-
+            this._scrollToLastReadOrSelfMessage();
         }, Chat.WAITING_FOR_CHAT_LOADING)
 
         this.fullyLoaded = true;
