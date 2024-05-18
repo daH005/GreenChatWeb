@@ -236,7 +236,7 @@ export class Chat extends AbstractChat {
         await this._fillChatHistory(apiData.messages);
 
         setTimeout(() => {
-            this._scrollToLastReadMessage();
+            this._scrollToLastReadOrSelfMessage();
         }, Chat.WAITING_FOR_CHAT_LOADING)
 
         this.fullyLoaded = true;
@@ -249,7 +249,7 @@ export class Chat extends AbstractChat {
         }
     }
 
-    _scrollToLastReadMessage() {
+    _scrollToLastReadOrSelfMessage() {
         this.childEls.messages.scrollTop = this._scrollTopForLastReadMessageY();
     }
 
