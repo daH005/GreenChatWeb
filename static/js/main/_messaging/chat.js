@@ -198,7 +198,7 @@ export class Chat extends AbstractChat {
 
         }
 
-        if (!isSelf) {
+        if (!message.isSelf) {
             this._read();
         }
 
