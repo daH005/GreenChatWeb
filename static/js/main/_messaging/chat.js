@@ -44,7 +44,7 @@ export class Chat extends AbstractChat {
         this.bottomDateStr = null;
         this.typingTimeoutId = null;
 
-        this._defineinterlocutor();
+        this._defineInterlocutor();
         this._defineName();
     }
 
@@ -129,7 +129,7 @@ export class Chat extends AbstractChat {
         }
     }
 
-    _defineinterlocutor() {
+    _defineInterlocutor() {
         for (let i in this.data.fromApi.users) {
             if (this.data.fromApi.users[i].id != user.id) {
                 this.interlocutor = this.data.fromApi.users[i];
