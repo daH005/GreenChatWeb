@@ -60,7 +60,7 @@
 
 .sidebar__user-settings {
     position: absolute;
-    background: rgba(0, 0, 0, 0.6);
+    background: var(--main-5-color);
     height: calc(100% - 67px);
     width: 100%;
     padding: 10px;
@@ -154,7 +154,7 @@
     right: 22px;
     padding: 5px 10px;
     border-radius: 10px;
-    backdrop-filter: brightness(60%);
+    background: var(--main-5-color);
     font-size: smaller;
 }
 
