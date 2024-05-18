@@ -250,10 +250,10 @@ export class Chat extends AbstractChat {
     }
 
     _scrollToLastReadOrSelfMessage() {
-        this.childEls.messages.scrollTop = this._scrollTopForLastReadMessageY();
+        this.childEls.messages.scrollTop = this._scrollTopForLastReadOrSelfMessageY();
     }
 
-    _scrollTopForLastReadMessageY() {
+    _scrollTopForLastReadOrSelfMessageY() {
         let message = this._lastReadOrSelfMessage();
         if (!message) {
             return 0;
