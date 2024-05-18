@@ -197,6 +197,11 @@ export class Chat extends AbstractChat {
             });
 
         }
+
+        if (!isSelf) {
+            this._read();
+        }
+
     }
 
     _scrollingIsBottom() {
