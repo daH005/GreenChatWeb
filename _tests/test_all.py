@@ -7,10 +7,10 @@ from time import sleep
 from itertools import combinations
 from typing import Iterator
 
-from web._tests.common.drivers import new_chrome_driver  # noqa
-from web._tests.common.constants import EMAIL_CODE, FullUrl  # noqa
-from web._tests.common.info_generation import UserInfo  # noqa
-from web._tests.all_test_data import *  # noqa
+from web._tests.common.drivers import new_chrome_driver
+from web._tests.common.constants import EMAIL_CODE, FullUrl
+from web._tests.common.info_generation import UserInfo
+from web._tests.data import *
 
 
 class TestAll:
