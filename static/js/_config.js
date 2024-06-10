@@ -11,8 +11,8 @@ if (!HTTP_BASE_URL) {
 
 export const HTTP_ENDPOINTS_URLS = {
     CHECK_EMAIL: HTTP_BASE_URL + "/user/login/email/check",
-    SEND_EMAIL_CODE: HTTP_BASE_URL + "/user/login/code/send",
-    CHECK_EMAIL_CODE: HTTP_BASE_URL + "/user/login/code/check",
+    SEND_EMAIL_CODE: HTTP_BASE_URL + "/user/login/email/code/send",
+    CHECK_EMAIL_CODE: HTTP_BASE_URL + "/user/login/email/code/check",
     LOGIN: HTTP_BASE_URL + "/user/login",
     REFRESH_TOKEN: HTTP_BASE_URL + "/user/refreshToken",
     USER_INFO: HTTP_BASE_URL + "/user/info",
