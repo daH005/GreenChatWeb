@@ -2,7 +2,7 @@ import { User } from "../../common/apiDataInterfaces.js";
 import { dateToTimeStr }  from "../datetime.js";
 import { makeHyperlinks, makeHighlights } from "../messageTextHighlighting.js";
 import { AbstractHTMLChatElementFacade } from "./abstractChatElement.js";
-import {thisUser} from "../../common/thisUser";
+import { thisUser } from "../../common/thisUser";
 
 export class HTMLChatMessage extends AbstractHTMLChatElementFacade {
 

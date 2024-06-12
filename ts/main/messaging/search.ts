@@ -1,7 +1,7 @@
 import { requestUserInfo } from "../../common/http/functions.js";
 import { setInputAsInvalidAndNotifyWithThrow, removeInvalidClassForAllInputs } from "../../common/inputsHighlighting.js";
 import { thisUser } from "../../common/thisUser.js";
-import {User} from "../../common/apiDataInterfaces.js";
+import { User } from "../../common/apiDataInterfaces.js";
 import { HTMLPrivateRealChat } from "./privateRealChat.js";
 import { privateFakeChat } from "./privateFakeChat.js";
 
