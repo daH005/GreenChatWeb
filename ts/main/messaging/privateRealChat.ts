@@ -14,7 +14,7 @@ export class HTMLPrivateRealChat extends AbstractHTMLRealChat {
         HTMLPrivateRealChat._chatsByInterlocutorsIds[interlocutor.id] = this;
     }
 
-    public static getChatByInterlocutorId(interlocutorId: number): HTMLPrivateRealChat {
+    public static getChatByInterlocutorId(interlocutorId: number): HTMLPrivateRealChat | null {
         return HTMLPrivateRealChat._chatsByInterlocutorsIds[interlocutorId];
     }
 

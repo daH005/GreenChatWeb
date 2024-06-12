@@ -10,10 +10,12 @@ var allChats = {};
 export const handlersForWebsocket = {
     [WebSocketMessageType.INTERLOCUTORS_ONLINE_STATUSES]: async (apiData) => {
         for (let interlocutorId in apiData) {
-            let chat = HTMLPrivateRealChat.getChatByInterlocutorId(Number(interlocutorId));
-            if (!chat || privateFakeChat.isOpened) {
+            if (privateFakeChat.isOpenedWith(Number(interlocutorId))) {
+                privateFakeChat.updateOnlineStatus(apiData[interlocutorId]);
                 interlocutorsOnlineStatusesForUncreatedChats[interlocutorId] = apiData[interlocutorId];
+                return;
             }
+            let chat = HTMLPrivateRealChat.getChatByInterlocutorId(Number(interlocutorId));
             if (chat) {
                 chat.updateOnlineStatus(apiData[interlocutorId]);
             }
