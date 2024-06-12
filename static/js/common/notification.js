@@ -1,14 +1,14 @@
-const notificationEl = document.getElementById("notification");
-
+var notificationEl = null;
 var timeoutId = null;
-
-function notify(text) {
+export function notify(text) {
+    if (!notificationEl) {
+        notificationEl = document.getElementById("notification");
+    }
     notificationEl.textContent = text;
-
     if (timeoutId) {
         clearTimeout(timeoutId);
     }
     timeoutId = setTimeout(() => {
         notificationEl.textContent = "";
-    }, 5000)
+    }, 5000);
 }

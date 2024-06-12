@@ -1,47 +1,42 @@
-import { requestLogin, requestCheckEmailCode, requestSendEmailCode } from "./_http.js";
-import { saveJWTAndRedirect } from "./_authorizationTools.js";
-import { setInputAsInvalidAndMessageWithThrow, removeInvalidClassForAllInputs } from "./_common.js";
-
+import { requestToLogin, requestToCheckEmailCode, requestToSendEmailCode } from "./common/http/functions.js";
+import { redirectToMainPage } from "./common/redirects.js";
+import { JWT } from "./common/localStorage.js";
+import { setInputAsInvalidAndNotifyWithThrow, removeInvalidClassForAllInputs } from "./common/inputsHighlighting.js";
 const emailInputEl = document.getElementById("js-email");
 const sendEmailCodeButtonEl = document.getElementById("js-send-email-code");
 const emailCodeInputEl = document.getElementById("js-email-code");
 const buttonEl = document.getElementById("js-button");
-
 sendEmailCodeButtonEl.onclick = async () => {
     await checkEmail();
-    await requestSendEmailCode({email: emailInputEl.value});
+    await requestToSendEmailCode({ email: emailInputEl.value });
     removeInvalidClassForAllInputs();
-}
-
+};
 buttonEl.onclick = async () => {
     removeInvalidClassForAllInputs();
     await checkEmail();
     await checkEmailCode();
-    
-    let data = await requestLogin({
+    let data = await requestToLogin({
         email: emailInputEl.value,
-        code: emailCodeInputEl.value,
+        code: Number(emailCodeInputEl.value),
     });
-    saveJWTAndRedirect(data.JWT);
-}
-
+    JWT.set(data.JWT);
+    redirectToMainPage();
+};
 async function checkEmail() {
     if (!emailInputEl.value.includes("@")) {
-        setInputAsInvalidAndMessageWithThrow(emailInputEl, "Введите почту!");
+        setInputAsInvalidAndNotifyWithThrow(emailInputEl, "Введите почту!");
     }
 }
-
 async function checkEmailCode() {
     if (!emailCodeInputEl.value) {
-        setInputAsInvalidAndMessageWithThrow(emailCodeInputEl, "Введите код!");
+        setInputAsInvalidAndNotifyWithThrow(emailCodeInputEl, "Введите код!");
         return;
     }
-
-    let flagData = await requestCheckEmailCode({
+    let flagData = await requestToCheckEmailCode({
         email: emailInputEl.value,
-        code: emailCodeInputEl.value,
+        code: Number(emailCodeInputEl.value),
     });
     if (!flagData.codeIsValid) {
-        setInputAsInvalidAndMessageWithThrow(emailCodeInputEl, "Код подтверждения неверный!");
+        setInputAsInvalidAndNotifyWithThrow(emailCodeInputEl, "Код подтверждения неверный!");
     }
 }

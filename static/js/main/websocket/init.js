@@ -1,22 +1,16 @@
-import { WEBSOCKET_URL } from "../_config.js";
-import { JWT } from "../_localStorage.js";
-
+import { JWT } from "../../common/localStorage.js";
+import { WEBSOCKET_URL } from "./url.js";
 export var websocket;
-
-export function startWebSocket(handlers) {
+export function initWebSocket(handlers) {
     websocket = new WebSocket(WEBSOCKET_URL);
-
-    websocket.onopen = (event) => {
+    websocket.onopen = () => {
         websocket.send(JWT.get());
-    }
-
+    };
     websocket.onmessage = async (event) => {
         let message = JSON.parse(event.data);
         await handlers[message.type](message.data);
-    }
-
-    websocket.sendJSON = (data) => {
+    };
+    websocket.sendMessage = (data) => {
         websocket.send(JSON.stringify(data));
-    }
-
+    };
 }

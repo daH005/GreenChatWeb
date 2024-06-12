@@ -1,0 +1,13 @@
+import { notify } from "./notification.js";
+export function setInputAsInvalidAndNotifyWithThrow(inputEl, message = null) {
+    if (message) {
+        notify(message);
+    }
+    inputEl.classList.add("invalid");
+    throw Error;
+}
+export function removeInvalidClassForAllInputs() {
+    document.querySelectorAll("input").forEach((el) => {
+        el.classList.remove("invalid");
+    });
+}

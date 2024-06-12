@@ -11,27 +11,24 @@ const MONTHS_LABELS = {
     10: "окт",
     11: "ноя",
     12: "дек",
-}
-
+};
 export function nowDate() {
     return new Date();
 }
-
-export function setNowDate(newFunc) {  // for tests
+export function setNowDate(newFunc) {
+    // @ts-ignore
     nowDate = newFunc;
 }
-
 export function normalizeDateTimezone(date) {
     date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
 }
-
 export function dateToTimeStr(date) {
     let hours = date.getHours();
     let hoursStr = String(hours);
     if (hours < 10) {
         hoursStr = "0" + hoursStr;
     }
-    let minutes = date.getMinutes()
+    let minutes = date.getMinutes();
     let minutesStr = String(minutes);
     if (minutes < 10) {
         minutesStr = "0" + minutesStr;
@@ -41,17 +38,16 @@ export function dateToTimeStr(date) {
     if (nowDate_.toLocaleDateString() == date.toLocaleDateString()) {
         return timeStr;
     }
-
     let yesterdayDate = nowDate();
     yesterdayDate.setDate(yesterdayDate.getDate() - 1);
     if (yesterdayDate.toLocaleDateString() == date.toLocaleDateString()) {
         timeStr += " (вчера)";
-    } else {
+    }
+    else {
         timeStr += " (" + dateToDateStr(date) + ")";
     }
     return timeStr;
 }
-
 export function dateToDateStr(date) {
     let nowDate_ = nowDate();
     if (nowDate_.toLocaleDateString() == date.toLocaleDateString()) {

@@ -1,37 +1,23 @@
-import { assertEqualsObjects } from "./common.js";
-import { HTTP_BASE_URL } from "../_config.js";
-import { makeRequestingUrlAndOptions,
-         requestCheckEmail,
-         requestSendEmailCode,
-         requestCheckEmailCode,
-         requestLogin,
-         requestUserInfo,
-         requestUserAvatar,
-         requestUserEditInfo,
-         requestUserEditAvatar,
-         requestUserChats,
-         requestChatHistory,
-         requestNewJWT,
-       } from "../_http.js";
-import { JWT } from "../_localStorage.js";
-
+import { assertEqualsObjects, assert } from "./common.js";
+import { requestToCheckEmail, requestToSendEmailCode, requestToCheckEmailCode, requestToLogin, requestUserInfo, requestUserAvatar, requestToEditUserInfo, requestToEditUserAvatar, requestUserChats, requestChatHistory, requestNewJWT, } from "../common/http/functions.js";
+import { makeRequestUrlAndOptions } from "../common/http/base.js";
+import { JWT } from "../common/localStorage.js";
 JWT.get = () => {
     return "testToken";
-}
-
-function testPositiveMakeRequestingUrlAndOptions() {
+};
+function testPositiveMakeRequestUrlAndOptions() {
     let data = [
         [
             // in
             [
-                requestCheckEmail.options,
+                requestToCheckEmail.options,
                 {
                     email: "dan005@mail.ru",
                 }
             ],
             // out
             [
-                "http://localhost:5181/user/login/email/check?email=dan005%40mail.ru",  // %40 = @
+                "http://localhost:5181/user/login/email/check?email=dan005%40mail.ru", // %40 = @
                 {
                     method: "GET",
                     headers: {
@@ -43,14 +29,14 @@ function testPositiveMakeRequestingUrlAndOptions() {
         [
             // in
             [
-                requestSendEmailCode.options,
+                requestToSendEmailCode.options,
                 {
                     code: 5150,
                 }
             ],
             // out
             [
-                "http://localhost:5181/user/login/code/send",
+                "http://localhost:5181/user/login/email/code/send",
                 {
                     method: "POST",
                     headers: {
@@ -65,14 +51,14 @@ function testPositiveMakeRequestingUrlAndOptions() {
         [
             // in
             [
-                requestCheckEmailCode.options,
+                requestToCheckEmailCode.options,
                 {
                     code: 1122,
                 }
             ],
             // out
             [
-                "http://localhost:5181/user/login/code/check?code=1122",
+                "http://localhost:5181/user/login/email/code/check?code=1122",
                 {
                     method: "GET",
                     headers: {
@@ -84,7 +70,7 @@ function testPositiveMakeRequestingUrlAndOptions() {
         [
             // in
             [
-                requestLogin.options,
+                requestToLogin.options,
                 {
                     username: "dan005",
                     password: "Mypass",
@@ -165,7 +151,7 @@ function testPositiveMakeRequestingUrlAndOptions() {
         [
             // in
             [
-                requestUserEditInfo.options,
+                requestToEditUserInfo.options,
                 {
                     firstName: "dan",
                     lastName: "shev",
@@ -190,7 +176,7 @@ function testPositiveMakeRequestingUrlAndOptions() {
         [
             // in
             [
-                requestUserEditAvatar.options,
+                requestToEditUserAvatar.options,
                 new File(["foo"], "file.jpg"),
             ],
             // out
@@ -263,11 +249,15 @@ function testPositiveMakeRequestingUrlAndOptions() {
             ]
         ],
     ];
+    let inputData;
+    let outputData;
     for (let i in data) {
-        console.log(data[i][1][0]);
-
-        let outputData = makeRequestingUrlAndOptions(...data[i][0]);
-        assertEqualsObjects(outputData, data[i][1]);
+        inputData = data[i][0];
+        outputData = data[i][1];
+        console.log(outputData[0]);
+        let [fetchUrl, fetchOptions] = makeRequestUrlAndOptions(inputData[0], inputData[1]);
+        assert(fetchUrl == outputData[0]);
+        assertEqualsObjects(fetchOptions, outputData[1]);
     }
 }
-testPositiveMakeRequestingUrlAndOptions();
+testPositiveMakeRequestUrlAndOptions();
