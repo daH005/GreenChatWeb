@@ -5,7 +5,7 @@ import { userInWindow } from "../../common/userInWindowChecking.js";
 import { newMessageSound } from "../../common/audio.js";
 import { requestChatHistory } from "../../common/http/functions.js";
 import { addUserToApiData } from "../../common/apiDataAdding.js";
-import { websocket } from "../websocket/init.js";
+import { sendWebSocketMessage } from "../websocket/init.js";
 import { WebSocketMessageType } from "../websocket/messageTypes.js";
 import { dateToDateStr, normalizeDateTimezone } from "../datetime.js";
 import { HTMLChatLink } from "./chatLink.js";
@@ -21,22 +21,16 @@ export abstract class AbstractHTMLRealChat extends AbstractHTMLChat {
     protected _messagesEl: HTMLElement;
     protected _typingEl: HTMLElement;
 
-    protected _messages: HTMLChatMessage[];
+    protected _messages: Record<number, HTMLChatMessage>;
     protected _fullyLoaded: boolean = false;
-    protected _datesSeps = {};
+    protected _datesSeps: Record<number, HTMLDateSep> = {};
     protected _link: HTMLChatLink;
-    protected _topDateStr: string;
-    protected _bottomDateStr: string;
-    protected _typingTimeoutId: number;
+    protected _topDateStr: string | null = null;
+    protected _bottomDateStr: string | null = null;
+    protected _typingTimeoutId: number | null = null;
 
-    protected _id: number;
-    protected _name: string;
-    protected _lastMessage: ChatMessage;
-    protected _users: User[];
-    protected _unreadCount: number;
-
-    protected _WAITING_FOR_CHAT_LOADING: number = 30;
-    protected _PHRASES: string[] = [
+    protected readonly _WAITING_FOR_CHAT_LOADING: number = 30;
+    protected readonly _PHRASES: string[] = [
         "Что же написать...",
         "Хм...",
         "Короче, да...",
@@ -46,6 +40,12 @@ export abstract class AbstractHTMLRealChat extends AbstractHTMLChat {
         "Наполни меня текстом!",
     ];
 
+    protected _id: number;
+    protected _name: string;
+    protected _lastMessage: ChatMessage;
+    protected _users: User[];
+    protected _unreadCount: number;
+
     public constructor(id: number, name: string, lastMessage: ChatMessage, users: User[], unreadCount: number, interlocutor: User | null = null) {
         super(interlocutor);
         this._id = id;
@@ -54,14 +54,8 @@ export abstract class AbstractHTMLRealChat extends AbstractHTMLChat {
         this._users = users;
         this._unreadCount = unreadCount;
 
-        this._messages = [];
-        this._fullyLoaded = false;
+        this._messages = {};
         this._datesSeps = {};
-
-        this._link = null;
-        this._topDateStr = null;
-        this._bottomDateStr = null;
-        this._typingTimeoutId = null;
     }
 
     public static get curOpenedChat(): AbstractHTMLRealChat | null {
@@ -82,7 +76,7 @@ export abstract class AbstractHTMLRealChat extends AbstractHTMLChat {
         });
 
         this._textareaEl.addEventListener("input", () => {
-            websocket.sendMessage({
+            sendWebSocketMessage({
                 type: WebSocketMessageType.NEW_CHAT_MESSAGE_TYPING,
                 data: {
                     chatId: this.id,
@@ -218,7 +212,7 @@ export abstract class AbstractHTMLRealChat extends AbstractHTMLChat {
         await this._fillChatHistory(apiData.messages);
 
         setTimeout(() => {
-            this._scrollToLastReadOrSelfMessage();
+            this._scrollToLastReadOrMessageFromThisUser();
         }, this._WAITING_FOR_CHAT_LOADING)
 
         this._fullyLoaded = true;
@@ -231,12 +225,12 @@ export abstract class AbstractHTMLRealChat extends AbstractHTMLChat {
         }
     }
 
-    protected _scrollToLastReadOrSelfMessage(): void {
-        this._messagesEl.scrollTop = this._scrollTopForLastReadOrSelfMessageY();
+    protected _scrollToLastReadOrMessageFromThisUser(): void {
+        this._messagesEl.scrollTop = this._scrollTopForLastReadOrMessageFromThisUserY();
     }
 
-    protected _scrollTopForLastReadOrSelfMessageY(): number {
-        let message = this._lastReadOrSelfMessage();
+    protected _scrollTopForLastReadOrMessageFromThisUserY(): number {
+        let message = this._lastReadOrMessageFromThisUser();
         if (!message) {
             return 0;
         }
@@ -248,7 +242,7 @@ export abstract class AbstractHTMLRealChat extends AbstractHTMLChat {
         return resultY;
     }
 
-    protected _lastReadOrSelfMessage(): HTMLChatMessage {
+    protected _lastReadOrMessageFromThisUser(): HTMLChatMessage {
         let message = null;
         let ids = this._sortedMessagesIds();
         for (let i in ids) {
@@ -289,7 +283,7 @@ export abstract class AbstractHTMLRealChat extends AbstractHTMLChat {
         let message = this._lastVisibleMessage();
         if (!message.isRead && !message.fromThisUser) {
             message.setAsRead();
-            websocket.sendMessage({
+            sendWebSocketMessage({
                 type: WebSocketMessageType.CHAT_MESSAGE_WAS_READ,
                 data: {
                     chatId: this.id,

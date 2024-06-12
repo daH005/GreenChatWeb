@@ -1,5 +1,5 @@
 import { thisUser } from "../../common/thisUser.js";
-import { websocket } from "../websocket/init.js";
+import { sendWebSocketMessage } from "../websocket/init.js";
 import { WebSocketMessageType } from "../websocket/messageTypes.js";
 import { setAvatar } from "../avatars.js";
 import { sendMessageToWebSocketAndClearInput } from "./websocketFunctions.js";
@@ -25,7 +25,7 @@ export class HTMLPrivateFakeChat extends AbstractHTMLChat {
     }
     open() {
         super.open();
-        websocket.sendMessage({
+        sendWebSocketMessage({
             type: WebSocketMessageType.ONLINE_STATUS_TRACING_ADDING,
             data: {
                 userId: this._interlocutor.id,

@@ -6,7 +6,7 @@ import { AbstractHTMLRealChat } from "./abstractRealChat.js";
 export class HTMLPrivateRealChat extends AbstractHTMLRealChat {
 
     protected _thisElTemplateEl = <HTMLTemplateElement>document.getElementById("js-chat-temp");
-    protected static _chatsByInterlocutorsIds = {};
+    protected static _chatsByInterlocutorsIds: Record<number, HTMLPrivateRealChat> = {};
     
     public constructor(id: number, lastMessage: ChatMessage, users: User[], unreadCount: number, interlocutor: User) {
         let interlocutorFullName: string = interlocutor.firstName + " " + interlocutor.lastName;

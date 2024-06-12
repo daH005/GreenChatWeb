@@ -7,10 +7,10 @@ import { HTMLPrivateRealChat } from "./privateRealChat.js";
 import { privateFakeChat } from "./privateFakeChat.js";
 import "./search.js";
 
-var interlocutorsOnlineStatusesForUncreatedChats = {};
-var allChats = {};
+var interlocutorsOnlineStatusesForUncreatedChats: Record<number, boolean> = {};
+var allChats: Record<number, HTMLPrivateRealChat> = {};
 
-export const handlersForWebsocket = {
+export const handlersForWebsocket: Partial<Record<WebSocketMessageType, Function>> = {
     [WebSocketMessageType.INTERLOCUTORS_ONLINE_STATUSES]: async (apiData: InterlocutorsOnlineStatuses): Promise<void> => {
         for (let interlocutorId in apiData) {
             if (privateFakeChat.isOpenedWith(Number(interlocutorId))) {

@@ -3,15 +3,15 @@ import { notify } from "../notification.js";
 
 interface FetchOptions {
     method: string,
-    headers: Object,
-    body?: Object,
+    headers: Record<string, string>,
+    body?: string | Blob,
 }
 
 interface RequestOptions {
     URL: string,
     METHOD: string,
-    STATUSES_NOTIFICATIONS?: Object,
-    STATUSES_FUNCTIONS?: Object,
+    STATUSES_NOTIFICATIONS?: Record<number, string>,
+    STATUSES_FUNCTIONS?: Record<number, Function>,
     RESPONSE_DATA_TYPE?: string,
     REQUEST_DATA_IS_JSON?: boolean,
     AUTHORIZATION_IS_REQUIRED?: boolean,
@@ -70,7 +70,7 @@ async function request<RequestDataInterface, ResponseDataInterface>(options: Req
     throw Error;
 }
 
-export function makeRequestUrlAndOptions(options: RequestOptions, data: Object | null=null): [string, Object] {
+export function makeRequestUrlAndOptions(options: RequestOptions, data: Object | Blob | null=null): [string, Object] {
     let fetchUrl = options.URL;
     let fetchOptions: FetchOptions = {
         method: options.METHOD,
@@ -91,7 +91,7 @@ export function makeRequestUrlAndOptions(options: RequestOptions, data: Object |
         } else if (options.REQUEST_DATA_IS_JSON) {
             fetchOptions.body = JSON.stringify(data);
         } else {
-            fetchOptions.body = data;
+            fetchOptions.body = <Blob>data;
         }
     }
 

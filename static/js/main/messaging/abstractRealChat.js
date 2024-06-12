@@ -4,7 +4,7 @@ import { userInWindow } from "../../common/userInWindowChecking.js";
 import { newMessageSound } from "../../common/audio.js";
 import { requestChatHistory } from "../../common/http/functions.js";
 import { addUserToApiData } from "../../common/apiDataAdding.js";
-import { websocket } from "../websocket/init.js";
+import { sendWebSocketMessage } from "../websocket/init.js";
 import { WebSocketMessageType } from "../websocket/messageTypes.js";
 import { dateToDateStr, normalizeDateTimezone } from "../datetime.js";
 import { HTMLDateSep } from "./dateSep.js";
@@ -20,14 +20,9 @@ export class AbstractHTMLRealChat extends AbstractHTMLChat {
     _fullyLoaded = false;
     _datesSeps = {};
     _link;
-    _topDateStr;
-    _bottomDateStr;
-    _typingTimeoutId;
-    _id;
-    _name;
-    _lastMessage;
-    _users;
-    _unreadCount;
+    _topDateStr = null;
+    _bottomDateStr = null;
+    _typingTimeoutId = null;
     _WAITING_FOR_CHAT_LOADING = 30;
     _PHRASES = [
         "Что же написать...",
@@ -38,6 +33,11 @@ export class AbstractHTMLRealChat extends AbstractHTMLChat {
         "Впиши в меня текст!",
         "Наполни меня текстом!",
     ];
+    _id;
+    _name;
+    _lastMessage;
+    _users;
+    _unreadCount;
     constructor(id, name, lastMessage, users, unreadCount, interlocutor = null) {
         super(interlocutor);
         this._id = id;
@@ -45,13 +45,8 @@ export class AbstractHTMLRealChat extends AbstractHTMLChat {
         this._lastMessage = lastMessage;
         this._users = users;
         this._unreadCount = unreadCount;
-        this._messages = [];
-        this._fullyLoaded = false;
+        this._messages = {};
         this._datesSeps = {};
-        this._link = null;
-        this._topDateStr = null;
-        this._bottomDateStr = null;
-        this._typingTimeoutId = null;
     }
     static get curOpenedChat() {
         return this._curOpenedChat;
@@ -67,7 +62,7 @@ export class AbstractHTMLRealChat extends AbstractHTMLChat {
             this._read();
         });
         this._textareaEl.addEventListener("input", () => {
-            websocket.sendMessage({
+            sendWebSocketMessage({
                 type: WebSocketMessageType.NEW_CHAT_MESSAGE_TYPING,
                 data: {
                     chatId: this.id,
@@ -181,7 +176,7 @@ export class AbstractHTMLRealChat extends AbstractHTMLChat {
         });
         await this._fillChatHistory(apiData.messages);
         setTimeout(() => {
-            this._scrollToLastReadOrSelfMessage();
+            this._scrollToLastReadOrMessageFromThisUser();
         }, this._WAITING_FOR_CHAT_LOADING);
         this._fullyLoaded = true;
     }
@@ -191,11 +186,11 @@ export class AbstractHTMLRealChat extends AbstractHTMLChat {
             this.addMessage(messages[i], true);
         }
     }
-    _scrollToLastReadOrSelfMessage() {
-        this._messagesEl.scrollTop = this._scrollTopForLastReadOrSelfMessageY();
+    _scrollToLastReadOrMessageFromThisUser() {
+        this._messagesEl.scrollTop = this._scrollTopForLastReadOrMessageFromThisUserY();
     }
-    _scrollTopForLastReadOrSelfMessageY() {
-        let message = this._lastReadOrSelfMessage();
+    _scrollTopForLastReadOrMessageFromThisUserY() {
+        let message = this._lastReadOrMessageFromThisUser();
         if (!message) {
             return 0;
         }
@@ -205,7 +200,7 @@ export class AbstractHTMLRealChat extends AbstractHTMLChat {
         let resultY = messageBottomAbsY - messagesContainerBottomAbsY;
         return resultY;
     }
-    _lastReadOrSelfMessage() {
+    _lastReadOrMessageFromThisUser() {
         let message = null;
         let ids = this._sortedMessagesIds();
         for (let i in ids) {
@@ -241,7 +236,7 @@ export class AbstractHTMLRealChat extends AbstractHTMLChat {
         let message = this._lastVisibleMessage();
         if (!message.isRead && !message.fromThisUser) {
             message.setAsRead();
-            websocket.sendMessage({
+            sendWebSocketMessage({
                 type: WebSocketMessageType.CHAT_MESSAGE_WAS_READ,
                 data: {
                     chatId: this.id,
