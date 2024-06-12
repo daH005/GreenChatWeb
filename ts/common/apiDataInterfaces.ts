@@ -67,8 +67,5 @@ export interface ReadChatMessagesIds {
 }
 
 export interface InterlocutorsOnlineStatuses {
-    1: boolean,
-    2: boolean,
-    3: boolean,
-    // And more
+    [interlocutorId: number]: boolean,
 }
