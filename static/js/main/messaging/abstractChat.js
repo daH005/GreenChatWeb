@@ -30,6 +30,9 @@ export class AbstractHTMLChat extends AbstractHTMLChatElementFacade {
         return this._isOpened;
     }
     isOpenedWith(interlocutorId) {
+        if (!this._interlocutor) {
+            return false;
+        }
         return interlocutorId == this._interlocutor.id;
     }
     updateOnlineStatus(isOnline) {
