@@ -41,6 +41,9 @@ export abstract class AbstractHTMLChat extends AbstractHTMLChatElementFacade {
     }
 
     public isOpenedWith(interlocutorId: number): boolean {
+        if (!this._interlocutor) {
+            return false;
+        }
         return interlocutorId == this._interlocutor.id;
     }
 
