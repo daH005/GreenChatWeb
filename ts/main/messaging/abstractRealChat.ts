@@ -212,7 +212,7 @@ export abstract class AbstractHTMLRealChat extends AbstractHTMLChat {
         await this._fillChatHistory(apiData.messages);
 
         setTimeout(() => {
-            this._scrollToLastReadOrMessageFromThisUser();
+            this._scrollToLastReadOrFromThisUserMessage();
         }, this._WAITING_FOR_CHAT_LOADING)
 
         this._fullyLoaded = true;
@@ -225,12 +225,12 @@ export abstract class AbstractHTMLRealChat extends AbstractHTMLChat {
         }
     }
 
-    protected _scrollToLastReadOrMessageFromThisUser(): void {
-        this._messagesEl.scrollTop = this._scrollTopForLastReadOrMessageFromThisUserY();
+    protected _scrollToLastReadOrFromThisUserMessage(): void {
+        this._messagesEl.scrollTop = this._calcScrollTopForLastReadOrFromThisUserMessageY();
     }
 
-    protected _scrollTopForLastReadOrMessageFromThisUserY(): number {
-        let message = this._lastReadOrMessageFromThisUser();
+    protected _calcScrollTopForLastReadOrFromThisUserMessageY(): number {
+        let message = this._lastReadOrFromThisUserMessage();
         if (!message) {
             return 0;
         }
@@ -242,7 +242,7 @@ export abstract class AbstractHTMLRealChat extends AbstractHTMLChat {
         return resultY;
     }
 
-    protected _lastReadOrMessageFromThisUser(): HTMLChatMessage {
+    protected _lastReadOrFromThisUserMessage(): HTMLChatMessage {
         let message = null;
         let ids = this._sortedMessagesIds();
         for (let i in ids) {
