@@ -176,7 +176,7 @@ export class AbstractHTMLRealChat extends AbstractHTMLChat {
         });
         await this._fillChatHistory(apiData.messages);
         setTimeout(() => {
-            this._scrollToLastReadOrMessageFromThisUser();
+            this._scrollToLastReadOrFromThisUserMessage();
         }, this._WAITING_FOR_CHAT_LOADING);
         this._fullyLoaded = true;
     }
@@ -186,11 +186,11 @@ export class AbstractHTMLRealChat extends AbstractHTMLChat {
             this.addMessage(messages[i], true);
         }
     }
-    _scrollToLastReadOrMessageFromThisUser() {
-        this._messagesEl.scrollTop = this._scrollTopForLastReadOrMessageFromThisUserY();
+    _scrollToLastReadOrFromThisUserMessage() {
+        this._messagesEl.scrollTop = this._calcScrollTopForLastReadOrFromThisUserMessageY();
     }
-    _scrollTopForLastReadOrMessageFromThisUserY() {
-        let message = this._lastReadOrMessageFromThisUser();
+    _calcScrollTopForLastReadOrFromThisUserMessageY() {
+        let message = this._lastReadOrFromThisUserMessage();
         if (!message) {
             return 0;
         }
@@ -200,7 +200,7 @@ export class AbstractHTMLRealChat extends AbstractHTMLChat {
         let resultY = messageBottomAbsY - messagesContainerBottomAbsY;
         return resultY;
     }
-    _lastReadOrMessageFromThisUser() {
+    _lastReadOrFromThisUserMessage() {
         let message = null;
         let ids = this._sortedMessagesIds();
         for (let i in ids) {
@@ -249,8 +249,7 @@ export class AbstractHTMLRealChat extends AbstractHTMLChat {
         let lineAbsY = this._messagesLineBottomAbsY();
         let ids = this._sortedMessagesIds();
         let message = null;
-        for (let i in ids) {
-            let id = ids[i];
+        for (let id of ids) {
             let messageBottomY = this._messages[id].getBoundingClientRect().bottom;
             if (messageBottomY <= lineAbsY) {
                 message = this._messages[id];

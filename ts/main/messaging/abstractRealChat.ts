@@ -297,10 +297,8 @@ export abstract class AbstractHTMLRealChat extends AbstractHTMLChat {
         let lineAbsY = this._messagesLineBottomAbsY();
 
         let ids = this._sortedMessagesIds();
-        let message = null;
-        for (let i in ids) {
-            let id = ids[i];
-
+        let message: HTMLChatMessage = null;
+        for (let id of ids) {
             let messageBottomY = this._messages[id].getBoundingClientRect().bottom;
             if (messageBottomY <= lineAbsY) {
                 message = this._messages[id];
