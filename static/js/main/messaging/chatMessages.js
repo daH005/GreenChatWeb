@@ -49,6 +49,7 @@ export class HTMLChatMessage extends AbstractHTMLChatElementFacade {
     }
     setAsRead() {
         this._thisEl.classList.remove("chat__message--unread");
+        this._isRead = true;
     }
     getBoundingClientRect() {
         return this._thisEl.getBoundingClientRect();
