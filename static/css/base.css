@@ -59,7 +59,7 @@ button {
 }
 
 button:hover, button:focus {
-    background: none !important;
+    opacity: 0.8;
 }
 
 input:hover, input:focus, textarea:hover, textarea:focus {
