@@ -60,7 +60,7 @@
 
 .sidebar__user-settings {
     position: absolute;
-    background: var(--main-5-color);
+    background: var(--main-6-color);
     height: calc(100% - 67px);
     width: 100%;
     padding: 10px;
