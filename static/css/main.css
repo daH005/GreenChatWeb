@@ -99,15 +99,17 @@
     display: flex;
 }
 
+.sidebar__user-settings__exit-buttons > button {
+    flex: 50%;
+}
+
 .sidebar__user-settings__save {
     background: var(--success-color);
     margin-right: 7px;
-    flex: 50%;
 }
 
 .sidebar__user-settings__close {
     background: var(--cancel-color);
-    flex: 50%;
 }
 
 .sidebar__links {
