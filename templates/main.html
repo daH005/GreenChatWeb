@@ -27,8 +27,8 @@ GreenChat
 
         <div class="sidebar__search">
             <div class="input-and-inner-button-container js-click-by-press-enter">
-                <input id="js-search-input" class="js-click-by-press-enter-input" placeholder="Введите ID..." maxlength="100">
-                <button id="js-search-button" class="js-click-by-press-enter-button">
+                <input class="js-click-by-press-enter-input" id="js-search-input" placeholder="Введите ID..." maxlength="100">
+                <button class="js-click-by-press-enter-button" id="js-search-button">
                     <i class="fa fa-search" aria-hidden="true"></i>
                 </button>
             </div>
@@ -38,9 +38,19 @@ GreenChat
 
         <div class="sidebar__user-settings sidebar__user-settings--hidden" id="js-user-settings">
             <input type="file" accept="image/*" id="js-user-settings-avatar-input">
+            <button class="icon-button" id="js-user-settings-avatar-change-button">
+                <i class="fa fa-file-image" aria-hidden="true"></i>
+                Поменять аватар
+            </button>
 
             <input value="Загрузка..." placeholder="Как вас звать?" id="js-user-settings-first-name">
             <input value="Загрузка..." placeholder="А фамилия?" id="js-user-settings-last-name">
+
+            <input type="file" accept="image/*" id="js-user-settings-background-input">
+            <button class="icon-button" id="js-user-settings-background-change-button">
+                <i class="fa fa-file-image" aria-hidden="true"></i>
+                Поменять фон
+            </button>
 
             <button class="sidebar__user-settings__save" id="js-user-settings-save">Сохранить изменения</button>
             <button class="sidebar__user-settings__close" id="js-user-settings-close">Закрыть</button>

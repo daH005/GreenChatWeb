@@ -63,6 +63,23 @@ button:hover, button:focus {
     opacity: 0.8;
 }
 
+button.icon-button {
+    display: flex;
+    padding: 0;
+    align-items: center;
+}
+
+button.icon-button i {
+    display: block;
+    padding: 7px 13px;
+    margin-right: 10px;
+    text-align: center;
+    font-size: xx-large;
+    background: var(--main-5-color);
+    color: var(--main-3-color);
+    margin-left: 10px;
+}
+
 input:hover, input:focus, textarea:hover, textarea:focus {
     outline: 2px solid var(--main-3-color);
 }
