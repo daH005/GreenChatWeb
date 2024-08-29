@@ -7,7 +7,8 @@ var avatarSrcBackup;
 const SETTINGS_HIDDEN_CLASS = "sidebar__user-settings--hidden";
 const settingsEl = document.getElementById("js-user-settings");
 const settingsOpenButtonEl = document.getElementById("js-user-settings-open");
-const avatarLoadingImageEl = document.getElementById("js-user-avatar");
+const avatarImageEl = document.getElementById("js-user-avatar");
+const avatarChangeButtonEl = document.getElementById("js-user-settings-avatar-change-button");
 const avatarInputEl = document.getElementById("js-user-settings-avatar-input");
 const firstNameInputEl = document.getElementById("js-user-settings-first-name");
 const lastNameInputEl = document.getElementById("js-user-settings-last-name");
@@ -16,17 +17,17 @@ const closeButtonEl = document.getElementById("js-user-settings-close");
 settingsOpenButtonEl.onclick = () => {
     settingsEl.classList.remove(SETTINGS_HIDDEN_CLASS);
 };
-avatarLoadingImageEl.onclick = () => {
+avatarChangeButtonEl.onclick = () => {
     avatarInputEl.click();
 };
-avatarLoadingImageEl.onload = () => {
-    avatarSrcBackup = avatarLoadingImageEl.src;
-    avatarLoadingImageEl.onload = () => { };
+avatarImageEl.onload = () => {
+    avatarSrcBackup = avatarImageEl.src;
+    avatarImageEl.onload = () => { };
 };
 avatarInputEl.oninput = () => {
-    avatarSrcBackup = avatarLoadingImageEl.src;
+    avatarSrcBackup = avatarImageEl.src;
     let imageFileURL = URL.createObjectURL(avatarInputEl.files[0]);
-    avatarLoadingImageEl.src = imageFileURL;
+    avatarImageEl.src = imageFileURL;
 };
 firstNameInputEl.value = thisUser.firstName;
 firstNameInputEl.oninput = () => {
@@ -69,7 +70,7 @@ saveButtonEl.onclick = async () => {
     settingsEl.classList.add(SETTINGS_HIDDEN_CLASS);
 };
 closeButtonEl.onclick = () => {
-    avatarLoadingImageEl.src = avatarSrcBackup;
+    avatarImageEl.src = avatarSrcBackup;
     avatarInputEl.value = "";
     firstNameInputEl.value = thisUser.firstName;
     lastNameInputEl.value = thisUser.lastName;

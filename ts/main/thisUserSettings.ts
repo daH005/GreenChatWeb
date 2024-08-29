@@ -9,7 +9,8 @@ const SETTINGS_HIDDEN_CLASS: string = "sidebar__user-settings--hidden";
 
 const settingsEl: HTMLElement = document.getElementById("js-user-settings");
 const settingsOpenButtonEl: HTMLButtonElement = <HTMLButtonElement>document.getElementById("js-user-settings-open");
-const avatarLoadingImageEl: HTMLImageElement = <HTMLImageElement>document.getElementById("js-user-avatar");
+const avatarImageEl: HTMLImageElement = <HTMLImageElement>document.getElementById("js-user-avatar");
+const avatarChangeButtonEl: HTMLButtonElement = <HTMLButtonElement>document.getElementById("js-user-settings-avatar-change-button");
 const avatarInputEl: HTMLInputElement = <HTMLInputElement>document.getElementById("js-user-settings-avatar-input");
 const firstNameInputEl: HTMLInputElement = <HTMLInputElement>document.getElementById("js-user-settings-first-name");
 const lastNameInputEl: HTMLInputElement = <HTMLInputElement>document.getElementById("js-user-settings-last-name");
@@ -20,20 +21,20 @@ settingsOpenButtonEl.onclick = () => {
     settingsEl.classList.remove(SETTINGS_HIDDEN_CLASS);
 }
 
-avatarLoadingImageEl.onclick = () => {
+avatarChangeButtonEl.onclick = () => {
     avatarInputEl.click();
 }
 
-avatarLoadingImageEl.onload = () => {
-    avatarSrcBackup = avatarLoadingImageEl.src;
-    avatarLoadingImageEl.onload = () => {}
+avatarImageEl.onload = () => {
+    avatarSrcBackup = avatarImageEl.src;
+    avatarImageEl.onload = () => {}
 }
 
 avatarInputEl.oninput = () => {
-    avatarSrcBackup = avatarLoadingImageEl.src;
+    avatarSrcBackup = avatarImageEl.src;
 
     let imageFileURL: string = URL.createObjectURL(avatarInputEl.files[0]);
-    avatarLoadingImageEl.src = imageFileURL;
+    avatarImageEl.src = imageFileURL;
 }
 
 firstNameInputEl.value = thisUser.firstName;
@@ -87,7 +88,7 @@ saveButtonEl.onclick = async () => {
 }
 
 closeButtonEl.onclick = () => {
-    avatarLoadingImageEl.src = avatarSrcBackup;
+    avatarImageEl.src = avatarSrcBackup;
     avatarInputEl.value = "";
 
     firstNameInputEl.value = thisUser.firstName;
