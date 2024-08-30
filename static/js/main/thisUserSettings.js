@@ -1,17 +1,22 @@
 import { notify } from "../common/notification.js";
 import { thisUser } from "../common/thisUser.js";
-import { requestToEditUserInfo, requestToEditUserAvatar } from "../common/http/functions.js";
+import { requestToEditUserInfo, requestToEditUserAvatar, requestToEditUserBackground } from "../common/http/functions.js";
 import { setInputAsInvalidAndNotifyWithThrow, removeInvalidClassForAllInputs } from "../common/inputsHighlighting.js";
+import { updateBackgroundUrl } from "./background.js";
 import { updateUserFullName } from "./thisUserInfo.js";
 var avatarSrcBackup;
+var backgroundSrcBackup;
 const SETTINGS_HIDDEN_CLASS = "sidebar__user-settings--hidden";
 const settingsEl = document.getElementById("js-user-settings");
 const settingsOpenButtonEl = document.getElementById("js-user-settings-open");
-const avatarImageEl = document.getElementById("js-user-avatar");
+const avatarEl = document.getElementById("js-user-avatar");
 const avatarChangeButtonEl = document.getElementById("js-user-settings-avatar-change-button");
 const avatarInputEl = document.getElementById("js-user-settings-avatar-input");
 const firstNameInputEl = document.getElementById("js-user-settings-first-name");
 const lastNameInputEl = document.getElementById("js-user-settings-last-name");
+const backgroundEl = document.getElementById("js-background");
+const backgroundChangeButtonEl = document.getElementById("js-user-settings-background-change-button");
+const backgroundInputEl = document.getElementById("js-user-settings-background-input");
 const saveButtonEl = document.getElementById("js-user-settings-save");
 const closeButtonEl = document.getElementById("js-user-settings-close");
 settingsOpenButtonEl.onclick = () => {
@@ -20,14 +25,14 @@ settingsOpenButtonEl.onclick = () => {
 avatarChangeButtonEl.onclick = () => {
     avatarInputEl.click();
 };
-avatarImageEl.onload = () => {
-    avatarSrcBackup = avatarImageEl.src;
-    avatarImageEl.onload = () => { };
+avatarEl.onload = () => {
+    updateAvatarSrcBackup();
+    avatarEl.onload = () => { };
 };
 avatarInputEl.oninput = () => {
-    avatarSrcBackup = avatarImageEl.src;
+    updateAvatarSrcBackup();
     let imageFileURL = URL.createObjectURL(avatarInputEl.files[0]);
-    avatarImageEl.src = imageFileURL;
+    avatarEl.src = imageFileURL;
 };
 firstNameInputEl.value = thisUser.firstName;
 firstNameInputEl.oninput = () => {
@@ -37,11 +42,28 @@ lastNameInputEl.value = thisUser.lastName;
 lastNameInputEl.oninput = () => {
     updateUserFullNameWrap();
 };
+backgroundChangeButtonEl.onclick = () => {
+    backgroundInputEl.click();
+};
+backgroundEl.onload = () => {
+    updateBackgroundSrcBackup();
+    backgroundEl.onload = () => { };
+};
+backgroundInputEl.oninput = () => {
+    updateBackgroundSrcBackup();
+    let imageFileURL = URL.createObjectURL(backgroundInputEl.files[0]);
+    updateBackgroundUrl(imageFileURL);
+};
 saveButtonEl.onclick = async () => {
     let updatingWas = false;
     if (avatarInputEl.files.length) {
         await requestToEditUserAvatar(avatarInputEl.files[0]);
         avatarInputEl.value = "";
+        updatingWas = true;
+    }
+    if (backgroundInputEl.files.length) {
+        await requestToEditUserBackground(backgroundInputEl.files[0]);
+        backgroundInputEl.value = "";
         updatingWas = true;
     }
     if (!firstNameInputEl.value) {
@@ -70,13 +92,21 @@ saveButtonEl.onclick = async () => {
     settingsEl.classList.add(SETTINGS_HIDDEN_CLASS);
 };
 closeButtonEl.onclick = () => {
-    avatarImageEl.src = avatarSrcBackup;
+    avatarEl.src = avatarSrcBackup;
     avatarInputEl.value = "";
     firstNameInputEl.value = thisUser.firstName;
     lastNameInputEl.value = thisUser.lastName;
     updateUserFullNameWrap();
+    updateBackgroundUrl(backgroundSrcBackup);
+    backgroundInputEl.value = "";
     settingsEl.classList.add(SETTINGS_HIDDEN_CLASS);
 };
 function updateUserFullNameWrap() {
     updateUserFullName(firstNameInputEl.value + " " + lastNameInputEl.value);
+}
+function updateAvatarSrcBackup() {
+    avatarSrcBackup = avatarEl.src;
+}
+function updateBackgroundSrcBackup() {
+    backgroundSrcBackup = backgroundEl.style.background.slice(5, -2);
 }

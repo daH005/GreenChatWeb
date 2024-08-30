@@ -101,9 +101,8 @@ h1 {
     height: 100vh;
     overflow-y: hidden;
 
-    background: url('../images/background.jpg');
-    background-repeat: no-repeat;
-    background-size: cover;
+    background-repeat: no-repeat !important;
+    background-size: cover !important;
 }
 
 .central-container {

@@ -42,6 +42,13 @@ export const requestUserAvatar = makeRequestFunc({
     REQUEST_DATA_IS_JSON: false,
     RESPONSE_DATA_TYPE: ResponseDataType.BLOB,
 });
+export const requestUserBackground = makeRequestFuncWithoutRequestData({
+    URL: HTTP_API_URLS.USER_BACKGROUND,
+    METHOD: "GET",
+    AUTHORIZATION_IS_REQUIRED: true,
+    REQUEST_DATA_IS_JSON: false,
+    RESPONSE_DATA_TYPE: ResponseDataType.BLOB,
+});
 export const requestToEditUserInfo = makeRequestFunc({
     URL: HTTP_API_URLS.USER_INFO_EDIT,
     METHOD: "PUT",
@@ -49,6 +56,12 @@ export const requestToEditUserInfo = makeRequestFunc({
 });
 export const requestToEditUserAvatar = makeRequestFunc({
     URL: HTTP_API_URLS.USER_AVATAR_EDIT,
+    METHOD: "PUT",
+    AUTHORIZATION_IS_REQUIRED: true,
+    REQUEST_DATA_IS_JSON: false,
+});
+export const requestToEditUserBackground = makeRequestFunc({
+    URL: HTTP_API_URLS.USER_BACKGROUND_EDIT,
     METHOD: "PUT",
     AUTHORIZATION_IS_REQUIRED: true,
     REQUEST_DATA_IS_JSON: false,

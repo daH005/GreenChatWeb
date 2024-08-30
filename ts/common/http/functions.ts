@@ -66,6 +66,14 @@ export const requestUserAvatar = makeRequestFunc<UserAvatarRequestData, Blob>({
     RESPONSE_DATA_TYPE: ResponseDataType.BLOB,
 });
 
+export const requestUserBackground = makeRequestFuncWithoutRequestData<Blob>({
+    URL: HTTP_API_URLS.USER_BACKGROUND,
+    METHOD: "GET",
+    AUTHORIZATION_IS_REQUIRED: true,
+    REQUEST_DATA_IS_JSON: false,
+    RESPONSE_DATA_TYPE: ResponseDataType.BLOB,
+});
+
 export const requestToEditUserInfo = makeRequestFunc<UserInfoEditRequestData, SimpleResponseStatus>({
     URL: HTTP_API_URLS.USER_INFO_EDIT,
     METHOD: "PUT",
@@ -74,6 +82,13 @@ export const requestToEditUserInfo = makeRequestFunc<UserInfoEditRequestData, Si
 
 export const requestToEditUserAvatar = makeRequestFunc<Blob, SimpleResponseStatus>({
     URL: HTTP_API_URLS.USER_AVATAR_EDIT,
+    METHOD: "PUT",
+    AUTHORIZATION_IS_REQUIRED: true,
+    REQUEST_DATA_IS_JSON: false,
+});
+
+export const requestToEditUserBackground = makeRequestFunc<Blob, SimpleResponseStatus>({
+    URL: HTTP_API_URLS.USER_BACKGROUND_EDIT,
     METHOD: "PUT",
     AUTHORIZATION_IS_REQUIRED: true,
     REQUEST_DATA_IS_JSON: false,

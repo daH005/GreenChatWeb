@@ -1,19 +1,28 @@
 import { notify } from "../common/notification.js";
 import { thisUser } from "../common/thisUser.js";
-import { requestToEditUserInfo, requestToEditUserAvatar } from "../common/http/functions.js";
+import { requestToEditUserInfo, requestToEditUserAvatar, requestToEditUserBackground } from "../common/http/functions.js";
 import { setInputAsInvalidAndNotifyWithThrow, removeInvalidClassForAllInputs } from "../common/inputsHighlighting.js";
+import { updateBackgroundUrl } from "./background.js";
 import { updateUserFullName } from "./thisUserInfo.js";
 
 var avatarSrcBackup: string;
+var backgroundSrcBackup: string;
 const SETTINGS_HIDDEN_CLASS: string = "sidebar__user-settings--hidden";
 
 const settingsEl: HTMLElement = document.getElementById("js-user-settings");
 const settingsOpenButtonEl: HTMLButtonElement = <HTMLButtonElement>document.getElementById("js-user-settings-open");
-const avatarImageEl: HTMLImageElement = <HTMLImageElement>document.getElementById("js-user-avatar");
+
+const avatarEl: HTMLImageElement = <HTMLImageElement>document.getElementById("js-user-avatar");
 const avatarChangeButtonEl: HTMLButtonElement = <HTMLButtonElement>document.getElementById("js-user-settings-avatar-change-button");
 const avatarInputEl: HTMLInputElement = <HTMLInputElement>document.getElementById("js-user-settings-avatar-input");
+
 const firstNameInputEl: HTMLInputElement = <HTMLInputElement>document.getElementById("js-user-settings-first-name");
 const lastNameInputEl: HTMLInputElement = <HTMLInputElement>document.getElementById("js-user-settings-last-name");
+
+const backgroundEl: HTMLImageElement = <HTMLImageElement>document.getElementById("js-background");
+const backgroundChangeButtonEl: HTMLButtonElement = <HTMLButtonElement>document.getElementById("js-user-settings-background-change-button");
+const backgroundInputEl: HTMLInputElement = <HTMLInputElement>document.getElementById("js-user-settings-background-input");
+
 const saveButtonEl: HTMLButtonElement = <HTMLButtonElement>document.getElementById("js-user-settings-save");
 const closeButtonEl: HTMLButtonElement = <HTMLButtonElement>document.getElementById("js-user-settings-close");
 
@@ -25,16 +34,16 @@ avatarChangeButtonEl.onclick = () => {
     avatarInputEl.click();
 }
 
-avatarImageEl.onload = () => {
-    avatarSrcBackup = avatarImageEl.src;
-    avatarImageEl.onload = () => {}
+avatarEl.onload = () => {
+    updateAvatarSrcBackup();
+    avatarEl.onload = () => {}
 }
 
 avatarInputEl.oninput = () => {
-    avatarSrcBackup = avatarImageEl.src;
+    updateAvatarSrcBackup();
 
     let imageFileURL: string = URL.createObjectURL(avatarInputEl.files[0]);
-    avatarImageEl.src = imageFileURL;
+    avatarEl.src = imageFileURL;
 }
 
 firstNameInputEl.value = thisUser.firstName;
@@ -47,12 +56,34 @@ lastNameInputEl.oninput = () => {
     updateUserFullNameWrap();
 }
 
+backgroundChangeButtonEl.onclick = () => {
+    backgroundInputEl.click();
+}
+
+backgroundEl.onload = () => {
+    updateBackgroundSrcBackup();
+    backgroundEl.onload = () => {}
+}
+
+backgroundInputEl.oninput = () => {
+    updateBackgroundSrcBackup();
+
+    let imageFileURL: string = URL.createObjectURL(backgroundInputEl.files[0]);
+    updateBackgroundUrl(imageFileURL);
+}
+
 saveButtonEl.onclick = async () => {
     let updatingWas = false;
 
     if (avatarInputEl.files.length) {
         await requestToEditUserAvatar(avatarInputEl.files[0]);
         avatarInputEl.value = "";
+        updatingWas = true;
+    }
+
+    if (backgroundInputEl.files.length) {
+        await requestToEditUserBackground(backgroundInputEl.files[0]);
+        backgroundInputEl.value = "";
         updatingWas = true;
     }
 
@@ -88,16 +119,27 @@ saveButtonEl.onclick = async () => {
 }
 
 closeButtonEl.onclick = () => {
-    avatarImageEl.src = avatarSrcBackup;
+    avatarEl.src = avatarSrcBackup;
     avatarInputEl.value = "";
 
     firstNameInputEl.value = thisUser.firstName;
     lastNameInputEl.value = thisUser.lastName;
     updateUserFullNameWrap();
 
+    updateBackgroundUrl(backgroundSrcBackup);
+    backgroundInputEl.value = "";
+
     settingsEl.classList.add(SETTINGS_HIDDEN_CLASS);
 }
 
 function updateUserFullNameWrap(): void {
     updateUserFullName(firstNameInputEl.value + " " + lastNameInputEl.value);
+}
+
+function updateAvatarSrcBackup(): void {
+    avatarSrcBackup = avatarEl.src;
+}
+
+function updateBackgroundSrcBackup(): void {
+    backgroundSrcBackup = backgroundEl.style.background.slice(5, -2);
 }
