@@ -40,10 +40,8 @@ avatarEl.onload = () => {
 }
 
 avatarInputEl.oninput = () => {
-    updateAvatarSrcBackup();
-
-    let imageFileURL: string = URL.createObjectURL(avatarInputEl.files[0]);
-    avatarEl.src = imageFileURL;
+    let url: string = URL.createObjectURL(avatarInputEl.files[0]);
+    avatarEl.src = url;
 }
 
 firstNameInputEl.value = thisUser.firstName;
@@ -66,10 +64,8 @@ backgroundEl.onload = () => {
 }
 
 backgroundInputEl.oninput = () => {
-    updateBackgroundSrcBackup();
-
-    let imageFileURL: string = URL.createObjectURL(backgroundInputEl.files[0]);
-    updateBackgroundUrl(imageFileURL);
+    let url: string = URL.createObjectURL(backgroundInputEl.files[0]);
+    updateBackgroundUrl(url);
 }
 
 saveButtonEl.onclick = async () => {
@@ -78,12 +74,14 @@ saveButtonEl.onclick = async () => {
     if (avatarInputEl.files.length) {
         await requestToEditUserAvatar(avatarInputEl.files[0]);
         avatarInputEl.value = "";
+        updateAvatarSrcBackup();
         updatingWas = true;
     }
 
     if (backgroundInputEl.files.length) {
         await requestToEditUserBackground(backgroundInputEl.files[0]);
         backgroundInputEl.value = "";
+        updateBackgroundSrcBackup();
         updatingWas = true;
     }
 
