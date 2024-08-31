@@ -7,7 +7,7 @@ import { SimpleResponseStatus,
          UserChats,
        } from "../apiDataInterfaces.js";
 import { redirectToLoginPage } from "../redirects.js";
-import { HTTP_API_URLS } from "./endpoints.js";
+import { HTTP_API_URLS } from "./apiUrls.js";
 import { ResponseDataType, makeRequestFunc, makeRequestFuncWithoutRequestData } from "./base.js";
 import { EmailRequestData,
          EmailAndCodeRequestData,

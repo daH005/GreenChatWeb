@@ -1,5 +1,5 @@
 import { redirectToLoginPage } from "../redirects.js";
-import { HTTP_API_URLS } from "./endpoints.js";
+import { HTTP_API_URLS } from "./apiUrls.js";
 import { ResponseDataType, makeRequestFunc, makeRequestFuncWithoutRequestData } from "./base.js";
 export const requestToCheckEmail = makeRequestFunc({
     URL: HTTP_API_URLS.EMAIL_CHECK,
