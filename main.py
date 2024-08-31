@@ -10,7 +10,7 @@ from web.config import (
     HOST,
     PORT,
 )
-from web.enums import Url, TemplateNames
+from web.urls import Url, TemplateNames
 
 app: Flask = Flask(__name__)
 
