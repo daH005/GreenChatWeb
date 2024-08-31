@@ -1,26 +1,13 @@
-export interface EmailCheckRequestData {
+export interface EmailRequestData {
     email: string,
 }
 
-export interface EmailCodeSendRequestData {
-    email: string,
-}
-
-export interface EmailCodeCheckRequestData {
+export interface EmailAndCodeRequestData extends EmailRequestData {
     email: string,
     code: number,
 }
 
-export interface LoginRequestData {
-    email: string,
-    code: number,
-}
-
-export interface UserInfoRequestData {
-    userId: number,
-}
-
-export interface UserAvatarRequestData {
+export interface UserIdRequestData {
     userId: number,
 }
 

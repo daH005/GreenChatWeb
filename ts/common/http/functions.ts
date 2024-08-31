@@ -9,22 +9,19 @@ import { SimpleResponseStatus,
 import { redirectToLoginPage } from "../redirects.js";
 import { HTTP_API_URLS } from "./endpoints.js";
 import { ResponseDataType, makeRequestFunc, makeRequestFuncWithoutRequestData } from "./base.js";
-import { EmailCheckRequestData,
-         EmailCodeSendRequestData,
-         EmailCodeCheckRequestData,
-         LoginRequestData,
-         UserInfoRequestData,
-         UserAvatarRequestData,
+import { EmailRequestData,
+         EmailAndCodeRequestData,
+         UserIdRequestData,
          UserInfoEditRequestData,
          ChatHistoryRequestData,
        } from "./requestDataInterfaces.js";
 
-export const requestToCheckEmail = makeRequestFunc<EmailCheckRequestData, AlreadyTakenFlag>({
+export const requestToCheckEmail = makeRequestFunc<EmailRequestData, AlreadyTakenFlag>({
     URL: HTTP_API_URLS.EMAIL_CHECK,
     METHOD: "GET",
 });
 
-export const requestToSendEmailCode = makeRequestFunc<EmailCodeSendRequestData, SimpleResponseStatus>({
+export const requestToSendEmailCode = makeRequestFunc<EmailRequestData, SimpleResponseStatus>({
     URL: HTTP_API_URLS.EMAIL_CODE_SEND,
     METHOD: "POST",
     STATUSES_NOTIFICATIONS: {
@@ -33,12 +30,12 @@ export const requestToSendEmailCode = makeRequestFunc<EmailCodeSendRequestData, 
     },
 });
 
-export const requestToCheckEmailCode = makeRequestFunc<EmailCodeCheckRequestData, CodeIsValidFlag>({
+export const requestToCheckEmailCode = makeRequestFunc<EmailAndCodeRequestData, CodeIsValidFlag>({
     URL: HTTP_API_URLS.EMAIL_CODE_CHECK,
     METHOD: "GET",
 });
 
-export const requestToLogin = makeRequestFunc<LoginRequestData, JWT>({
+export const requestToLogin = makeRequestFunc<EmailAndCodeRequestData, JWT>({
     URL: HTTP_API_URLS.LOGIN,
     METHOD: "POST",
     STATUSES_NOTIFICATIONS: {
@@ -46,7 +43,7 @@ export const requestToLogin = makeRequestFunc<LoginRequestData, JWT>({
     },
 });
 
-export const requestUserInfo = makeRequestFunc<UserInfoRequestData | null, User>({
+export const requestUserInfo = makeRequestFunc<UserIdRequestData | null, User>({
     URL: HTTP_API_URLS.USER_INFO,
     METHOD: "GET",
     AUTHORIZATION_IS_REQUIRED: true,
@@ -58,7 +55,7 @@ export const requestUserInfo = makeRequestFunc<UserInfoRequestData | null, User>
     },
 });
 
-export const requestUserAvatar = makeRequestFunc<UserAvatarRequestData, Blob>({
+export const requestUserAvatar = makeRequestFunc<UserIdRequestData, Blob>({
     URL: HTTP_API_URLS.USER_AVATAR,
     METHOD: "GET",
     AUTHORIZATION_IS_REQUIRED: true,
