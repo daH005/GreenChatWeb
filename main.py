@@ -1,4 +1,4 @@
-from flask import (  # pip install flask
+from flask import (
     Flask,
     render_template,
 )
@@ -10,24 +10,24 @@ from web.config import (
     HOST,
     PORT,
 )
-from web.endpoints import EndpointName, Url, TemplateName
+from web.enums import Url, TemplateNames
 
 app: Flask = Flask(__name__)
 
 
 @app.errorhandler(HTTPException)
 def handle_exception(exception: HTTPException) -> str:
-    return render_template(TemplateName.ERROR, status=exception.code)
+    return render_template(TemplateNames.ERROR, status=exception.code)
 
 
-@app.route(Url.LOGIN, endpoint=EndpointName.LOGIN, methods=[HTTPMethod.GET])
+@app.route(Url.LOGIN, methods=[HTTPMethod.GET])
 def login() -> str:
-    return render_template(TemplateName.LOGIN)
+    return render_template(TemplateNames.LOGIN)
 
 
-@app.route(Url.MAIN, endpoint=EndpointName.MAIN, methods=[HTTPMethod.GET])
+@app.route(Url.MAIN, methods=[HTTPMethod.GET])
 def main() -> str:
-    return render_template(TemplateName.MAIN)
+    return render_template(TemplateNames.MAIN)
 
 
 if __name__ == '__main__':

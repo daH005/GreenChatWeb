@@ -1,15 +1,9 @@
 from enum import StrEnum
 
 __all__ = (
-    'EndpointName',
     'Url',
-    'TemplateName',
+    'TemplateNames',
 )
-
-
-class EndpointName(StrEnum):
-    MAIN = 'main'
-    LOGIN = 'login'
 
 
 class Url(StrEnum):
@@ -17,7 +11,7 @@ class Url(StrEnum):
     LOGIN = '/login'
 
 
-class TemplateName:  # Enum вызывает ошибку...
+class TemplateNames:
     MAIN = 'main.html'
     LOGIN = 'login.html'
     ERROR = 'error.html'
