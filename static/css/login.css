@@ -1,7 +1,7 @@
 .inputs-container {
-    padding: 4vw 3vw;
+    padding: 3vw 2vw;
     background: var(--main-4-color);
-    border-radius: 40%;
+    border-radius: 10%;
 }
 
 a.reg-link {
