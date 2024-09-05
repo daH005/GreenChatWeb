@@ -1,6 +1,5 @@
 import { JWT_TOKEN_REFRESH_INTERVAL_DELAY } from "../config.js";
 import { requestNewJWT } from "./http/functions.js";
-import { JWT } from "./localStorage.js";
 export async function initJWTUpdating() {
     await updateJWT();
     setInterval(async () => {
@@ -8,7 +7,6 @@ export async function initJWTUpdating() {
     }, JWT_TOKEN_REFRESH_INTERVAL_DELAY);
 }
 async function updateJWT() {
-    let data = await requestNewJWT();
-    JWT.set(data.JWT);
+    await requestNewJWT();
     console.log("Токен обновлён!");
 }

@@ -2,10 +2,6 @@ export interface SimpleResponseStatus {
     status: number,
 }
 
-export interface JWT {
-    JWT: string,
-}
-
 export interface AlreadyTakenFlag {
     isAlreadyTaken: boolean,
 }

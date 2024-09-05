@@ -1,4 +1,3 @@
-import { JWT } from "../localStorage.js";
 import { notify } from "../notification.js";
 export var ResponseDataType;
 (function (ResponseDataType) {
@@ -52,6 +51,7 @@ export function makeRequestUrlAndOptions(options, data = null) {
     let fetchOptions = {
         method: options.METHOD,
         headers: {},
+        credentials: "include",
     };
     if (options.REQUEST_DATA_IS_JSON) {
         fetchOptions.headers = {
@@ -70,12 +70,6 @@ export function makeRequestUrlAndOptions(options, data = null) {
         else {
             fetchOptions.body = data;
         }
-    }
-    if (options.AUTHORIZATION_IS_REQUIRED) {
-        fetchOptions.headers = {
-            ...fetchOptions.headers,
-            Authorization: `Bearer ${JWT.get()}`,
-        };
     }
     return [fetchUrl, fetchOptions];
 }

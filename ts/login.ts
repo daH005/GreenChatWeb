@@ -1,6 +1,5 @@
 import { requestToLogin, requestToCheckEmailCode, requestToSendEmailCode } from "./common/http/functions.js";
 import { redirectToMainPage } from "./common/redirects.js";
-import { JWT } from "./common/localStorage.js";
 import { setInputAsInvalidAndNotifyWithThrow, removeInvalidClassForAllInputs } from "./common/inputsHighlighting.js";
 
 const emailInputEl: HTMLInputElement = <HTMLInputElement>document.getElementById("js-email");
@@ -19,12 +18,11 @@ buttonEl.onclick = async () => {
     await checkEmail();
     await checkEmailCode();
     
-    let data = await requestToLogin({
+    await requestToLogin({
         email: emailInputEl.value,
         code: Number(emailCodeInputEl.value),
     });
 
-    JWT.set(data.JWT);
     redirectToMainPage();
 }
 

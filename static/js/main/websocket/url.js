@@ -1,6 +1,6 @@
 export var WEBSOCKET_URL = ""; // <- WEBSOCKET_URL // Comment For Nginx
 if (!WEBSOCKET_URL) {
-    WEBSOCKET_URL = "ws://localhost:5180";
+    WEBSOCKET_URL = "wss://localhost:5180";
 }
 else {
     let protocol = window.location.protocol;

@@ -1,12 +1,10 @@
 import { SimpleResponseStatus,
-         JWT,
          AlreadyTakenFlag,
          CodeIsValidFlag,
          User,
          ChatHistory,
          UserChats,
        } from "../apiDataInterfaces.js";
-import { redirectToLoginPage } from "../redirects.js";
 import { HTTP_API_URLS } from "./apiUrls.js";
 import { ResponseDataType, makeRequestFunc, makeRequestFuncWithoutRequestData } from "./base.js";
 import { EmailRequestData,
@@ -35,7 +33,7 @@ export const requestToCheckEmailCode = makeRequestFunc<EmailAndCodeRequestData, 
     METHOD: "GET",
 });
 
-export const requestToLogin = makeRequestFunc<EmailAndCodeRequestData, JWT>({
+export const requestToLogin = makeRequestFunc<EmailAndCodeRequestData, SimpleResponseStatus>({
     URL: HTTP_API_URLS.LOGIN,
     METHOD: "POST",
     STATUSES_NOTIFICATIONS: {
@@ -46,19 +44,14 @@ export const requestToLogin = makeRequestFunc<EmailAndCodeRequestData, JWT>({
 export const requestUserInfo = makeRequestFunc<UserIdRequestData | null, User>({
     URL: HTTP_API_URLS.USER_INFO,
     METHOD: "GET",
-    AUTHORIZATION_IS_REQUIRED: true,
     STATUSES_NOTIFICATIONS: {
         404: "Пользователь с таким ID не найден!",
-    },
-    STATUSES_FUNCTIONS: {
-        401: redirectToLoginPage,
     },
 });
 
 export const requestUserAvatar = makeRequestFunc<UserIdRequestData, Blob>({
     URL: HTTP_API_URLS.USER_AVATAR,
     METHOD: "GET",
-    AUTHORIZATION_IS_REQUIRED: true,
     REQUEST_DATA_IS_JSON: false,
     RESPONSE_DATA_TYPE: ResponseDataType.BLOB,
 });
@@ -66,7 +59,6 @@ export const requestUserAvatar = makeRequestFunc<UserIdRequestData, Blob>({
 export const requestUserBackground = makeRequestFuncWithoutRequestData<Blob>({
     URL: HTTP_API_URLS.USER_BACKGROUND,
     METHOD: "GET",
-    AUTHORIZATION_IS_REQUIRED: true,
     REQUEST_DATA_IS_JSON: false,
     RESPONSE_DATA_TYPE: ResponseDataType.BLOB,
 });
@@ -74,46 +66,31 @@ export const requestUserBackground = makeRequestFuncWithoutRequestData<Blob>({
 export const requestToEditUserInfo = makeRequestFunc<UserInfoEditRequestData, SimpleResponseStatus>({
     URL: HTTP_API_URLS.USER_INFO_EDIT,
     METHOD: "PUT",
-    AUTHORIZATION_IS_REQUIRED: true,
 });
 
 export const requestToEditUserAvatar = makeRequestFunc<Blob, SimpleResponseStatus>({
     URL: HTTP_API_URLS.USER_AVATAR_EDIT,
     METHOD: "PUT",
-    AUTHORIZATION_IS_REQUIRED: true,
     REQUEST_DATA_IS_JSON: false,
 });
 
 export const requestToEditUserBackground = makeRequestFunc<Blob, SimpleResponseStatus>({
     URL: HTTP_API_URLS.USER_BACKGROUND_EDIT,
     METHOD: "PUT",
-    AUTHORIZATION_IS_REQUIRED: true,
     REQUEST_DATA_IS_JSON: false,
 });
 
 export const requestUserChats = makeRequestFuncWithoutRequestData<UserChats>({
     URL: HTTP_API_URLS.USER_CHATS,
     METHOD: "GET",
-    AUTHORIZATION_IS_REQUIRED: true,
-    STATUSES_FUNCTIONS: {
-        401: redirectToLoginPage,
-    },
 });
 
 export const requestChatHistory = makeRequestFunc<ChatHistoryRequestData, ChatHistory>({
     URL: HTTP_API_URLS.CHAT_HISTORY,
     METHOD: "GET",
-    AUTHORIZATION_IS_REQUIRED: true,
-    STATUSES_FUNCTIONS: {
-        401: redirectToLoginPage,
-    },
 });
 
-export const requestNewJWT = makeRequestFuncWithoutRequestData<JWT>({
+export const requestNewJWT = makeRequestFuncWithoutRequestData<SimpleResponseStatus>({
     URL: HTTP_API_URLS.REFRESH_TOKEN,
     METHOD: "POST",
-    AUTHORIZATION_IS_REQUIRED: true,
-    STATUSES_FUNCTIONS: {
-        401: redirectToLoginPage,
-    },
 });

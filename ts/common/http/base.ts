@@ -1,10 +1,10 @@
-import { JWT } from "../localStorage.js";
 import { notify } from "../notification.js";
 
 interface FetchOptions {
     method: string,
     headers: Record<string, string>,
     body?: string | Blob,
+    credentials: string,
 }
 
 interface RequestOptions {
@@ -14,7 +14,6 @@ interface RequestOptions {
     STATUSES_FUNCTIONS?: Record<number, Function>,
     RESPONSE_DATA_TYPE?: string,
     REQUEST_DATA_IS_JSON?: boolean,
-    AUTHORIZATION_IS_REQUIRED?: boolean,
 }
 
 export enum ResponseDataType {
@@ -75,6 +74,7 @@ export function makeRequestUrlAndOptions(options: RequestOptions, data: Object |
     let fetchOptions: FetchOptions = {
         method: options.METHOD,
         headers: {},
+        credentials: "include",
     }
 
     if (options.REQUEST_DATA_IS_JSON) {
@@ -92,13 +92,6 @@ export function makeRequestUrlAndOptions(options: RequestOptions, data: Object |
             fetchOptions.body = JSON.stringify(data);
         } else {
             fetchOptions.body = <Blob>data;
-        }
-    }
-
-    if (options.AUTHORIZATION_IS_REQUIRED) {
-        fetchOptions.headers = {
-            ...fetchOptions.headers,
-            Authorization: `Bearer ${JWT.get()}`,
         }
     }
 
