@@ -5,6 +5,7 @@ from flask import (
 from werkzeug.exceptions import HTTPException
 from http import HTTPMethod
 
+from api.ssl_context import get_ssl_context
 from web.config import (
     DEBUG,
     HOST,
@@ -31,4 +32,4 @@ def main() -> str:
 
 
 if __name__ == '__main__':
-    app.run(HOST, PORT, debug=DEBUG)
+    app.run(HOST, PORT, debug=DEBUG, ssl_context=get_ssl_context())
