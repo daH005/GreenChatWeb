@@ -1,4 +1,3 @@
-from __future__ import annotations
 from selenium.webdriver.common.by import By
 from selenium.webdriver import Chrome
 from selenium.webdriver.remote.webelement import WebElement
