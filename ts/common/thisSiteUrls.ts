@@ -1,4 +1,4 @@
-export const SITE_URLS = {
+export const THIS_SITE_URLS = {
     MAIN: "/",
     LOGIN: "/login",
 }
