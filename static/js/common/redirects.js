@@ -1,7 +1,7 @@
-import { SITE_URLS } from "./siteEndpoints.js";
+import { THIS_SITE_URLS } from "./thisSiteUrls.js";
 export function redirectToLoginPage() {
-    window.location.href = SITE_URLS.LOGIN;
+    window.location.href = THIS_SITE_URLS.LOGIN;
 }
 export function redirectToMainPage() {
-    window.location.href = SITE_URLS.MAIN;
+    window.location.href = THIS_SITE_URLS.MAIN;
 }
