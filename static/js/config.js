@@ -1,1 +1,0 @@
-export const JWT_TOKEN_REFRESH_INTERVAL_DELAY = 1000 * 60 * 15;
