@@ -89,8 +89,3 @@ export const requestChatHistory = makeRequestFunc<ChatHistoryRequestData, ChatHi
     URL: HTTP_API_URLS.CHAT_HISTORY,
     METHOD: "GET",
 });
-
-export const requestNewJWT = makeRequestFuncWithoutRequestData<SimpleResponseStatus>({
-    URL: HTTP_API_URLS.REFRESH_TOKEN,
-    METHOD: "POST",
-});

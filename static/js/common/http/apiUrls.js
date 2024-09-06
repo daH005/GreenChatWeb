@@ -7,7 +7,7 @@ export const HTTP_API_URLS = {
     EMAIL_CODE_SEND: HTTP_API_BASE_URL + "/user/login/email/code/send",
     EMAIL_CODE_CHECK: HTTP_API_BASE_URL + "/user/login/email/code/check",
     LOGIN: HTTP_API_BASE_URL + "/user/login",
-    REFRESH_TOKEN: HTTP_API_BASE_URL + "/user/refreshToken",
+    REFRESH_ACCESS: HTTP_API_BASE_URL + "/user/refreshAccess",
     USER_INFO: HTTP_API_BASE_URL + "/user/info",
     USER_AVATAR: HTTP_API_BASE_URL + "/user/avatar",
     USER_BACKGROUND: HTTP_API_BASE_URL + "/user/background",

@@ -1,4 +1,6 @@
+import { redirectToLoginPage } from "../redirects.js";
 import { notify } from "../notification.js";
+import { HTTP_API_URLS } from "./apiUrls.js";
 export var ResponseDataType;
 (function (ResponseDataType) {
     ResponseDataType["JSON"] = "json";
@@ -32,16 +34,26 @@ function optionsWithDefaultValues(options) {
 async function request(options, data) {
     let [fetchUrl, fetchOptions] = makeRequestUrlAndOptions(options, data);
     let response = await fetch(fetchUrl, fetchOptions);
+    if (response.status == 401) {
+        let refreshAccessResponse = await fetch(HTTP_API_URLS.REFRESH_ACCESS, {
+            method: "POST",
+            credentials: "include",
+        });
+        if (refreshAccessResponse.status == 401) {
+            redirectToLoginPage();
+        }
+        return await request(options, data);
+    }
     if (response.status in options.STATUSES_NOTIFICATIONS) {
         notify(options.STATUSES_NOTIFICATIONS[response.status]);
     }
     if (response.ok) {
         return await response[options.RESPONSE_DATA_TYPE]();
     }
-    else if (response.status in options.STATUSES_FUNCTIONS) {
+    if (response.status in options.STATUSES_FUNCTIONS) {
         return options.STATUSES_FUNCTIONS[response.status]();
     }
-    else if (!(response.status in options.STATUSES_NOTIFICATIONS)) {
+    if (!(response.status in options.STATUSES_NOTIFICATIONS)) {
         console.log("Неизвестная ошибка...", response.status);
     }
     throw Error;
