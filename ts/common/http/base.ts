@@ -68,7 +68,7 @@ async function request<RequestDataInterface, ResponseDataInterface>(options: Req
             credentials: "include",
         });
         if (refreshAccessResponse.status == 401) {
-            // redirectToLoginPage();
+            redirectToLoginPage();
         }
 
         return await request(options, data);

@@ -1,3 +1,4 @@
+import { redirectToLoginPage } from "../redirects.js";
 import { getCookie } from "../cookies.js";
 import { notify } from "../notification.js";
 import { HTTP_API_URLS } from "./apiUrls.js";
@@ -43,7 +44,7 @@ async function request(options, data) {
             credentials: "include",
         });
         if (refreshAccessResponse.status == 401) {
-            // redirectToLoginPage();
+            redirectToLoginPage();
         }
         return await request(options, data);
     }
