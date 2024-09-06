@@ -25,4 +25,5 @@ def _make_chrome_options() -> ChromeOptions:
     if os.name == 'posix':
         options.add_argument('--remote-debugging-port=9222')
     options.add_argument("--window-size=1600,1000")
+    options.add_argument('--ignore-certificate-errors')
     return options
