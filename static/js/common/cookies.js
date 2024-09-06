@@ -5,3 +5,7 @@ export function getCookie(name) {
 export function setCookie(name, value, maxAge = 0) {
     document.cookie = name + "=" + value + "; " + "max-age=" + String(maxAge);
 }
+export function setFunctionOfGetCookieForTest(fn) {
+    // @ts-ignore
+    getCookie = fn;
+}

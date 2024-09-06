@@ -8,8 +8,9 @@ import { requestToCheckEmail,
          requestToEditUserAvatar,
          requestUserChats,
          requestChatHistory,
-         requestNewJWT,
        } from "../../common/http/functions.js";
+
+export const COMMON_COOKIE_VALUE = "COMMON_COOKIE_VALUE";
 
 export const FUNCTIONS_ARGS_AND_FETCH_ARGS = [
     [
@@ -22,12 +23,13 @@ export const FUNCTIONS_ARGS_AND_FETCH_ARGS = [
         ],
         // out
         [
-            "http://localhost:5181/user/login/email/check?email=dan005%40mail.ru", // %40 = @
+            "https://localhost:5181/user/login/email/check?email=dan005%40mail.ru", // %40 = @
             {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
                 },
+                credentials: "include",
             }
         ]
     ],
@@ -41,15 +43,17 @@ export const FUNCTIONS_ARGS_AND_FETCH_ARGS = [
         ],
         // out
         [
-            "http://localhost:5181/user/login/email/code/send",
+            "https://localhost:5181/user/login/email/code/send",
             {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": COMMON_COOKIE_VALUE,
                 },
                 body: JSON.stringify({
                     code: 5150,
-                })
+                }),
+                credentials: "include",
             }
         ]
     ],
@@ -63,12 +67,13 @@ export const FUNCTIONS_ARGS_AND_FETCH_ARGS = [
         ],
         // out
         [
-            "http://localhost:5181/user/login/email/code/check?code=1122",
+            "https://localhost:5181/user/login/email/code/check?code=1122",
             {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
                 },
+                credentials: "include",
             }
         ]
     ],
@@ -83,16 +88,18 @@ export const FUNCTIONS_ARGS_AND_FETCH_ARGS = [
         ],
         // out
         [
-            "http://localhost:5181/user/login",
+            "https://localhost:5181/user/login",
             {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": COMMON_COOKIE_VALUE,
                 },
                 body: JSON.stringify({
                     username: "dan005",
                     password: "Mypass",
-                })
+                }),
+                credentials: "include",
             }
         ]
     ],
@@ -106,13 +113,13 @@ export const FUNCTIONS_ARGS_AND_FETCH_ARGS = [
         ],
         // out
         [
-            "http://localhost:5181/user/info?userId=100",
+            "https://localhost:5181/user/info?userId=100",
             {
                 method: "GET",
                 headers: {
-                    "Authorization": "Bearer testToken",
                     "Content-Type": "application/json",
                 },
+                credentials: "include",
             }
         ]
     ],
@@ -124,13 +131,13 @@ export const FUNCTIONS_ARGS_AND_FETCH_ARGS = [
         ],
         // out
         [
-            "http://localhost:5181/user/info",
+            "https://localhost:5181/user/info",
             {
                 method: "GET",
                 headers: {
-                    "Authorization": "Bearer testToken",
                     "Content-Type": "application/json",
                 },
+                credentials: "include",
             }
         ]
     ],
@@ -144,12 +151,11 @@ export const FUNCTIONS_ARGS_AND_FETCH_ARGS = [
         ],
         // out
         [
-            "http://localhost:5181/user/avatar?userId=1",
+            "https://localhost:5181/user/avatar?userId=1",
             {
                 method: "GET",
-                headers: {
-                    "Authorization": "Bearer testToken",
-                },
+                headers: {},
+                credentials: "include",
             }
         ]
     ],
@@ -164,17 +170,18 @@ export const FUNCTIONS_ARGS_AND_FETCH_ARGS = [
         ],
         // out
         [
-            "http://localhost:5181/user/info/edit",
+            "https://localhost:5181/user/info/edit",
             {
                 method: "PUT",
                 headers: {
-                    "Authorization": "Bearer testToken",
                     "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": COMMON_COOKIE_VALUE,
                 },
                 body: JSON.stringify({
                     firstName: "dan",
                     lastName: "shev",
                 }),
+                credentials: "include",
             }
         ]
     ],
@@ -186,13 +193,14 @@ export const FUNCTIONS_ARGS_AND_FETCH_ARGS = [
         ],
         // out
         [
-            "http://localhost:5181/user/avatar/edit",
+            "https://localhost:5181/user/avatar/edit",
             {
                 method: "PUT",
                 headers: {
-                    "Authorization": "Bearer testToken",
+                    "X-CSRF-TOKEN": COMMON_COOKIE_VALUE,
                 },
                 body: new File(["foo"], "file.jpg"),
+                credentials: "include",
             }
         ]
     ],
@@ -204,13 +212,13 @@ export const FUNCTIONS_ARGS_AND_FETCH_ARGS = [
         ],
         // out
         [
-            "http://localhost:5181/user/chats",
+            "https://localhost:5181/user/chats",
             {
                 method: "GET",
                 headers: {
-                    "Authorization": "Bearer testToken",
                     "Content-Type": "application/json",
                 },
+                credentials: "include",
             }
         ]
     ],
@@ -225,31 +233,13 @@ export const FUNCTIONS_ARGS_AND_FETCH_ARGS = [
         ],
         // out
         [
-            "http://localhost:5181/chat/history?chatId=1&offsetFromEnd=1",
+            "https://localhost:5181/chat/history?chatId=1&offsetFromEnd=1",
             {
                 method: "GET",
                 headers: {
-                    "Authorization": "Bearer testToken",
                     "Content-Type": "application/json",
                 },
-            }
-        ]
-    ],
-    [
-        // in
-        [
-            requestNewJWT.options,
-            null
-        ],
-        // out
-        [
-            "http://localhost:5181/user/refreshToken",
-            {
-                method: "POST",
-                headers: {
-                    "Authorization": "Bearer testToken",
-                    "Content-Type": "application/json",
-                },
+                credentials: "include",
             }
         ]
     ],
