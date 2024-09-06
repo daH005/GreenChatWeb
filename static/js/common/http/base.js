@@ -1,4 +1,4 @@
-import { redirectToLoginPage } from "../redirects.js";
+import { getCookie } from "../cookies.js";
 import { notify } from "../notification.js";
 import { HTTP_API_URLS } from "./apiUrls.js";
 export var ResponseDataType;
@@ -37,10 +37,13 @@ async function request(options, data) {
     if (response.status == 401) {
         let refreshAccessResponse = await fetch(HTTP_API_URLS.REFRESH_ACCESS, {
             method: "POST",
+            headers: {
+                "X-CSRF-TOKEN": getCookie("csrf_refresh_token"),
+            },
             credentials: "include",
         });
         if (refreshAccessResponse.status == 401) {
-            redirectToLoginPage();
+            // redirectToLoginPage();
         }
         return await request(options, data);
     }
@@ -65,8 +68,15 @@ export function makeRequestUrlAndOptions(options, data = null) {
         headers: {},
         credentials: "include",
     };
+    if (["POST", "PUT", "DELETE", "PATCH"].includes(options.METHOD)) {
+        fetchOptions.headers = {
+            ...fetchOptions.headers,
+            "X-CSRF-TOKEN": getCookie("csrf_access_token"),
+        };
+    }
     if (options.REQUEST_DATA_IS_JSON) {
         fetchOptions.headers = {
+            ...fetchOptions.headers,
             "Content-Type": "application/json",
         };
     }
