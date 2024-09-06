@@ -11,7 +11,7 @@ __all__ = (
 )
 
 host: str = HOST.replace('0.0.0.0', 'localhost')
-WEBSITE_URL: Final[str] = f'http://{host}:{PORT}'
+WEBSITE_URL: Final[str] = f'https://{host}:{PORT}'
 EMAIL_CODE: Final[int] = 9999
 
 
