@@ -64,9 +64,3 @@ class UserInfo:
     @property
     def full_name(self) -> str:
         return self.first_name + ' ' + self.last_name
-
-
-if __name__ == '__main__':
-    print(UserInfo.new())
-    print(UserInfo.new())
-    print(UserInfo.new())

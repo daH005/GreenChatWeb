@@ -18,6 +18,3 @@ DEBUG: Final[bool] = False if environ['DEBUG'].lower() == 'false' else bool(envi
 
 HOST: Final[str] = environ['HOST']
 PORT: Final[int] = int(environ['PORT'])
-
-if __name__ == '__main__':
-    print(BASE_DIR)
