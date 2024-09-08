@@ -1,6 +1,6 @@
 FROM python:3.11
 
-COPY ./* /web
+COPY ./ /web
 WORKDIR /web
 
 RUN apt update
