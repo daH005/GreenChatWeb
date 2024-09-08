@@ -5,13 +5,13 @@ from flask import (
 from werkzeug.exceptions import HTTPException
 from http import HTTPMethod
 
-from web.ssl_context import get_ssl_context
-from web.config import (
+from ssl_context import get_ssl_context
+from config import (
     DEBUG,
     HOST,
     PORT,
 )
-from web.urls import Url, TemplateNames
+from urls import Url, TemplateNames
 
 app: Flask = Flask(__name__)
 

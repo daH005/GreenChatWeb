@@ -6,10 +6,10 @@ from time import sleep
 from itertools import combinations
 from typing import Iterator
 
-from web._tests.common.drivers import new_chrome_driver
-from web._tests.common.constants import EMAIL_CODE, FullUrl
-from web._tests.common.info_generation import UserInfo
-from web._tests.data import *
+from _tests.common.drivers import new_chrome_driver
+from _tests.common.constants import EMAIL_CODE, FullUrl
+from _tests.common.info_generation import UserInfo
+from _tests.data import *
 
 
 class TestAll:

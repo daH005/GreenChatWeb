@@ -1,8 +1,8 @@
 from typing import Final
 from enum import StrEnum
 
-from web.config import HOST, PORT
-from web.urls import Url
+from config import HOST, PORT
+from urls import Url
 
 __all__ = (
     'WEBSITE_URL',

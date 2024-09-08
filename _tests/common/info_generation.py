@@ -3,7 +3,7 @@ from typing import Final
 from pathlib import Path
 from dataclasses import dataclass
 
-from web.config import BASE_DIR
+from config import BASE_DIR
 
 __all__ = (
     'UserInfo',
