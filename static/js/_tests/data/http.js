@@ -9,6 +9,7 @@ import { requestToCheckEmail,
          requestUserChats,
          requestChatHistory,
        } from "../../common/http/functions.js";
+import { File } from "../fakeFileClass.js";
 
 export const COMMON_COOKIE_VALUE = "COMMON_COOKIE_VALUE";
 
