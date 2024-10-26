@@ -8,6 +8,7 @@ __all__ = (
     'DEBUG',
     'HOST',
     'PORT',
+    'CHROMEDRIVER_PATH',
 )
 
 load_dotenv()
@@ -18,3 +19,5 @@ DEBUG: Final[bool] = False if environ['DEBUG'].lower() == 'false' else bool(envi
 
 HOST: Final[str] = environ['HOST']
 PORT: Final[int] = int(environ['PORT'])
+
+CHROMEDRIVER_PATH: Final[str | None] = environ.get('CHROMEDRIVER_PATH')

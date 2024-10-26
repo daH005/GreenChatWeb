@@ -3,6 +3,8 @@ from webdriver_manager.chrome import ChromeDriverManager
 from webdriver_manager.core.os_manager import ChromeType
 import os
 
+from config import CHROMEDRIVER_PATH
+
 __all__ = (
     'new_chrome_driver',
 )
@@ -14,9 +16,14 @@ def new_chrome_driver() -> Chrome:
     chrome_type: str = ChromeType.GOOGLE
     if os.name == 'posix':
         chrome_type = ChromeType.CHROMIUM
-    path: str = ChromeDriverManager(chrome_type=chrome_type).install()
-    service: ChromeService = ChromeService(executable_path=path)
 
+    path: str
+    if CHROMEDRIVER_PATH:
+        path = CHROMEDRIVER_PATH
+    else:
+        path = ChromeDriverManager(chrome_type=chrome_type).install()
+
+    service: ChromeService = ChromeService(executable_path=path)
     return Chrome(options=options, service=service)
 
 
