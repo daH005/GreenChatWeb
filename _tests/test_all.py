@@ -59,7 +59,7 @@ class TestAll:
         cls.driver.get(FullUrl.LOGIN)
 
         cls.driver.find_element(By.XPATH, '//input[@id="js-email"]').send_keys(user.email)
-        cls.driver.find_element(By.XPATH, '//input[@id="js-email-code"]').send_keys(EMAIL_CODE)
+        cls.driver.find_element(By.XPATH, '//input[@id="js-email-code"]').send_keys(str(EMAIL_CODE))
 
         cls.driver.find_element(By.XPATH, '//button[@id="js-button"]').click()
         sleep(0.5)  # wait api authorization
