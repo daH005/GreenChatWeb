@@ -8,6 +8,8 @@ __all__ = (
     'DEBUG',
     'HOST',
     'PORT',
+    'SSL_CERTFILE',
+    'SSL_KEYFILE',
     'CHROMEDRIVER_PATH',
 )
 
@@ -19,5 +21,8 @@ DEBUG: Final[bool] = False if environ['DEBUG'].lower() == 'false' else bool(envi
 
 HOST: Final[str] = environ['HOST']
 PORT: Final[int] = int(environ['PORT'])
+
+SSL_CERTFILE: Final[Path] = Path(environ['SSL_CERTFILE'])
+SSL_KEYFILE: Final[Path] = Path(environ['SSL_KEYFILE'])
 
 CHROMEDRIVER_PATH: Final[str | None] = environ.get('CHROMEDRIVER_PATH')

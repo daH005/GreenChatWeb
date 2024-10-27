@@ -10,6 +10,8 @@ from config import (
     DEBUG,
     HOST,
     PORT,
+    SSL_CERTFILE,
+    SSL_KEYFILE,
 )
 from urls import Url, TemplateNames
 
@@ -32,4 +34,4 @@ def main() -> str:
 
 
 if __name__ == '__main__':
-    app.run(HOST, PORT, debug=DEBUG, ssl_context=get_ssl_context())
+    app.run(HOST, PORT, debug=DEBUG, ssl_context=get_ssl_context(SSL_CERTFILE, SSL_KEYFILE))
