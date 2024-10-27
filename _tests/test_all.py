@@ -13,6 +13,7 @@ from _tests.data import *
 
 
 class TestAll:
+    _LOADING_TEXT: str = 'загрузка...'
 
     driver: Chrome = new_chrome_driver()
     users: list[UserInfo] = []
@@ -69,7 +70,11 @@ class TestAll:
 
     @classmethod
     def _get_my_id(cls) -> int:
-        return int(cls.driver.find_element(By.XPATH, '//span[@id="js-user-id"]').text)
+        id_el_text = cls.driver.find_element(By.XPATH, '//span[@id="js-user-id"]').text
+        if id_el_text == cls._LOADING_TEXT:
+            return cls._get_my_id()
+
+        return int(id_el_text)
 
     @classmethod
     def _set_full_name(cls) -> None:
