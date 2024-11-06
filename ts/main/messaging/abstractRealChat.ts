@@ -42,15 +42,13 @@ export abstract class AbstractHTMLRealChat extends AbstractHTMLChat {
 
     protected _id: number;
     protected _name: string;
-    protected _lastMessage: ChatMessage;
     protected _users: User[];
     protected _unreadCount: number;
 
-    public constructor(id: number, name: string, lastMessage: ChatMessage, users: User[], unreadCount: number, interlocutor: User | null = null) {
+    public constructor(id: number, name: string, users: User[], unreadCount: number, interlocutor: User | null = null) {
         super(interlocutor);
         this._id = id;
         this._name = name;
-        this._lastMessage = lastMessage;
         this._users = users;
         this._unreadCount = unreadCount;
 
@@ -99,10 +97,6 @@ export abstract class AbstractHTMLRealChat extends AbstractHTMLChat {
         }
 
         this._typingEl = this._thisEl.querySelector(".chat__interlocutor-write-hint");
-
-        if (this._lastMessage) {
-            this.addMessage(this._lastMessage, false, true);
-        }
     }
 
     public async open(): Promise<void> {

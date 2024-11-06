@@ -71,8 +71,10 @@ async function addChat(apiData: Chat): Promise<HTMLPrivateRealChat> {
     await addUserToApiData(apiData.lastMessage);
     apiData.interlocutor = defineInterlocutor(apiData.users);
 
-    let chat = new HTMLPrivateRealChat(apiData.id, apiData.lastMessage, apiData.users, apiData.unreadCount, apiData.interlocutor);
+    let chat = new HTMLPrivateRealChat(apiData.id, apiData.users, apiData.unreadCount, apiData.interlocutor);
     chat.init();
+
+    chat.addMessage(apiData.lastMessage, false, true);
 
     let onlineStatus = interlocutorsOnlineStatusesForUncreatedChats[apiData.interlocutor.id];
     if (onlineStatus) {

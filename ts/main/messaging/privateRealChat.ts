@@ -8,9 +8,9 @@ export class HTMLPrivateRealChat extends AbstractHTMLRealChat {
     protected _thisElTemplateEl = <HTMLTemplateElement>document.getElementById("js-chat-temp");
     protected static _chatsByInterlocutorsIds: Record<number, HTMLPrivateRealChat> = {};
     
-    public constructor(id: number, lastMessage: ChatMessage, users: User[], unreadCount: number, interlocutor: User) {
+    public constructor(id: number, users: User[], unreadCount: number, interlocutor: User) {
         let interlocutorFullName: string = interlocutor.firstName + " " + interlocutor.lastName;
-        super(id, interlocutorFullName, lastMessage, users, unreadCount, interlocutor);
+        super(id, interlocutorFullName, users, unreadCount, interlocutor);
         HTMLPrivateRealChat._chatsByInterlocutorsIds[interlocutor.id] = this;
     }
 
