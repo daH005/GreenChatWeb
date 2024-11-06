@@ -51,6 +51,10 @@
     cursor: pointer;
 }
 
+.sidebar__title:hover {
+    background: var(--main-color);
+}
+
 .sidebar__id {
     z-index: 1;
     color: white;
