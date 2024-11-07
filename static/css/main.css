@@ -240,14 +240,6 @@
     display: none;
 }
 
-.chat.chat--new-fake .chat__messages {
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: auto;
-}
-
 .chat__header {
     display: flex;
     justify-content: space-between;
@@ -295,10 +287,6 @@
     justify-content: flex-start;
     margin-top: auto;
     margin-bottom: 10px;
-}
-
-.chat.chat--new-fake .chat__messages {
-    text-align: center;
 }
 
 .chat__messages > .chat__message:first-child {
