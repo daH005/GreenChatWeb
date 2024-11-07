@@ -146,6 +146,10 @@
     position: relative;
 }
 
+.chat-link.chat-link--hidden {
+    display: none;
+}
+
 .chat-link:hover, .chat-link.chat-link--active {
     background: var(--main-3-color);
     border-bottom: 1px solid var(--main-3-color);
