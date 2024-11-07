@@ -133,9 +133,7 @@ class TestAll:
                          first_text_message: str,
                          ) -> None:
         cls._search_interlocutor(interlocutor_id)
-
-        cls.driver.find_element(By.XPATH, '//div[@id="js-new-chat"]//textarea').send_keys(first_text_message)
-        cls.driver.find_element(By.XPATH, '//div[@id="js-new-chat"]//button').click()
+        cls._send_message_in_cur_chat(first_text_message)
         sleep(0.5)  # wait for api chat creating
 
         cls._find_cur_chat_el()
