@@ -1,8 +1,7 @@
 from selenium.webdriver.common.by import By
 from selenium.webdriver import Chrome
 from selenium.webdriver.remote.webelement import WebElement
-from selenium.common.exceptions import NoSuchElementException
-from time import sleep
+from functools import partial
 from itertools import combinations
 from typing import Iterator
 
@@ -13,6 +12,7 @@ from _tests.data import *
 
 
 class TestAll:
+    _MAX_ATTEMPTS: int = 200
     _LOADING_TEXT: str = 'загрузка...'
 
     driver: Chrome = new_chrome_driver()
@@ -40,8 +40,7 @@ class TestAll:
     @classmethod
     def _test_negative_redirect_to_login_if_is_not_authorized(cls) -> None:
         cls.driver.get(FullUrl.MAIN)
-        sleep(0.1)
-        assert cls.driver.current_url == FullUrl.LOGIN
+        cls._try_to_execute_func(lambda: cls.driver.current_url == FullUrl.LOGIN)
 
     @classmethod
     def _register_all(cls) -> None:
@@ -63,9 +62,8 @@ class TestAll:
         cls.driver.find_element(By.XPATH, '//input[@id="js-email-code"]').send_keys(str(EMAIL_CODE))
 
         cls.driver.find_element(By.XPATH, '//button[@id="js-button"]').click()
-        sleep(0.5)  # wait api authorization
 
-        user.id = cls._get_my_id()
+        user.id = cls._try_to_execute_func(cls._get_my_id)
         cls.cur_user = user
 
     @classmethod
@@ -134,9 +132,6 @@ class TestAll:
                          ) -> None:
         cls._search_interlocutor(interlocutor_id)
         cls._send_message_in_cur_chat(first_text_message)
-        sleep(0.5)  # wait for api chat creating
-
-        cls._find_cur_chat_el()
 
     @classmethod
     def _search_interlocutor(cls, interlocutor_id: int) -> None:
@@ -144,20 +139,15 @@ class TestAll:
         input_el.clear()
         input_el.send_keys(str(interlocutor_id))
         cls.driver.find_element(By.XPATH, '//button[@id="js-search-button"]').click()
-        sleep(0.5)  # wait for switch and history loading
 
-        try:
-            cls._find_cur_chat_el()
-        except NoSuchElementException:
-            pass
+        cls._try_to_execute_func(cls._find_cur_chat_el)
 
     @classmethod
     def _switch_to_chat_by_sidebar(cls, interlocutor_full_name: str) -> None:
         cls.driver.find_element(By.XPATH, f'//div[@id="js-all-chats-links"]'
                                           f'//div[@class="chat-link__chat-name"]'
                                           f'[text()="{interlocutor_full_name}"]').click()
-        sleep(0.5)  # wait for switch and history loading
-        cls._find_cur_chat_el()
+        cls._try_to_execute_func(cls._find_cur_chat_el)
 
     @classmethod
     def _find_cur_chat_el(cls) -> None:
@@ -171,7 +161,12 @@ class TestAll:
 
         input_el.send_keys(text_message)
         button_el.click()
-        sleep(0.5)  # wait for api chat message creating
+
+        cls._try_to_execute_func(partial(cls._check_message_creation, text_message=text_message))
+
+    @classmethod
+    def _check_message_creation(cls, text_message: str) -> None:
+        assert cls.cur_chat_el.find_elements(By.XPATH, './/div[@class="chat__message__text"]')[-1].text == text_message
 
     @classmethod
     def _change_users(cls, first_user: UserInfo,
@@ -195,3 +190,13 @@ class TestAll:
         text_messages_els = cls.cur_chat_el.find_elements(By.XPATH, './/div[@class="chat__message__text"]')
         for i, text_message_el in enumerate(text_messages_els):
             assert text_message_el.text == expected_history[i]
+
+    @classmethod
+    def _try_to_execute_func(cls, func):
+        count: int = cls._MAX_ATTEMPTS
+        while count:
+            try:
+                return func()
+            except:
+                count -= 1
+        raise AssertionError
