@@ -1,11 +1,10 @@
-import { setAvatar } from "../avatars.js";
 import { AbstractHTMLChatElementFacade } from "./abstractChatElement.js";
 
 export class HTMLChatLink extends AbstractHTMLChatElementFacade {
 
+    protected static _chatLinkParentEl: HTMLElement = document.getElementById("js-all-chats-links");
     protected _thisElTemplateEl = <HTMLTemplateElement>document.getElementById("js-chat-link-temp");
 
-    protected static _chatLinkParentEl: HTMLElement = document.getElementById("js-all-chats-links");
     protected _avatarEl: HTMLImageElement;
     protected _chatNameEl: HTMLElement;
     protected _onlineStatusEl: HTMLElement;
@@ -14,13 +13,13 @@ export class HTMLChatLink extends AbstractHTMLChatElementFacade {
     protected _lastMessageDateEl: HTMLElement;
     protected _unreadCountEl: HTMLElement;
 
-    protected _interlocutorId: number;
+    protected _avatarURL: string;
     protected _chatName: string;
 
-    public constructor(interlocutorId: number, chatName: string) {
+    public constructor(chatName: string, avatarURL: string) {
         super(HTMLChatLink._chatLinkParentEl);
-        this._interlocutorId = interlocutorId;
         this._chatName = chatName;
+        this._avatarURL = avatarURL;
     }
 
     protected _initThisEl(prepend: boolean): void {
@@ -32,7 +31,7 @@ export class HTMLChatLink extends AbstractHTMLChatElementFacade {
 
     public _initChildEls(): void {
         this._avatarEl = this._thisEl.querySelector(".avatar");
-        setAvatar(this._avatarEl, this._interlocutorId);
+        this._avatarEl.src = this._avatarURL;
 
         this._chatNameEl = this._thisEl.querySelector(".chat-link__chat-name");
         this._chatNameEl.textContent = this._chatName;
@@ -82,6 +81,18 @@ export class HTMLChatLink extends AbstractHTMLChatElementFacade {
 
     public updateOnlineStatus(isOnline: boolean): void {
         this._onlineStatusEl.classList.toggle("avatar--active", isOnline);
+    }
+
+    public hide(): void {
+        this._toggle(true);
+    }
+
+    public show(): void {
+        this._toggle(false);
+    }
+
+    protected _toggle(isHidden: boolean): void {
+        this._thisEl.classList.toggle("chat-link--hidden", isHidden);
     }
 
 }

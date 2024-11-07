@@ -1,8 +1,12 @@
 import { requestUserAvatar } from "../common/http/functions.js";
 
-export async function setAvatar(avatarImageEl: HTMLImageElement, userId: number): Promise<void> {
+export async function setUserAvatar(avatarImageEl: HTMLImageElement, userId: number): Promise<void> {
+    avatarImageEl.src = await makeUserAvatarURL(userId);
+}
+
+export async function makeUserAvatarURL(userId: number): Promise<string> {
    let avatarFile = await requestUserAvatar({
         userId,
     });
-    avatarImageEl.src = URL.createObjectURL(avatarFile);
+    return URL.createObjectURL(avatarFile);
 }

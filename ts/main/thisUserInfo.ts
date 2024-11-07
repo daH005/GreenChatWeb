@@ -1,6 +1,6 @@
 import { User } from "../common/apiDataInterfaces.js";
 import { notify } from "../common/notification.js";
-import { setAvatar } from "./avatars.js";
+import { setUserAvatar } from "./avatars.js";
 
 const avatarImageEl: HTMLImageElement = <HTMLImageElement>document.getElementById("js-user-avatar");
 const userNameEl: HTMLElement = document.getElementById("js-user-name");
@@ -16,7 +16,7 @@ export async function updateUserInfo(user: User): Promise<void> {
     updateUserFullName(user.firstName + " " + user.lastName);
     userIdEl.textContent = String(user.id);
 
-    await setAvatar(avatarImageEl, user.id);
+    await setUserAvatar(avatarImageEl, user.id);
 }
 
 export function updateUserFullName(fullName: string): void {
