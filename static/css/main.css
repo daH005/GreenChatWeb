@@ -391,6 +391,21 @@
     min-height: 50px;
     max-height: 100px;
     resize: none;
+    padding-right: 90px;
+}
+
+.chat__input-container button {
+    padding: 5px 15px;
+}
+
+.chat__input-container .clip {
+    right: 50px;
+    border-right: 1px solid var(--main-5-color);
+    border-radius: 0;
+}
+
+.chat__input-container input[type="file"] {
+    display: none;
 }
 
 .avatar {
