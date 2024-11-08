@@ -5,7 +5,7 @@ export function setInputAsInvalidAndNotifyWithThrow(inputEl: HTMLInputElement, m
         notify(message);
     }
     inputEl.classList.add("invalid");
-    throw Error;
+    throw Error(message);
 }
 
 export function removeInvalidClassForAllInputs(): void {
