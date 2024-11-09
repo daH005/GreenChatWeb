@@ -370,6 +370,10 @@
     color: white;
 }
 
+.chat__message__image-files:empty ~ .chat__message__move {
+    display: none;
+}
+
 .chat__input-container {
     padding: 1vw 5vw;
     padding-top: 2vw;
@@ -398,7 +402,7 @@
     padding: 5px 15px;
 }
 
-.chat__input-container .clip {
+.chat__input-container .chat__clip {
     right: 50px;
     border-right: 1px solid var(--main-5-color);
     border-radius: 0;

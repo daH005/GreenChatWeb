@@ -106,13 +106,15 @@ GreenChat
 
         <div class="chat__messages"></div>
 
+        <div class="chat__files-to-upload"></div>
+
         <div class="chat__input-container">
             <div class="chat__interlocutor-write-hint"></div>
             <div class="input-and-inner-button-container js-click-by-press-enter">
 		        <textarea class="js-click-by-press-enter-input" placeholder="Что же написать..." maxlength="10000"></textarea>
 
-                <input type="file" accept="image/*" id="js-clip-files">
-                <button class="clip" id="js-clip">
+                <input class="chat__clip-input" type="file" accept="image/*">
+                <button class="chat__clip">
                     <i class="fa fa-paperclip" aria-hidden="true"></i>
                 </button>
 
@@ -128,15 +130,53 @@ GreenChat
 <template id="js-chat-message-temp">
     <div class="chat__message">
         <div class="chat__message__name"></div>
+
+        <div class="chat__message__image-files-wrapper">
+            <div class="chat__message__image-files"></div>
+            <div class="chat__message__move chat__message__move--left">
+                <
+            </div>
+            <div class="chat__message__move chat__message__move--right">
+                >
+            </div>
+        </div>
+
         <div class="chat__message__text-wrapper">
             <div class="chat__message__text"></div>
             <div class="chat__message__time"></div>
         </div>
+
+        <div class="chat__message__files"></div>
     </div>
 </template>
 
 <template id="js-chat-date-sep-temp">
     <div class="chat__date-sep"></div>
+</template>
+
+<template id="js-chat-file-to-upload-temp">
+    <div class="chat__file-to-upload">
+        <div class="chat__file-to-upload__name" data-filename></div>
+        <img data-image>
+        <a target="_blank" data-url>Скачать</a>
+        <div class="chat__file-to-upload__delete" data-delete>Удалить</div>
+    </div>
+</template>
+
+<template id="js-chat-message-file-temp">
+    <div class="chat__message__file">
+        <div class="chat__message__file__name"></div>
+        <img>
+        <a target="_blank">Скачать</a>
+    </div>
+</template>
+
+<template id="js-chat-message-image-file-temp">
+    <div class="chat__message__image-file">
+        <div class="chat__message__image-file__name"></div>
+        <img>
+        <a target="_blank">Скачать</a>
+    </div>
 </template>
 
 {% endblock %}
