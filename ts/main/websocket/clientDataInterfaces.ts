@@ -22,6 +22,7 @@ export interface NewChat {
 export interface NewChatMessage {
     chatId: number,
     text: string,
+    hasFiles?: boolean,
 }
 
 export interface ChatMessageWasRead {
