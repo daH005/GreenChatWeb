@@ -28,6 +28,7 @@ export interface ChatMessage {
     text: string,
     creatingDatetime: string | Date,
     isRead: boolean,
+    hasFiles: boolean,
     user?: User,
 }
 
