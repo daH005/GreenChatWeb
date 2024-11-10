@@ -104,6 +104,13 @@ abstract class AbstractInputFilesMapper {
         return new Set(this._serverFilenamesToDelete);
     }
 
+    public clear(): void {
+        this._serverFilenames.clear();
+        this._serverFilenamesToDelete.clear();
+        this._fileEls.clear();
+        this._inputEl.value = "";
+    }
+
 }
 
 export class DefaultInputFilesMapper extends AbstractInputFilesMapper {
@@ -138,8 +145,12 @@ export class NoOverwriteInputFilesMapper extends AbstractInputFilesMapper {
 
     protected _storage: InputFilesStorage;
 
-    public constructor(inputEl: HTMLInputElement, filesEl: HTMLElement, fileTempEl: HTMLTemplateElement, storage: InputFilesStorage) {
+    public constructor(inputEl: HTMLInputElement, filesEl: HTMLElement, fileTempEl: HTMLTemplateElement, storage: InputFilesStorage | null=null) {
         super(inputEl, filesEl, fileTempEl);
+
+        if (!storage) {
+            storage = new InputFilesStorage(inputEl);
+        }
         this._storage = storage;
         noOverwriteFilesInInput(inputEl, storage);
     }
@@ -154,6 +165,11 @@ export class NoOverwriteInputFilesMapper extends AbstractInputFilesMapper {
     protected _deleteFile(filename: string): void {
         this._storage.deleteFile(filename);
         this._storage.updateInput();
+    }
+
+    public clear(): void {
+        super.clear();
+        this._storage.clear();
     }
 
 }
