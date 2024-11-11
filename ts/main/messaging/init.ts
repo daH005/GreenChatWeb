@@ -54,7 +54,7 @@ async function addPrivateChat(apiData: Chat): Promise<HTMLPrivateChat> {
         await chat.init();
     } else {
         chat.setId(apiData.id);
-        chat.setAsCreatedOnServer();
+        await chat.setAsCreatedOnServer();
     }
     chat.showLink();
 

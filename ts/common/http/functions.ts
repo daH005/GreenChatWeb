@@ -4,6 +4,8 @@ import { SimpleResponseStatus,
          User,
          ChatHistory,
          UserChats,
+         ChatMessageStorageId,
+         ChatMessageFilenames,
        } from "../apiDataInterfaces.js";
 import { notify } from "../notification.js";
 import { HTTP_API_URLS } from "./apiUrls.js";
@@ -125,13 +127,13 @@ export async function requestChatHistory(requestData: ChatHistoryRequestData): P
     return await response.json();
 }
 
-export async function requestToSaveChatMessageFiles(chatMessageId: number, files: FileList): Promise<SimpleResponseStatus> {
+export async function requestToSaveChatMessageFiles(files: FileList): Promise<ChatMessageStorageId> {
     let formData = new FormData();
-    Array.from(files).forEach((file: File) => {
-        formData.append("files[]", file);
-    });
+    for (let i = 0; i < files.length; i++) {
+        formData.append('files', files[i]);
+    }
 
-    let response: Response = await commonFetch(makeUrlWithParams(HTTP_API_URLS.CHAT_MESSAGES_FILES_SAVE, {chatMessageId}), {
+    let response: Response = await commonFetch(HTTP_API_URLS.CHAT_MESSAGES_FILES_SAVE, {
         method: "POST",
         body: formData,
     });

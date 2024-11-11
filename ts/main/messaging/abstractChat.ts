@@ -4,7 +4,7 @@ import { choose } from "../../common/random.js";
 import { thisUser } from "../../common/thisUser.js";
 import { userInWindow } from "../../common/userInWindowChecking.js";
 import { newMessageSound } from "../../common/audio.js";
-import { requestChatHistory } from "../../common/http/functions.js";
+import { requestChatHistory, requestToSaveChatMessageFiles } from "../../common/http/functions.js";
 import { addUserToApiData } from "../../common/apiDataAdding.js";
 import { sendWebSocketMessage } from "../websocket/init.js";
 import { WebSocketMessageType } from "../websocket/messageTypes.js";
@@ -113,11 +113,11 @@ export abstract class AbstractHTMLChat extends AbstractHTMLChatElementFacade {
         });
         this._textareaEl.setAttribute("placeholder", choose(this._PHRASES));
 
-        this._buttonEl.onclick = () => {
+        this._buttonEl.onclick = async () => {
             if (!this._messageTextIsMeaningful(this._textareaEl.value)) {
                 return;
             }
-            this._sendMessage();
+            await this._sendMessage();
         }
 
         this._typingEl = this._thisEl.querySelector(".chat__interlocutor-write-hint");
@@ -153,14 +153,22 @@ export abstract class AbstractHTMLChat extends AbstractHTMLChatElementFacade {
         });
     }
 
-    protected _sendMessage(): void {
+    protected async _sendMessage(): Promise<void> {
+
+        let storageId: number | null = null;
         let hasFiles: boolean = Boolean(this._clipInputEl.files.length);
+        if (hasFiles) {
+            let save = await requestToSaveChatMessageFiles(this._clipInputEl.files);
+            storageId = save.storageId;
+            this._filesMapper.clear();
+        }
+
         sendMessageToWebSocketAndClearInput({
             type: WebSocketMessageType.NEW_CHAT_MESSAGE,
             data: {
                 chatId: this._id,
                 text: this._textareaEl.value,
-                hasFiles: hasFiles,
+                storageId: storageId,
             }
         }, this._textareaEl);
     }

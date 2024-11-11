@@ -62,7 +62,7 @@ export class HTMLPrivateChat extends AbstractHTMLChat {
         }
     }
 
-    protected _sendMessage(): void {
+    protected async _sendMessage(): Promise<void> {
         if (this._isNotCreatedOnServer) {
             sendWebSocketMessage({
                 type: WebSocketMessageType.NEW_CHAT,
@@ -71,13 +71,13 @@ export class HTMLPrivateChat extends AbstractHTMLChat {
                 }
             });
         } else {
-            super._sendMessage();
+            await super._sendMessage();
         }
     }
 
-    public setAsCreatedOnServer(): void {
+    public async setAsCreatedOnServer(): Promise<void> {
         this._isNotCreatedOnServer = false;
-        this._sendMessage();
+        await this._sendMessage();
     }
 
     public setId(chatId: number): void {

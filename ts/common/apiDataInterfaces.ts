@@ -28,8 +28,16 @@ export interface ChatMessage {
     text: string,
     creatingDatetime: string | Date,
     isRead: boolean,
-    hasFiles: boolean,
+    storageId?: number,
     user?: User,
+}
+
+export interface ChatMessageStorageId {
+    storageId: number,
+}
+
+export interface ChatMessageFilenames {
+    filenames: string[],
 }
 
 export interface ChatMessageTyping {
@@ -46,7 +54,7 @@ export interface Chat {
     id: number,
     name: string,
     isGroup: boolean,
-    lastMessage: ChatMessage,
+    lastMessage?: ChatMessage,
     usersIds: number[],
     unreadCount: number,
     users?: User[],

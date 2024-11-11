@@ -10,7 +10,7 @@ export async function commonFetch(url, options): Promise<Response> {
         }
     }
 
-    if (typeof options.body == "object") {
+    if (_getExactTypeString(options.body) == "Object") {
         options.headers = {
             "Content-Type": "application/json",
             ...options.headers,
@@ -39,6 +39,10 @@ export async function commonFetch(url, options): Promise<Response> {
     }
 
     return await commonFetch(url, options);
+}
+
+function _getExactTypeString(ob): string {
+    return Object.prototype.toString.call(ob).slice(8, -1);
 }
 
 export function makeUrlWithParams(url: string, params): string {
