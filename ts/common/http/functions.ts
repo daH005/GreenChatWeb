@@ -5,87 +5,122 @@ import { SimpleResponseStatus,
          ChatHistory,
          UserChats,
        } from "../apiDataInterfaces.js";
+import { notify } from "../notification.js";
 import { HTTP_API_URLS } from "./apiUrls.js";
-import { ResponseDataType, makeRequestFunc, makeRequestFuncWithoutRequestData } from "./base.js";
 import { EmailRequestData,
          EmailAndCodeRequestData,
          UserIdRequestData,
          UserInfoEditRequestData,
          ChatHistoryRequestData,
        } from "./requestDataInterfaces.js";
+import { makeUrlWithParams, commonFetch } from "./base.js";
 
-export const requestToCheckEmail = makeRequestFunc<EmailRequestData, AlreadyTakenFlag>({
-    URL: HTTP_API_URLS.EMAIL_CHECK,
-    METHOD: "GET",
-});
+export async function requestToCheckEmail(requestData: EmailRequestData): Promise<AlreadyTakenFlag> {
+    let response: Response = await commonFetch(makeUrlWithParams(HTTP_API_URLS.EMAIL_CHECK, requestData), {
+        method: "GET",
+    });
+    return await response.json();
+}
 
-export const requestToSendEmailCode = makeRequestFunc<EmailRequestData, SimpleResponseStatus>({
-    URL: HTTP_API_URLS.EMAIL_CODE_SEND,
-    METHOD: "POST",
-    STATUSES_NOTIFICATIONS: {
-        200: "Код успешно отправлен!",
-        409: "Вы не можете отправлять более одного кода в минуту!",
-    },
-});
+export async function requestToSendEmailCode(requestData: EmailRequestData): Promise<SimpleResponseStatus> {
+    let response: Response = await commonFetch(HTTP_API_URLS.EMAIL_CODE_SEND, {
+        method: "POST",
+        body: requestData,
+    });
 
-export const requestToCheckEmailCode = makeRequestFunc<EmailAndCodeRequestData, CodeIsValidFlag>({
-    URL: HTTP_API_URLS.EMAIL_CODE_CHECK,
-    METHOD: "GET",
-});
+    if (response.status == 200) {
+        notify("Код успешно отправлен!")
+    } else if (response.status == 409) {
+        notify("Вы не можете отправлять более одного кода в минуту!");
+    }
 
-export const requestToLogin = makeRequestFunc<EmailAndCodeRequestData, SimpleResponseStatus>({
-    URL: HTTP_API_URLS.LOGIN,
-    METHOD: "POST",
-    STATUSES_NOTIFICATIONS: {
-        403: "Неверный логин или пароль!",
-    },
-});
+    return await response.json();
+}
 
-export const requestUserInfo = makeRequestFunc<UserIdRequestData | null, User>({
-    URL: HTTP_API_URLS.USER_INFO,
-    METHOD: "GET",
-    STATUSES_NOTIFICATIONS: {
-        404: "Пользователь с таким ID не найден!",
-    },
-});
+export async function requestToCheckEmailCode(requestData: EmailAndCodeRequestData): Promise<CodeIsValidFlag> {
+    let response: Response = await commonFetch(makeUrlWithParams(HTTP_API_URLS.EMAIL_CODE_CHECK, requestData), {
+        method: "GET",
+    });
+    return await response.json();
+}
 
-export const requestUserAvatar = makeRequestFunc<UserIdRequestData, Blob>({
-    URL: HTTP_API_URLS.USER_AVATAR,
-    METHOD: "GET",
-    REQUEST_DATA_IS_JSON: false,
-    RESPONSE_DATA_TYPE: ResponseDataType.BLOB,
-});
+export async function requestToLogin(requestData: EmailAndCodeRequestData): Promise<SimpleResponseStatus> {
+    let response: Response = await commonFetch(HTTP_API_URLS.LOGIN, {
+        method: "POST",
+        body: requestData,
+    });
 
-export const requestUserBackground = makeRequestFuncWithoutRequestData<Blob>({
-    URL: HTTP_API_URLS.USER_BACKGROUND,
-    METHOD: "GET",
-    REQUEST_DATA_IS_JSON: false,
-    RESPONSE_DATA_TYPE: ResponseDataType.BLOB,
-});
+    if (response.status == 403) {
+        notify("Неверный логин или пароль!")
+    }
 
-export const requestToEditUserInfo = makeRequestFunc<UserInfoEditRequestData, SimpleResponseStatus>({
-    URL: HTTP_API_URLS.USER_INFO_EDIT,
-    METHOD: "PUT",
-});
+    return await response.json();
+}
 
-export const requestToEditUserAvatar = makeRequestFunc<Blob, SimpleResponseStatus>({
-    URL: HTTP_API_URLS.USER_AVATAR_EDIT,
-    METHOD: "PUT",
-    REQUEST_DATA_IS_JSON: false,
-});
+export async function requestUserInfo(requestData: UserIdRequestData | null): Promise<User> {
+    if (!requestData) {
+        requestData = <UserIdRequestData>{};
+    }
 
-export const requestToEditUserBackground = makeRequestFunc<Blob, SimpleResponseStatus>({
-    URL: HTTP_API_URLS.USER_BACKGROUND_EDIT,
-    METHOD: "PUT",
-    REQUEST_DATA_IS_JSON: false,
-});
+    let response: Response = await commonFetch(makeUrlWithParams(HTTP_API_URLS.USER_INFO, requestData), {
+        method: "GET",
+    });
 
-export const requestUserChats = makeRequestFuncWithoutRequestData<UserChats>({
-    URL: HTTP_API_URLS.USER_CHATS,
-    METHOD: "GET",
-});
+    if (response.status == 404) {
+        notify("Пользователь с таким ID не найден!")
+    }
 
-export const requestChatHistory = makeRequestFunc<ChatHistoryRequestData, ChatHistory>({
-    URL: HTTP_API_URLS.CHAT_HISTORY,
-    METHOD: "GET",
-});
+    return await response.json();
+}
+
+export async function requestUserAvatar(requestData: UserIdRequestData): Promise<Blob> {
+    let response: Response = await commonFetch(makeUrlWithParams(HTTP_API_URLS.USER_AVATAR, requestData), {
+        method: "GET",
+    });
+    return await response.blob();
+}
+
+export async function requestUserBackground(): Promise<Blob> {
+    let response: Response = await commonFetch(HTTP_API_URLS.USER_BACKGROUND, {
+        method: "GET",
+    });
+    return await response.blob();
+}
+
+export async function requestToEditUserInfo(requestData: UserInfoEditRequestData): Promise<SimpleResponseStatus> {
+    let response: Response = await commonFetch(HTTP_API_URLS.USER_INFO_EDIT, {
+        method: "PUT",
+        body: requestData,
+    });
+    return await response.json();
+}
+
+export async function requestToEditUserAvatar(image: Blob): Promise<SimpleResponseStatus> {
+    let response: Response = await commonFetch(HTTP_API_URLS.USER_AVATAR_EDIT, {
+        method: "PUT",
+        body: image,
+    });
+    return await response.json();
+}
+
+export async function requestToEditUserBackground(image: Blob): Promise<SimpleResponseStatus> {
+    let response: Response = await commonFetch(HTTP_API_URLS.USER_BACKGROUND_EDIT, {
+        method: "PUT",
+        body: image,
+    });
+    return await response.json();
+}
+
+export async function requestUserChats(): Promise<UserChats> {
+    let response: Response = await commonFetch(HTTP_API_URLS.USER_CHATS, {
+        method: "GET",
+    });
+    return await response.json();
+}
+
+export async function requestChatHistory(requestData: ChatHistoryRequestData): Promise<ChatHistory> {
+    let response: Response = await commonFetch(makeUrlWithParams(HTTP_API_URLS.CHAT_HISTORY, requestData), {
+        method: "GET",
+    });
+    return await response.json();
+}
