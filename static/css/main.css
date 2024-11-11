@@ -412,6 +412,18 @@
     display: none;
 }
 
+.chat__file-to-upload img {
+    max-width: 100px;
+}
+
+.chat__message__image-file img {
+    max-width: 100px;
+}
+
+.chat__message__file img {
+    max-width: 100px;
+}
+
 .avatar {
     width: 50px;
     height: 50px;

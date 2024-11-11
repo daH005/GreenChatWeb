@@ -41,7 +41,7 @@ export class HTMLChatMessage extends AbstractHTMLTemplatedElement {
 
     public async init(prepend: boolean=false): Promise<void> {
         if (this._storageId) {
-            this._filenames = await requestChatMessageFilenames(this._storageId);
+            this._filenames = await requestChatMessageFilenames(this._storageId) ?? [];
         } else {
             this._filenames = [];
         }
@@ -63,7 +63,7 @@ export class HTMLChatMessage extends AbstractHTMLTemplatedElement {
         this._imageFilesEl = this._thisEl.querySelector(".chat__message__image-files");
 
         this._filenames.forEach(filename => {
-            let extension: string = filename.slice(filename.lastIndexOf('.') + 1).toLowerCase();
+            let extension: string = filename.slice(filename.lastIndexOf('.')).toLowerCase();
             let url: string = this._makeUrl(filename);
 
             let file: HTMLChatMessageFile | HTMLChatMessageImageFile;

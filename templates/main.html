@@ -157,8 +157,7 @@ GreenChat
 <template id="js-chat-file-to-upload-temp">
     <div class="chat__file-to-upload">
         <div class="chat__file-to-upload__name" data-filename></div>
-        <img data-image>
-        <a target="_blank" data-url>Скачать</a>
+        <img data-image onerror="this.style = 'display: none';">
         <div class="chat__file-to-upload__delete" data-delete>Удалить</div>
     </div>
 </template>
@@ -166,7 +165,7 @@ GreenChat
 <template id="js-chat-message-file-temp">
     <div class="chat__message__file">
         <div class="chat__message__file__name"></div>
-        <a target="_blank">Скачать</a>
+        <a download>Скачать</a>
     </div>
 </template>
 
@@ -174,7 +173,7 @@ GreenChat
     <div class="chat__message__image-file">
         <div class="chat__message__image-file__name"></div>
         <img>
-        <a target="_blank">Скачать</a>
+        <a download>Скачать</a>
     </div>
 </template>
 
