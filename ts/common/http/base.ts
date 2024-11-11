@@ -18,7 +18,6 @@ export async function commonFetch(url, options): Promise<Response> {
         options.body = JSON.stringify(options.body);
     }
 
-    console.log(options);
     let response: Response = await fetch(url, {
         credentials: "include",
         ...options,
