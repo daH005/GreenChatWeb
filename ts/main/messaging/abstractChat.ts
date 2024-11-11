@@ -201,7 +201,7 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
         AbstractHTMLChat._curOpenedChat = null;
     }
 
-    public addMessage(apiData: ChatMessage, prepend: boolean=false): void {
+    public async addMessage(apiData: ChatMessage, prepend: boolean=false): Promise<void> {
         apiData.creatingDatetime = new Date(apiData.creatingDatetime);
         normalizeDateTimezone(apiData.creatingDatetime);
 
@@ -229,8 +229,8 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
         } else {
             messageType = HTMLChatMessageFromThisUser;
         }
-        let message: HTMLChatMessage = new messageType(this._messagesEl, apiData.id, apiData.text, apiData.isRead, apiData.creatingDatetime, apiData.user);
-        message.init(prepend);
+        let message: HTMLChatMessage = new messageType(this._messagesEl, apiData.id, apiData.text, apiData.isRead, apiData.creatingDatetime, apiData.user, apiData.storageId);
+        await message.init(prepend);
         this._messages[apiData.id] = message;
 
         if (scrolledToBottomBackupBeforeMessageAdding && !prepend) {
@@ -297,7 +297,7 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
     protected async _fillChatHistory(messages: ChatMessage[]): Promise<void> {
         for (let i in messages) {
             await addUserToApiData(messages[i]);
-            this.addMessage(messages[i], true);
+            await this.addMessage(messages[i], true);
         }
     }
 

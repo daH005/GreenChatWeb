@@ -1,28 +1,51 @@
 import { User } from "../../common/apiDataInterfaces.js";
+import { HTTP_API_URLS } from "../../common/http/apiUrls.js";
+import { makeUrlWithParams } from "../../common/http/base.js";
+import { requestChatMessageFilenames } from "../../common/http/functions.js";
 import { dateToTimeStr }  from "../datetime.js";
 import { makeHyperlinks, makeHighlights } from "../messageTextHighlighting.js";
 import { AbstractHTMLTemplatedElement } from "./abstractChatElement.js";
+import { HTMLChatMessageFile } from "./chatMessageFile.js";
+import { HTMLChatMessageImageFile } from "./chatMessageImageFile.js";
 
 export class HTMLChatMessage extends AbstractHTMLTemplatedElement {
+
+    protected static _IMAGE_FILE_EXTENSIONS = [
+        ".png", ".jpg", ".jpeg", ".webp",
+    ];
 
     protected _thisElTemplateEl = <HTMLTemplateElement>document.getElementById("js-chat-message-temp");
     protected _userNameEl: HTMLElement;
     protected _textEl: HTMLElement;
     protected _timeEl: HTMLElement;
+    protected _filesEl: HTMLElement;
+    protected _imageFilesEl: HTMLElement;
 
     protected _id: number;
     protected _text: string;
     protected _isRead: boolean;
     protected _creatingDatetime: Date;
     protected _user: User;
+    protected _storageId: number | null;
+    protected _filenames: string[];
 
-    public constructor(parentEl: HTMLElement, id: number, text: string, isRead: boolean, creatingDatetime: Date, user: User) {
+    public constructor(parentEl: HTMLElement, id: number, text: string, isRead: boolean, creatingDatetime: Date, user: User, storageId: number | null=null) {
         super(parentEl);
         this._id = id;
         this._text = text;
         this._isRead = isRead;
         this._creatingDatetime = creatingDatetime;
         this._user = user;
+        this._storageId = storageId;
+    }
+
+    public async init(prepend: boolean=false): Promise<void> {
+        if (this._storageId) {
+            this._filenames = await requestChatMessageFilenames(this._storageId);
+        } else {
+            this._filenames = [];
+        }
+        super.init(prepend);
     }
 
     protected _initChildEls(): void {
@@ -35,6 +58,23 @@ export class HTMLChatMessage extends AbstractHTMLTemplatedElement {
 
         this._timeEl = this._thisEl.querySelector(".chat__message__time");
         this._timeEl.textContent = this._timeStr();
+
+        this._filesEl = this._thisEl.querySelector(".chat__message__files");
+        this._imageFilesEl = this._thisEl.querySelector(".chat__message__image-files");
+
+        this._filenames.forEach(filename => {
+            let extension: string = filename.slice(filename.lastIndexOf('.') + 1).toLowerCase();
+            let url: string = this._makeUrl(filename);
+
+            let file: HTMLChatMessageFile | HTMLChatMessageImageFile;
+            if (HTMLChatMessage._IMAGE_FILE_EXTENSIONS.includes(extension)) {
+                file = new HTMLChatMessageImageFile(this._imageFilesEl, filename, url);
+            } else {
+                file = new HTMLChatMessageFile(this._filesEl, filename, url);
+            }
+            file.init();
+
+        });
     }
 
     protected _formattedMessageTextHtml(html: string): string {
@@ -45,6 +85,10 @@ export class HTMLChatMessage extends AbstractHTMLTemplatedElement {
 
     protected _timeStr(): string {
         return dateToTimeStr(this._creatingDatetime);
+    }
+
+    protected _makeUrl(filename: string): string {
+        return makeUrlWithParams(HTTP_API_URLS.CHAT_MESSAGES_FILES_GET, {storageId: this._storageId, filename});
     }
 
     public get id(): number {

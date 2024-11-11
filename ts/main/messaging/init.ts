@@ -80,7 +80,7 @@ export async function initMessaging(): Promise<void> {
 
             if (data.chats[i].lastMessage) {
                 await addUserToApiData(data.chats[i].lastMessage);
-                chat.addMessage(data.chats[i].lastMessage);
+                await chat.addMessage(data.chats[i].lastMessage);
             }
         }
     }

@@ -139,3 +139,11 @@ export async function requestToSaveChatMessageFiles(files: FileList): Promise<Ch
     });
     return await response.json();
 }
+
+export async function requestChatMessageFilenames(storageId: number): Promise<string[]> {
+    let response: Response = await commonFetch(makeUrlWithParams(HTTP_API_URLS.CHAT_MESSAGES_FILES_NAMES, {storageId}), {
+        method: "GET",
+    });
+    let data = await response.json();
+    return data.filenames;
+}
