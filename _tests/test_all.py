@@ -157,7 +157,7 @@ class TestAll:
     def _send_message_in_cur_chat(cls, text_message: str) -> None:
         chat_input_container_el = cls.cur_chat_el.find_element(By.XPATH, 'div[@class="chat__input-container"]')
         input_el = chat_input_container_el.find_element(By.XPATH, './/textarea')
-        button_el = chat_input_container_el.find_element(By.XPATH, './/button')
+        button_el = chat_input_container_el.find_element(By.XPATH, './/button[@class="chat__send js-click-by-press-enter-button"]')
 
         input_el.send_keys(text_message)
         button_el.click()
