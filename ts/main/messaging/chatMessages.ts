@@ -1,9 +1,9 @@
 import { User } from "../../common/apiDataInterfaces.js";
 import { dateToTimeStr }  from "../datetime.js";
 import { makeHyperlinks, makeHighlights } from "../messageTextHighlighting.js";
-import { AbstractHTMLChatElementFacade } from "./abstractChatElement.js";
+import { AbstractHTMLTemplatedElement } from "./abstractChatElement.js";
 
-export class HTMLChatMessage extends AbstractHTMLChatElementFacade {
+export class HTMLChatMessage extends AbstractHTMLTemplatedElement {
 
     protected _thisElTemplateEl = <HTMLTemplateElement>document.getElementById("js-chat-message-temp");
     protected _userNameEl: HTMLElement;

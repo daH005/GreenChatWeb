@@ -1,4 +1,4 @@
-export abstract class AbstractHTMLChatElementFacade {
+export abstract class AbstractHTMLTemplatedElement {
 
     protected _parentEl: HTMLElement;
     protected _thisElTemplateEl: HTMLTemplateElement;

@@ -1,6 +1,6 @@
-import { AbstractHTMLChatElementFacade } from "./abstractChatElement.js";
+import { AbstractHTMLTemplatedElement } from "./abstractChatElement.js";
 
-export class HTMLDateSep extends AbstractHTMLChatElementFacade {
+export class HTMLDateSep extends AbstractHTMLTemplatedElement {
 
     protected _dateStr: string;
     protected _thisElTemplateEl = <HTMLTemplateElement>document.getElementById("js-chat-date-sep-temp");

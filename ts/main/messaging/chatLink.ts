@@ -1,6 +1,6 @@
-import { AbstractHTMLChatElementFacade } from "./abstractChatElement.js";
+import { AbstractHTMLTemplatedElement } from "./abstractChatElement.js";
 
-export class HTMLChatLink extends AbstractHTMLChatElementFacade {
+export class HTMLChatLink extends AbstractHTMLTemplatedElement {
 
     protected static _chatLinkParentEl: HTMLElement = document.getElementById("js-all-chats-links");
     protected _thisElTemplateEl = <HTMLTemplateElement>document.getElementById("js-chat-link-temp");

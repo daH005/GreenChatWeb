@@ -13,12 +13,12 @@ import { HTMLChatLink } from "./chatLink.js";
 import { HTMLDateSep } from "./dateSep.js";
 import { HTMLChatMessage, HTMLChatMessageFromThisUser } from "./chatMessages.js";
 import { sendMessageToWebSocketAndClearInput } from "./websocketFunctions.js";
-import { AbstractHTMLChatElementFacade } from "./abstractChatElement.js";
+import { AbstractHTMLTemplatedElement } from "./abstractChatElement.js";
 import { NoOverwriteInputFilesMapper } from "./files/htmlMapping.js";
 
 const fileToUploadElTemp: HTMLTemplateElement = <HTMLTemplateElement>document.getElementById("js-chat-file-to-upload-temp");
 
-export abstract class AbstractHTMLChat extends AbstractHTMLChatElementFacade {
+export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
 
     protected static _chatParentEl: HTMLElement = document.getElementById("js-loaded-chats");
     protected _thisElTemplateEl: HTMLTemplateElement = <HTMLTemplateElement>document.getElementById("js-chat-temp");
