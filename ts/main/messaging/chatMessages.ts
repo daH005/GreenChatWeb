@@ -15,16 +15,14 @@ export class HTMLChatMessage extends AbstractHTMLChatElementFacade {
     protected _isRead: boolean;
     protected _creatingDatetime: Date;
     protected _user: User;
-    protected _fromThisUser: boolean;
 
-    public constructor(parentEl: HTMLElement, id: number, text: string, isRead: boolean, creatingDatetime: Date, user: User, fromThisUser: boolean) {
+    public constructor(parentEl: HTMLElement, id: number, text: string, isRead: boolean, creatingDatetime: Date, user: User) {
         super(parentEl);
         this._id = id;
         this._text = text;
         this._isRead = isRead;
         this._creatingDatetime = creatingDatetime;
         this._user = user;
-        this._fromThisUser = fromThisUser;
     }
 
     protected _initChildEls(): void {
@@ -54,7 +52,7 @@ export class HTMLChatMessage extends AbstractHTMLChatElementFacade {
     }
 
     public get fromThisUser(): boolean {
-        return this._fromThisUser;
+        return false;
     }
 
     public get isRead(): boolean {
@@ -81,6 +79,10 @@ export class HTMLChatMessageFromThisUser extends HTMLChatMessage {
         if (!this._isRead) {
             this._thisEl.classList.add("chat__message--unread");
         }
+    }
+
+    public get fromThisUser(): boolean {
+        return true;
     }
 
 }

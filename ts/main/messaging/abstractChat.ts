@@ -229,7 +229,7 @@ export abstract class AbstractHTMLChat extends AbstractHTMLChatElementFacade {
         } else {
             messageType = HTMLChatMessageFromThisUser;
         }
-        let message: HTMLChatMessage = new messageType(this._messagesEl, apiData.id, apiData.text, apiData.isRead, apiData.creatingDatetime, apiData.user, fromThisUser);
+        let message: HTMLChatMessage = new messageType(this._messagesEl, apiData.id, apiData.text, apiData.isRead, apiData.creatingDatetime, apiData.user);
         message.init(prepend);
         this._messages[apiData.id] = message;
 
