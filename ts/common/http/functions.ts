@@ -124,3 +124,16 @@ export async function requestChatHistory(requestData: ChatHistoryRequestData): P
     });
     return await response.json();
 }
+
+export async function requestToSaveChatMessageFiles(chatMessageId: number, files: FileList): Promise<SimpleResponseStatus> {
+    let formData = new FormData();
+    Array.from(files).forEach((file: File) => {
+        formData.append("files[]", file);
+    });
+
+    let response: Response = await commonFetch(makeUrlWithParams(HTTP_API_URLS.CHAT_MESSAGES_FILES_SAVE, {chatMessageId}), {
+        method: "POST",
+        body: formData,
+    });
+    return await response.json();
+}

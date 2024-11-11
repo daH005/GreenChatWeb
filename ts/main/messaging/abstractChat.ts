@@ -14,6 +14,9 @@ import { HTMLDateSep } from "./dateSep.js";
 import { HTMLChatMessage, HTMLChatMessageFromThisUser } from "./chatMessages.js";
 import { sendMessageToWebSocketAndClearInput } from "./websocketFunctions.js";
 import { AbstractHTMLChatElementFacade } from "./abstractChatElement.js";
+import { NoOverwriteInputFilesMapper } from "./files/htmlMapping.js";
+
+const fileToUploadElTemp: HTMLTemplateElement = <HTMLTemplateElement>document.getElementById("js-chat-file-to-upload-temp");
 
 export abstract class AbstractHTMLChat extends AbstractHTMLChatElementFacade {
 
@@ -41,7 +44,11 @@ export abstract class AbstractHTMLChat extends AbstractHTMLChatElementFacade {
     protected _buttonEl: HTMLButtonElement;
     protected _messagesEl: HTMLElement;
     protected _typingEl: HTMLElement;
-    
+    protected _clipButtonEl: HTMLButtonElement;
+    protected _clipInputEl: HTMLInputElement;
+    protected _filesToUploadEl: HTMLElement;
+
+    protected _filesMapper: NoOverwriteInputFilesMapper;
     protected _curMessageIsFirst: boolean = true;
     protected _isOpened: boolean = false;
     protected _avatarURL: string;
@@ -92,7 +99,7 @@ export abstract class AbstractHTMLChat extends AbstractHTMLChatElementFacade {
         this._nameEl = this._thisEl.querySelector(".chat__name");
 
         this._textareaEl = this._thisEl.querySelector("textarea");
-        this._buttonEl = this._thisEl.querySelector("button");
+        this._buttonEl = this._thisEl.querySelector(".chat__send");
 
         this._nameEl.textContent = this._name;
 
@@ -114,6 +121,16 @@ export abstract class AbstractHTMLChat extends AbstractHTMLChatElementFacade {
         }
 
         this._typingEl = this._thisEl.querySelector(".chat__interlocutor-write-hint");
+
+        this._clipInputEl = this._thisEl.querySelector(".chat__clip-input");
+
+        this._clipButtonEl = this._thisEl.querySelector(".chat__clip");
+        this._clipButtonEl.onclick = () => {
+            this._clipInputEl.click();
+        }
+
+        this._filesToUploadEl = this._thisEl.querySelector(".chat__files-to-upload");
+        this._filesMapper = new NoOverwriteInputFilesMapper(this._clipInputEl, this._filesToUploadEl, fileToUploadElTemp);
 
         this._link = new HTMLChatLink(this._name, this._avatarURL);
         this._link.openChat = () => {
@@ -137,11 +154,13 @@ export abstract class AbstractHTMLChat extends AbstractHTMLChatElementFacade {
     }
 
     protected _sendMessage(): void {
+        let hasFiles: boolean = Boolean(this._clipInputEl.files.length);
         sendMessageToWebSocketAndClearInput({
             type: WebSocketMessageType.NEW_CHAT_MESSAGE,
             data: {
                 chatId: this._id,
                 text: this._textareaEl.value,
+                hasFiles: hasFiles,
             }
         }, this._textareaEl);
     }
