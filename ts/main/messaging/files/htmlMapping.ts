@@ -66,9 +66,12 @@ abstract class AbstractInputFilesMapper {
             urlEl.setAttribute("href", url);
         }
 
-        let imageEl = el.querySelector(makeHtmlAttrNameSelector(FileElAttrName.FILE_IMAGE));
+        let imageEl: HTMLImageElement = <HTMLImageElement>el.querySelector(makeHtmlAttrNameSelector(FileElAttrName.FILE_IMAGE));
         if (imageEl) {
             imageEl.setAttribute("src", url);
+            imageEl.onerror = () => {
+                imageEl.removeAttribute("src");
+            }
         }
 
         let deleteEl = el.querySelector(makeHtmlAttrNameSelector(FileElAttrName.FILE_DELETE));
