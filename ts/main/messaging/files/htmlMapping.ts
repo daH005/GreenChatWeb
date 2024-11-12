@@ -108,6 +108,7 @@ abstract class AbstractInputFilesMapper {
         this._serverFilenames.clear();
         this._serverFilenamesToDelete.clear();
         this._fileEls.clear();
+        this._filesEl.innerHTML = "";
         this._inputEl.value = "";
     }
 
