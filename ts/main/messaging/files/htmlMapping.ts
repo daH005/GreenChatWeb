@@ -71,6 +71,7 @@ abstract class AbstractInputFilesMapper {
             imageEl.setAttribute("src", url);
             imageEl.onerror = () => {
                 imageEl.removeAttribute("src");
+                imageEl.style.display = "none";
             }
         }
 
