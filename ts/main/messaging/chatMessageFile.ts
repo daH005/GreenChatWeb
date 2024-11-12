@@ -16,7 +16,7 @@ export class HTMLChatMessageFile extends AbstractHTMLTemplatedElement {
     }
 
     public _initChildEls(): void {
-        this._filenameEl = this._thisEl.querySelector(".chat__message__file__name");
+        this._filenameEl = this._thisEl.querySelector(".chat__file__name");
         this._filenameEl.textContent = this._filename;
 
         this._downloadEl = this._thisEl.querySelector("a");
