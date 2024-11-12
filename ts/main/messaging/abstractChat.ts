@@ -14,6 +14,7 @@ import { HTMLDateSep } from "./dateSep.js";
 import { HTMLChatMessage, HTMLChatMessageFromThisUser } from "./chatMessages.js";
 import { sendMessageToWebSocketAndClearInput } from "./websocketFunctions.js";
 import { AbstractHTMLTemplatedElement } from "./abstractChatElement.js";
+import { addDragUploadingForInput } from "./files/drag.js";
 import { NoOverwriteInputFilesMapper } from "./files/htmlMapping.js";
 
 const fileToUploadElTemp: HTMLTemplateElement = <HTMLTemplateElement>document.getElementById("js-chat-file-to-upload-temp");
@@ -123,6 +124,7 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
         this._typingEl = this._thisEl.querySelector(".chat__interlocutor-write-hint");
 
         this._clipInputEl = this._thisEl.querySelector(".chat__clip-input");
+        addDragUploadingForInput(this._clipInputEl, this._thisEl);
 
         this._clipButtonEl = this._thisEl.querySelector(".chat__clip");
         this._clipButtonEl.onclick = () => {
