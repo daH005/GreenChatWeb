@@ -106,9 +106,9 @@ GreenChat
 
         <div class="chat__messages"></div>
 
-        <div class="chat__files-to-upload"></div>
-
         <div class="chat__input-container">
+            <div class="chat__files-to-upload"></div>
+
             <div class="chat__interlocutor-write-hint"></div>
             <div class="input-and-inner-button-container js-click-by-press-enter">
 		        <textarea class="js-click-by-press-enter-input" placeholder="Что же написать..." maxlength="10000"></textarea>
@@ -131,15 +131,7 @@ GreenChat
     <div class="chat__message">
         <div class="chat__message__name"></div>
 
-        <div class="chat__message__image-files-wrapper">
-            <div class="chat__message__image-files"></div>
-            <div class="chat__message__move chat__message__move--left">
-                <
-            </div>
-            <div class="chat__message__move chat__message__move--right">
-                >
-            </div>
-        </div>
+        <div class="chat__message__image-files"></div>
 
         <div class="chat__message__text-wrapper">
             <div class="chat__message__text"></div>
@@ -155,24 +147,24 @@ GreenChat
 </template>
 
 <template id="js-chat-file-to-upload-temp">
-    <div class="chat__file-to-upload">
-        <div class="chat__file-to-upload__name" data-filename></div>
+    <div class="chat__file">
         <img data-image>
-        <div class="chat__file-to-upload__icon">
+        <div class="chat__file__icon">
             <i class="fa fa-file" aria-hidden="true"></i>
         </div>
-        <div class="chat__file-to-upload__delete" data-delete>
+        <div class="chat__file__name" data-filename></div>
+        <div class="chat__file__delete" data-delete>
             <i class="fa fa-times" aria-hidden="true"></i>
         </div>
     </div>
 </template>
 
 <template id="js-chat-message-file-temp">
-    <div class="chat__message__file">
-        <div class="chat__message__file__icon">
+    <div class="chat__file">
+        <div class="chat__file__icon">
             <i class="fa fa-file" aria-hidden="true"></i>
         </div>
-        <div class="chat__message__file__name"></div>
+        <div class="chat__file__name"></div>
         <a download>
             <i class="fa fa-download" aria-hidden="true"></i>
         </a>
@@ -181,8 +173,8 @@ GreenChat
 
 <template id="js-chat-message-image-file-temp">
     <div class="chat__message__image-file">
-        <div class="chat__message__image-file__name"></div>
         <img>
+        <div class="chat__message__image-file__name"></div>
         <a download>
             <i class="fa fa-download" aria-hidden="true"></i>
         </a>

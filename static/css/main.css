@@ -343,6 +343,10 @@
     overflow-wrap: anywhere;
 }
 
+.chat__message__image-files:not(:empty) + .chat__message__text-wrapper > .chat__message__text {
+    border-radius: 0 0 10px 10px;
+}
+
 .chat__message.chat__message--self .chat__message__text {
     background: var(--main-3-color);
     color: white;
@@ -368,10 +372,6 @@
 
 .chat__message.chat__message--self .chat__message__time {
     color: white;
-}
-
-.chat__message__image-files:empty ~ .chat__message__move {
-    display: none;
 }
 
 .chat__input-container {
@@ -412,16 +412,105 @@
     display: none;
 }
 
-.chat__file-to-upload img {
-    max-width: 100px;
+.chat__message__image-files-wrapper {
+    overflow: hidden;
+    position: relative;
+}
+
+.chat__message__image-files {
+    display: flex;
+    flex-wrap: wrap;
+    overflow: hidden;
+    border-radius: 0 10px 0 0;
+}
+
+.chat__message.chat__message--self .chat__message__image-files {
+    border-radius: 10px 10px 0 0;
+}
+
+.chat__message__image-file {
+    flex: 50%;
+    background: black;
+    position: relative;
 }
 
 .chat__message__image-file img {
-    max-width: 100px;
+    height: 100%;
+    display: block;
+    margin: auto;
+    max-width: 100%;
+    object-fit: cover;
 }
 
-.chat__message__file img {
-    max-width: 100px;
+.chat__message__image-file a {
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+    font-size: 20px;
+    color: var(--main-4-color);
+    opacity: 0.5;
+}
+
+.chat__message__image-file a:hover {
+    opacity: 1;
+}
+
+.chat__message__image-file__name {
+    display: none;
+}
+
+.chat__message__files {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.chat__file a {
+    position: absolute;
+    top: 0;
+    right: 0;
+    color: white;
+}
+
+.chat__files-to-upload {
+    overflow-y: auto;
+    overflow-x: hidden;
+    position: absolute;
+    max-width: 10vw;
+    font-size: smaller;
+    top: 0;
+    transform: translateY(-100%);
+    max-height: 30vw;
+    padding-right: 20px;
+}
+
+.chat__file {
+    text-align: center;
+    position: relative;
+    margin-top: 10px;
+    padding: 0 20px;
+}
+
+.chat__file__icon {
+    font-size: 40px;
+    color: var(--main-3-color);
+}
+
+.chat__file__delete {
+    position: absolute;
+    top: 0;
+    right: 0;
+    color: var(--cancel-color);
+    cursor: pointer;
+}
+
+.chat__file img {
+    height: 50px;
+    max-width: 50px;
+    object-fit: cover;
+}
+
+.chat__file img[src] ~ .chat__file__icon {
+    display: none;
 }
 
 .avatar {
