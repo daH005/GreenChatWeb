@@ -149,21 +149,28 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
     }
 
     protected async _sendMessage(): Promise<void> {
+        let textIsMeaningful: boolean = this._messageTextIsMeaningful();
+
         let storageId: number | null = null;
         if (this._hasFiles()) {
             let save = await requestToSaveChatMessageFiles(this._clipInputEl.files);
             storageId = save.storageId;
             this._filesMapper.clear();
-        } else if (!this._messageTextIsMeaningful()) {
+        } else if (!textIsMeaningful) {
             return;
+        }
+
+        let text: string = this._textareaEl.value;
+        if (!textIsMeaningful) {
+            text = "Файл(ы)";
         }
 
         sendMessageToWebSocketAndClearInput({
             type: WebSocketMessageType.NEW_CHAT_MESSAGE,
             data: {
                 chatId: this._id,
-                text: this._textareaEl.value,
-                storageId: storageId,
+                text,
+                storageId,
             }
         }, this._textareaEl);
     }
