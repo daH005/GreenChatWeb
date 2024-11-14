@@ -115,9 +115,6 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
         this._textareaEl.setAttribute("placeholder", choose(this._PHRASES));
 
         this._buttonEl.onclick = async () => {
-            if (!this._messageTextIsMeaningful(this._textareaEl.value)) {
-                return;
-            }
             await this._sendMessage();
         }
 
@@ -142,10 +139,6 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
         this._link.updateUnreadCount(this._unreadCount);
     }
 
-    protected _messageTextIsMeaningful(text: string): boolean {
-        return text.replaceAll("\n", "").replaceAll(" ", "") != "";
-    }
-
     protected _sendTyping(): void {
         sendWebSocketMessage({
             type: WebSocketMessageType.NEW_CHAT_MESSAGE_TYPING,
@@ -156,13 +149,13 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
     }
 
     protected async _sendMessage(): Promise<void> {
-
         let storageId: number | null = null;
-        let hasFiles: boolean = Boolean(this._clipInputEl.files.length);
-        if (hasFiles) {
+        if (this._hasFiles()) {
             let save = await requestToSaveChatMessageFiles(this._clipInputEl.files);
             storageId = save.storageId;
             this._filesMapper.clear();
+        } else if (!this._messageTextIsMeaningful()) {
+            return;
         }
 
         sendMessageToWebSocketAndClearInput({
@@ -173,6 +166,14 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
                 storageId: storageId,
             }
         }, this._textareaEl);
+    }
+
+    protected _messageTextIsMeaningful(): boolean {
+        return this._textareaEl.value.replaceAll("\n", "").replaceAll(" ", "") != "";
+    }
+
+    protected _hasFiles(): boolean {
+        return Boolean(this._clipInputEl.files.length);
     }
 
     public async open(): Promise<void> {
