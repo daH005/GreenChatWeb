@@ -466,7 +466,7 @@
     overflow-y: auto;
     overflow-x: hidden;
     position: absolute;
-    max-width: 30vw;
+    max-width: 60vw;
     font-size: smaller;
     top: 0;
     transform: translateY(-100%);
