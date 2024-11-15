@@ -3,8 +3,8 @@ import { AbstractHTMLTemplatedElement } from "./abstractChatElement.js";
 export class HTMLChatMessageFile extends AbstractHTMLTemplatedElement {
 
     protected _thisElTemplateEl = <HTMLTemplateElement>document.getElementById("js-chat-message-file-temp");
+    protected declare _thisEl: HTMLAnchorElement;
     protected _filenameEl: HTMLElement;
-    protected _downloadEl: HTMLAnchorElement;
 
     protected _filename: string;
     protected _url: string;
@@ -16,11 +16,10 @@ export class HTMLChatMessageFile extends AbstractHTMLTemplatedElement {
     }
 
     public _initChildEls(): void {
+        this._thisEl.href = this._url;
+
         this._filenameEl = this._thisEl.querySelector(".chat__file__name");
         this._filenameEl.textContent = this._filename;
-
-        this._downloadEl = this._thisEl.querySelector("a");
-        this._downloadEl.href = this._url;
     }
 
 }

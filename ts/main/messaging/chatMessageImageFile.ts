@@ -4,6 +4,7 @@ export class HTMLChatMessageImageFile extends HTMLChatMessageFile {
 
     protected _thisElTemplateEl = <HTMLTemplateElement>document.getElementById("js-chat-message-image-file-temp");
     protected _imageEl: HTMLImageElement;
+    protected _downloadEl: HTMLAnchorElement;
 
     public _initChildEls(): void {
         this._filenameEl = this._thisEl.querySelector(".chat__message__image-file__name");
