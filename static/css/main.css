@@ -493,6 +493,7 @@
     align-items: center;
     border-radius: 10px;
     background: var(--main-color);
+    font-size: small;
 }
 
 a.chat__file {
