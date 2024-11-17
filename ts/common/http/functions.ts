@@ -59,6 +59,13 @@ export async function requestToLogin(requestData: EmailAndCodeRequestData): Prom
     return await response.json();
 }
 
+export async function requestToLogout(): Promise<SimpleResponseStatus> {
+    let response: Response = await commonFetch(HTTP_API_URLS.LOGOUT, {
+        method: "POST",
+    });
+    return await response.json();
+}
+
 export async function requestUserInfo(requestData: UserIdRequestData | null): Promise<User> {
     if (!requestData) {
         requestData = <UserIdRequestData>{};
