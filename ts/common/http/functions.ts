@@ -18,14 +18,14 @@ import { EmailRequestData,
 import { makeUrlWithParams, commonFetch } from "./base.js";
 
 export async function requestToCheckEmail(requestData: EmailRequestData): Promise<AlreadyTakenFlag> {
-    let response: Response = await commonFetch(makeUrlWithParams(HTTP_API_URLS.EMAIL_CHECK, requestData), {
+    let response: Response = await commonFetch(makeUrlWithParams(HTTP_API_URLS.USER_EMAIL_CHECK, requestData), {
         method: "GET",
     });
     return await response.json();
 }
 
 export async function requestToSendEmailCode(requestData: EmailRequestData): Promise<SimpleResponseStatus> {
-    let response: Response = await commonFetch(HTTP_API_URLS.EMAIL_CODE_SEND, {
+    let response: Response = await commonFetch(HTTP_API_URLS.USER_EMAIL_CODE_SEND, {
         method: "POST",
         body: requestData,
     });
@@ -40,14 +40,14 @@ export async function requestToSendEmailCode(requestData: EmailRequestData): Pro
 }
 
 export async function requestToCheckEmailCode(requestData: EmailAndCodeRequestData): Promise<CodeIsValidFlag> {
-    let response: Response = await commonFetch(makeUrlWithParams(HTTP_API_URLS.EMAIL_CODE_CHECK, requestData), {
+    let response: Response = await commonFetch(makeUrlWithParams(HTTP_API_URLS.USER_EMAIL_CODE_CHECK, requestData), {
         method: "GET",
     });
     return await response.json();
 }
 
 export async function requestToLogin(requestData: EmailAndCodeRequestData): Promise<SimpleResponseStatus> {
-    let response: Response = await commonFetch(HTTP_API_URLS.LOGIN, {
+    let response: Response = await commonFetch(HTTP_API_URLS.USER_LOGIN, {
         method: "POST",
         body: requestData,
     });
@@ -60,7 +60,7 @@ export async function requestToLogin(requestData: EmailAndCodeRequestData): Prom
 }
 
 export async function requestToLogout(): Promise<SimpleResponseStatus> {
-    let response: Response = await commonFetch(HTTP_API_URLS.LOGOUT, {
+    let response: Response = await commonFetch(HTTP_API_URLS.USER_LOGOUT, {
         method: "POST",
     });
     return await response.json();

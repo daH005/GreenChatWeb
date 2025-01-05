@@ -27,7 +27,7 @@ export async function commonFetch(url, options): Promise<Response> {
         return response;
     }
 
-    let refreshAccessResponse = await fetch(HTTP_API_URLS.REFRESH_ACCESS, {
+    let refreshAccessResponse = await fetch(HTTP_API_URLS.USER_REFRESH_ACCESS, {
         method: "POST",
         headers: {
             "X-CSRF-TOKEN": getCookie("csrf_refresh_token"),
