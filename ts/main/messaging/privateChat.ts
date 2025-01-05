@@ -67,7 +67,7 @@ export class HTMLPrivateChat extends AbstractHTMLChat {
             sendWebSocketMessage({
                 type: WebSocketMessageType.NEW_CHAT,
                 data: {
-                    usersIds: [thisUser.id, this._interlocutor.id],
+                    userIds: [thisUser.id, this._interlocutor.id],
                 }
             });
         } else {

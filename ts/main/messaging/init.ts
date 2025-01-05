@@ -38,13 +38,13 @@ export const handlersForWebsocket: Partial<Record<WebSocketMessageType, Function
     },
 
     [WebSocketMessageType.READ_CHAT_MESSAGES]: async (apiData: ReadChatMessagesIds): Promise<void> => {
-        AbstractHTMLChat.getChatById(apiData.chatId).setMessagesAsRead(apiData.chatMessagesIds);
+        AbstractHTMLChat.getChatById(apiData.chatId).setMessagesAsRead(apiData.chatMessageIds);
     },
 
 }
 
 async function addPrivateChat(apiData: Chat): Promise<HTMLPrivateChat> {
-    let interlocutorId = defineInterlocutorId(apiData.usersIds);
+    let interlocutorId = defineInterlocutorId(apiData.userIds);
 
     let chat: HTMLPrivateChat | null = HTMLPrivateChat.getChatByInterlocutorId(interlocutorId);
 
@@ -61,8 +61,8 @@ async function addPrivateChat(apiData: Chat): Promise<HTMLPrivateChat> {
     return chat;
 }
 
-function defineInterlocutorId(usersIds: number[]): number {
-    for (let id of usersIds) {
+function defineInterlocutorId(userIds: number[]): number {
+    for (let id of userIds) {
         if (id != thisUser.id) {
             return id;
         }

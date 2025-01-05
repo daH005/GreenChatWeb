@@ -14,7 +14,7 @@ export interface ChatId {
 }
 
 export interface NewChat {
-    usersIds: number[],
+    userIds: number[],
     name?: string,
     isGroup?: boolean,
 }

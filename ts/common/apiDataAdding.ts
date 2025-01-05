@@ -7,8 +7,8 @@ export async function addUserToApiData(apiData: ChatMessage | ChatMessageTyping)
 
 export async function addUsersToApiData(apiData: Chat): Promise<void> {
     apiData.users = [];
-    for (let i in apiData.usersIds) {
-        let curId = apiData.usersIds[i];
+    for (let i in apiData.userIds) {
+        let curId = apiData.userIds[i];
         apiData.users.push(await userById(curId));
     }
 }

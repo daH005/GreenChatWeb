@@ -55,7 +55,7 @@ export interface Chat {
     name: string,
     isGroup: boolean,
     lastMessage?: ChatMessage,
-    usersIds: number[],
+    userIds: number[],
     unreadCount: number,
     users?: User[],
     interlocutor?: User,
@@ -68,7 +68,7 @@ export interface NewUnreadCount {
 
 export interface ReadChatMessagesIds {
     chatId: number,
-    chatMessagesIds: number[],
+    chatMessageIds: number[],
 }
 
 export interface InterlocutorsOnlineStatuses {
