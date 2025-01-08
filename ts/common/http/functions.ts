@@ -1,5 +1,4 @@
-import { SimpleResponseStatus,
-         AlreadyTakenFlag,
+import { AlreadyTakenFlag,
          CodeIsValidFlag,
          User,
          ChatHistory,
@@ -15,7 +14,7 @@ import { EmailRequestData,
          UserInfoEditRequestData,
          ChatHistoryRequestData,
        } from "./requestDataInterfaces.js";
-import { makeUrlWithParams, commonFetch } from "./base.js";
+import { makeUrlWithParams, commonFetch, JSONFromResponseOrNull } from "./base.js";
 
 export async function requestToCheckEmail(requestData: EmailRequestData): Promise<AlreadyTakenFlag> {
     let response: Response = await commonFetch(makeUrlWithParams(HTTP_API_URLS.USER_EMAIL_CHECK, requestData), {
@@ -24,7 +23,7 @@ export async function requestToCheckEmail(requestData: EmailRequestData): Promis
     return await response.json();
 }
 
-export async function requestToSendEmailCode(requestData: EmailRequestData): Promise<SimpleResponseStatus> {
+export async function requestToSendEmailCode(requestData: EmailRequestData): Promise<null> {
     let response: Response = await commonFetch(HTTP_API_URLS.USER_EMAIL_CODE_SEND, {
         method: "POST",
         body: requestData,
@@ -36,7 +35,7 @@ export async function requestToSendEmailCode(requestData: EmailRequestData): Pro
         notify("Вы не можете отправлять более одного кода в минуту!");
     }
 
-    return await response.json();
+    return await JSONFromResponseOrNull(response);
 }
 
 export async function requestToCheckEmailCode(requestData: EmailAndCodeRequestData): Promise<CodeIsValidFlag> {
@@ -46,7 +45,7 @@ export async function requestToCheckEmailCode(requestData: EmailAndCodeRequestDa
     return await response.json();
 }
 
-export async function requestToLogin(requestData: EmailAndCodeRequestData): Promise<SimpleResponseStatus> {
+export async function requestToLogin(requestData: EmailAndCodeRequestData): Promise<null> {
     let response: Response = await commonFetch(HTTP_API_URLS.USER_LOGIN, {
         method: "POST",
         body: requestData,
@@ -56,14 +55,14 @@ export async function requestToLogin(requestData: EmailAndCodeRequestData): Prom
         notify("Неверный логин или пароль!")
     }
 
-    return await response.json();
+    return await JSONFromResponseOrNull(response);
 }
 
-export async function requestToLogout(): Promise<SimpleResponseStatus> {
+export async function requestToLogout(): Promise<null> {
     let response: Response = await commonFetch(HTTP_API_URLS.USER_LOGOUT, {
         method: "POST",
     });
-    return await response.json();
+    return await JSONFromResponseOrNull(response);
 }
 
 export async function requestUserInfo(requestData: UserIdRequestData | null): Promise<User> {
@@ -96,28 +95,28 @@ export async function requestUserBackground(): Promise<Blob> {
     return await response.blob();
 }
 
-export async function requestToEditUserInfo(requestData: UserInfoEditRequestData): Promise<SimpleResponseStatus> {
+export async function requestToEditUserInfo(requestData: UserInfoEditRequestData): Promise<null> {
     let response: Response = await commonFetch(HTTP_API_URLS.USER_INFO_EDIT, {
         method: "PUT",
         body: requestData,
     });
-    return await response.json();
+    return await JSONFromResponseOrNull(response);
 }
 
-export async function requestToEditUserAvatar(image: Blob): Promise<SimpleResponseStatus> {
+export async function requestToEditUserAvatar(image: Blob): Promise<null> {
     let response: Response = await commonFetch(HTTP_API_URLS.USER_AVATAR_EDIT, {
         method: "PUT",
         body: image,
     });
-    return await response.json();
+    return await JSONFromResponseOrNull(response);
 }
 
-export async function requestToEditUserBackground(image: Blob): Promise<SimpleResponseStatus> {
+export async function requestToEditUserBackground(image: Blob): Promise<null> {
     let response: Response = await commonFetch(HTTP_API_URLS.USER_BACKGROUND_EDIT, {
         method: "PUT",
         body: image,
     });
-    return await response.json();
+    return await JSONFromResponseOrNull(response);
 }
 
 export async function requestUserChats(): Promise<UserChats> {

@@ -1,7 +1,3 @@
-export interface SimpleResponseStatus {
-    status: number,
-}
-
 export interface AlreadyTakenFlag {
     isAlreadyTaken: boolean,
 }
