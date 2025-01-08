@@ -15,6 +15,32 @@ class Params:
         MAIN = BASE + Url.MAIN
         LOGIN = BASE + Url.LOGIN
 
+    class Xpaths:
+
+        LOGIN_EMAIL = '//input[@id="js-email"]'
+        LOGIN_EMAIL_CODE = '//input[@id="js-email-code"]'
+        LOGIN_BUTTON = '//button[@id="js-button"]'
+
+        MAIN_USER_ID = '//span[@id="js-user-id"]'
+
+        MAIN_SETTINGS_OPEN = '//div[@id="js-user-settings-open"]'
+        MAIN_SETTINGS_FIRST_NAME = '//input[@id="js-user-settings-first-name"]'
+        MAIN_SETTINGS_LAST_NAME = '//input[@id="js-user-settings-last-name"]'
+        MAIN_SETTINGS_SAVE = '//button[@id="js-user-settings-save"]'
+
+        MAIN_SEARCH_INPUT = '//input[@id="js-search-input"]'
+        MAIN_SEARCH_BUTTON = '//button[@id="js-search-button"]'
+
+        MAIN_CHAT_LINK_TEMP = '//div[@id="js-all-chats-links"]//div[@class="chat-link__chat-name"][text()="{}"]'
+        MAIN_CUR_CHAT = '//div[@class="chat" and not(@class="chat--hidden")]'
+        MAIN_CUR_CHAT_INPUT_CONTAINER = 'div[@class="chat__input-container"]'
+        MAIN_CUR_CHAT_TEXTAREA = './/textarea'
+        MAIN_CUR_CHAT_SEND_BUTTON = './/button[@class="chat__send js-click-by-press-enter-button"]'
+        MAIN_CUR_CHAT_EACH_CHAT_MESSAGE_TEXT = './/div[@class="chat__message__text"]'
+        MAIN_CUR_CHAT_BACK_LINK = './/div[@class="chat__back-link"]'
+
+    MAX_ATTEMPTS = 200
+    LOADING_TEXT = 'загрузка...'
     EMAIL_CODE = 9999
     USERS_COUNT = 3
     CHANGE_MARK = '---'

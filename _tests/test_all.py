@@ -14,8 +14,6 @@ from _tests.data import (
 
 
 class TestAll:
-    _MAX_ATTEMPTS: int = 200
-    _LOADING_TEXT: str = 'загрузка...'
 
     _driver: Chrome = new_chrome_driver()
     _users: list[UserInfo] = []
@@ -60,35 +58,35 @@ class TestAll:
     def _login(cls, user: UserInfo) -> None:
         cls._driver.get(Params.FullUrls.LOGIN)
 
-        cls._driver.find_element(By.XPATH, '//input[@id="js-email"]').send_keys(user.email)
-        cls._driver.find_element(By.XPATH, '//input[@id="js-email-code"]').send_keys(str(Params.EMAIL_CODE))
+        cls._driver.find_element(By.XPATH, Params.Xpaths.LOGIN_EMAIL).send_keys(user.email)
+        cls._driver.find_element(By.XPATH, Params.Xpaths.LOGIN_EMAIL_CODE).send_keys(str(Params.EMAIL_CODE))
 
-        cls._driver.find_element(By.XPATH, '//button[@id="js-button"]').click()
+        cls._driver.find_element(By.XPATH, Params.Xpaths.LOGIN_BUTTON).click()
 
         user.id = cls._try_to_execute_func(cls._get_my_id)
         cls._cur_user = user
 
     @classmethod
     def _get_my_id(cls) -> int:
-        id_el_text = cls._driver.find_element(By.XPATH, '//span[@id="js-user-id"]').text
-        if id_el_text == cls._LOADING_TEXT:
+        id_el_text = cls._driver.find_element(By.XPATH, Params.Xpaths.MAIN_USER_ID).text
+        if id_el_text == Params.LOADING_TEXT:
             return cls._get_my_id()
 
         return int(id_el_text)
 
     @classmethod
     def _set_full_name(cls) -> None:
-        cls._driver.find_element(By.XPATH, '//div[@id="js-user-settings-open"]').click()
+        cls._driver.find_element(By.XPATH, Params.Xpaths.MAIN_SETTINGS_OPEN).click()
 
-        first_name_input_el = cls._driver.find_element(By.XPATH, '//input[@id="js-user-settings-first-name"]')
+        first_name_input_el = cls._driver.find_element(By.XPATH, Params.Xpaths.MAIN_SETTINGS_FIRST_NAME)
         first_name_input_el.clear()
         first_name_input_el.send_keys(cls._cur_user.first_name)
 
-        last_name_input_el = cls._driver.find_element(By.XPATH, '//input[@id="js-user-settings-last-name"]')
+        last_name_input_el = cls._driver.find_element(By.XPATH, Params.Xpaths.MAIN_SETTINGS_LAST_NAME)
         last_name_input_el.clear()
         last_name_input_el.send_keys(cls._cur_user.last_name)
 
-        cls._driver.find_element(By.XPATH, '//button[@id="js-user-settings-save"]').click()
+        cls._driver.find_element(By.XPATH, Params.Xpaths.MAIN_SETTINGS_SAVE).click()
 
     @classmethod
     def _test_positive_redirect_to_main_after_login(cls, user: UserInfo) -> None:
@@ -137,29 +135,27 @@ class TestAll:
 
     @classmethod
     def _search_interlocutor(cls, interlocutor_id: int) -> None:
-        input_el = cls._driver.find_element(By.XPATH, '//input[@id="js-search-input"]')
+        input_el = cls._driver.find_element(By.XPATH, Params.Xpaths.MAIN_SEARCH_INPUT)
         input_el.clear()
         input_el.send_keys(str(interlocutor_id))
-        cls._driver.find_element(By.XPATH, '//button[@id="js-search-button"]').click()
+        cls._driver.find_element(By.XPATH, Params.Xpaths.MAIN_SEARCH_BUTTON).click()
 
         cls._try_to_execute_func(cls._find_cur_chat_el)
 
     @classmethod
     def _switch_to_chat_by_sidebar(cls, interlocutor_full_name: str) -> None:
-        cls._driver.find_element(By.XPATH, f'//div[@id="js-all-chats-links"]'
-                                          f'//div[@class="chat-link__chat-name"]'
-                                          f'[text()="{interlocutor_full_name}"]').click()
+        cls._driver.find_element(By.XPATH, Params.Xpaths.MAIN_CHAT_LINK_TEMP.format(interlocutor_full_name)).click()
         cls._try_to_execute_func(cls._find_cur_chat_el)
 
     @classmethod
     def _find_cur_chat_el(cls) -> None:
-        cls._cur_chat_el = cls._driver.find_element(By.XPATH, '//div[@class="chat" and not(@class="chat--hidden")]')
+        cls._cur_chat_el = cls._driver.find_element(By.XPATH, Params.Xpaths.MAIN_CUR_CHAT)
 
     @classmethod
     def _send_message_in_cur_chat(cls, text_message: str) -> None:
-        chat_input_container_el = cls._cur_chat_el.find_element(By.XPATH, 'div[@class="chat__input-container"]')
-        input_el = chat_input_container_el.find_element(By.XPATH, './/textarea')
-        button_el = chat_input_container_el.find_element(By.XPATH, './/button[@class="chat__send js-click-by-press-enter-button"]')
+        chat_input_container_el = cls._cur_chat_el.find_element(By.XPATH, Params.Xpaths.MAIN_CUR_CHAT_INPUT_CONTAINER)
+        input_el = chat_input_container_el.find_element(By.XPATH, Params.Xpaths.MAIN_CUR_CHAT_TEXTAREA)
+        button_el = chat_input_container_el.find_element(By.XPATH, Params.Xpaths.MAIN_CUR_CHAT_SEND_BUTTON)
 
         input_el.send_keys(text_message)
         button_el.click()
@@ -168,7 +164,7 @@ class TestAll:
 
     @classmethod
     def _check_message_creation(cls, text_message: str) -> None:
-        assert cls._cur_chat_el.find_elements(By.XPATH, './/div[@class="chat__message__text"]')[-1].text == text_message
+        assert cls._cur_chat_el.find_elements(By.XPATH, Params.Xpaths.MAIN_CUR_CHAT_EACH_CHAT_MESSAGE_TEXT)[-1].text == text_message
 
     @classmethod
     def _change_users(cls, first_user: UserInfo,
@@ -185,17 +181,17 @@ class TestAll:
 
     @classmethod
     def _close_cur_chat(cls) -> None:
-        cls._cur_chat_el.find_element(By.XPATH, './/div[@class="chat__back-link"]').click()
+        cls._cur_chat_el.find_element(By.XPATH, Params.Xpaths.MAIN_CUR_CHAT_BACK_LINK).click()
 
     @classmethod
     def _test_positive_history(cls, expected_history: list[str]) -> None:
-        text_messages_els = cls._cur_chat_el.find_elements(By.XPATH, './/div[@class="chat__message__text"]')
+        text_messages_els = cls._cur_chat_el.find_elements(By.XPATH, Params.Xpaths.MAIN_CUR_CHAT_EACH_CHAT_MESSAGE_TEXT)
         for i, text_message_el in enumerate(text_messages_els):
             assert text_message_el.text == expected_history[i]
 
     @classmethod
     def _try_to_execute_func(cls, func):
-        count: int = cls._MAX_ATTEMPTS
+        count: int = Params.MAX_ATTEMPTS
         while count:
             try:
                 return func()
