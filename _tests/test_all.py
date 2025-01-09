@@ -1,6 +1,7 @@
 from selenium.webdriver.common.by import By
 from selenium.webdriver import Chrome
 from selenium.webdriver.remote.webelement import WebElement
+from selenium.common.exceptions import WebDriverException
 from functools import partial
 from itertools import combinations
 from typing import Iterator
@@ -195,6 +196,6 @@ class TestAll:
         while count:
             try:
                 return func()
-            except:
+            except WebDriverException:
                 count -= 1
         raise AssertionError
