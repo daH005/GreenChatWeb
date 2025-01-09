@@ -108,6 +108,11 @@ export async function requestToEditUserAvatar(image: Blob): Promise<null> {
         method: "PUT",
         body: image,
     });
+
+    if (response.status == 413) {
+        notify("Вес аватарки слишком велик, бро!");
+    }
+
     return await JSONFromResponseOrNull(response);
 }
 
@@ -116,6 +121,11 @@ export async function requestToEditUserBackground(image: Blob): Promise<null> {
         method: "PUT",
         body: image,
     });
+
+    if (response.status == 413) {
+        notify("А фончик ничего себе весит-то! Полегче...");
+    }
+
     return await JSONFromResponseOrNull(response);
 }
 
@@ -143,6 +153,11 @@ export async function requestToSaveChatMessageFiles(files: FileList): Promise<Ch
         method: "POST",
         body: formData,
     });
+
+    if (response.status == 413) {
+        notify("Суммарный вес файлов слишком велик!");
+    }
+
     return await response.json();
 }
 
