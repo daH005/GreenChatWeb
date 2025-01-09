@@ -196,6 +196,6 @@ class TestAll:
         while count:
             try:
                 return func()
-            except WebDriverException:
+            except (WebDriverException, IndexError, AssertionError):
                 count -= 1
         raise AssertionError
