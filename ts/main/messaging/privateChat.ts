@@ -1,4 +1,4 @@
-import { ChatMessage, User } from "../../common/apiDataInterfaces.js";
+import { Message, User } from "../../common/apiDataInterfaces.js";
 import { thisUser } from "../../common/thisUser.js";
 import { makeUserAvatarURL } from "../avatars.js";
 import { sendWebSocketMessage } from "../websocket/init.js";

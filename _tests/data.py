@@ -36,7 +36,7 @@ class Params:
         MAIN_CUR_CHAT_INPUT_CONTAINER = 'div[@class="chat__input-container"]'
         MAIN_CUR_CHAT_TEXTAREA = './/textarea'
         MAIN_CUR_CHAT_SEND_BUTTON = './/button[@class="chat__send js-click-by-press-enter-button"]'
-        MAIN_CUR_CHAT_EACH_CHAT_MESSAGE_TEXT = './/div[@class="chat__message__text"]'
+        MAIN_CUR_CHAT_EACH_MESSAGE_TEXT = './/div[@class="chat__message__text"]'
         MAIN_CUR_CHAT_BACK_LINK = './/div[@class="chat__back-link"]'
 
     MAX_ATTEMPTS = 200

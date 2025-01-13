@@ -2,7 +2,7 @@ import { requestUserChats } from "../../common/http/functions.js";
 import { addUserToApiData, addUsersToApiData } from "../../common/apiDataAdding.js";
 import { thisUser } from "../../common/thisUser.js";
 import { userById } from "../../common/users.js";
-import { User, InterlocutorsOnlineStatuses, Chat, ChatMessage, ChatMessageTyping, NewUnreadCount, ReadChatMessagesIds } from "../../common/apiDataInterfaces.js";
+import { User, InterlocutorsOnlineStatuses, Chat, Message, MessageTyping, NewUnreadCount, ReadMessagesIds } from "../../common/apiDataInterfaces.js";
 import { WebSocketMessageType } from "../websocket/messageTypes.js";
 import { HTMLPrivateChat } from "./privateChat.js";
 import { AbstractHTMLChat } from "./abstractChat.js";
@@ -23,12 +23,12 @@ export const handlersForWebsocket: Partial<Record<WebSocketMessageType, Function
         }
     },
 
-    [WebSocketMessageType.NEW_CHAT_MESSAGE]: async (apiData: ChatMessage): Promise<void> => {
+    [WebSocketMessageType.NEW_MESSAGE]: async (apiData: Message): Promise<void> => {
         await addUserToApiData(apiData);
         AbstractHTMLChat.getChatById(apiData.chatId).addMessage(apiData);
     },
 
-    [WebSocketMessageType.NEW_CHAT_MESSAGE_TYPING]: async (apiData: ChatMessageTyping): Promise<void> => {
+    [WebSocketMessageType.NEW_MESSAGE_TYPING]: async (apiData: MessageTyping): Promise<void> => {
         await addUserToApiData(apiData);
         AbstractHTMLChat.getChatById(apiData.chatId).updateTyping(apiData);
     },
@@ -37,8 +37,8 @@ export const handlersForWebsocket: Partial<Record<WebSocketMessageType, Function
         AbstractHTMLChat.getChatById(apiData.chatId).updateUnreadCount(apiData.unreadCount);
     },
 
-    [WebSocketMessageType.READ_CHAT_MESSAGES]: async (apiData: ReadChatMessagesIds): Promise<void> => {
-        AbstractHTMLChat.getChatById(apiData.chatId).setMessagesAsRead(apiData.chatMessageIds);
+    [WebSocketMessageType.READ_MESSAGES]: async (apiData: ReadMessagesIds): Promise<void> => {
+        AbstractHTMLChat.getChatById(apiData.chatId).setMessagesAsRead(apiData.messageIds);
     },
 
 }

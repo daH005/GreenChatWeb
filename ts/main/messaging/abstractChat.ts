@@ -1,17 +1,17 @@
-import { User, ChatMessage, ChatMessageTyping } from "../../common/apiDataInterfaces.js";
+import { User, Message, MessageTyping } from "../../common/apiDataInterfaces.js";
 import { isMobile } from "../../common/mobileDetecting.js";
 import { choose } from "../../common/random.js";
 import { thisUser } from "../../common/thisUser.js";
 import { userInWindow } from "../../common/userInWindowChecking.js";
 import { newMessageSound } from "../../common/audio.js";
-import { requestChatHistory, requestToSaveChatMessageFiles } from "../../common/http/functions.js";
+import { requestChatHistory, requestToSaveMessageFiles } from "../../common/http/functions.js";
 import { addUserToApiData } from "../../common/apiDataAdding.js";
 import { sendWebSocketMessage } from "../websocket/init.js";
 import { WebSocketMessageType } from "../websocket/messageTypes.js";
 import { dateToDateStr, normalizeDateTimezone } from "../datetime.js";
 import { HTMLChatLink } from "./chatLink.js";
 import { HTMLDateSep } from "./dateSep.js";
-import { HTMLChatMessage, HTMLChatMessageFromThisUser } from "./chatMessages.js";
+import { HTMLMessage, HTMLMessageFromThisUser } from "./messages.js";
 import { sendMessageToWebSocketAndClearInput } from "./websocketFunctions.js";
 import { AbstractHTMLTemplatedElement } from "./abstractChatElement.js";
 import { addDragUploadingForInput } from "./files/drag.js";
@@ -53,7 +53,7 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
     protected _curMessageIsFirst: boolean = true;
     protected _isOpened: boolean = false;
     protected _avatarURL: string;
-    protected _messages: Record<number, HTMLChatMessage>;
+    protected _messages: Record<number, HTMLMessage>;
     protected _fullyLoaded: boolean = false;
     protected _datesSeps: Record<number, HTMLDateSep> = {};
     protected _link: HTMLChatLink;
@@ -141,7 +141,7 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
 
     protected _sendTyping(): void {
         sendWebSocketMessage({
-            type: WebSocketMessageType.NEW_CHAT_MESSAGE_TYPING,
+            type: WebSocketMessageType.NEW_MESSAGE_TYPING,
             data: {
                 chatId: this._id,
             }
@@ -153,7 +153,7 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
 
         let storageId: number | null = null;
         if (this._hasFiles()) {
-            let save = await requestToSaveChatMessageFiles(this._clipInputEl.files);
+            let save = await requestToSaveMessageFiles(this._clipInputEl.files);
             storageId = save.storageId;
             this._filesMapper.clear();
         } else if (!textIsMeaningful) {
@@ -166,7 +166,7 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
         }
 
         sendMessageToWebSocketAndClearInput({
-            type: WebSocketMessageType.NEW_CHAT_MESSAGE,
+            type: WebSocketMessageType.NEW_MESSAGE,
             data: {
                 chatId: this._id,
                 text,
@@ -211,7 +211,7 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
         AbstractHTMLChat._curOpenedChat = null;
     }
 
-    public async addMessage(apiData: ChatMessage, prepend: boolean=false): Promise<void> {
+    public async addMessage(apiData: Message, prepend: boolean=false): Promise<void> {
         apiData.creatingDatetime = new Date(apiData.creatingDatetime);
         normalizeDateTimezone(apiData.creatingDatetime);
 
@@ -233,13 +233,13 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
 
         let fromThisUser: boolean = thisUser.id == apiData.user.id;
 
-        let messageType: typeof HTMLChatMessage;
+        let messageType: typeof HTMLMessage;
         if (!fromThisUser) {
-            messageType = HTMLChatMessage;
+            messageType = HTMLMessage;
         } else {
-            messageType = HTMLChatMessageFromThisUser;
+            messageType = HTMLMessageFromThisUser;
         }
-        let message: HTMLChatMessage = new messageType(this._messagesEl, apiData.id, apiData.text, apiData.isRead, apiData.creatingDatetime, apiData.user, apiData.storageId);
+        let message: HTMLMessage = new messageType(this._messagesEl, apiData.id, apiData.text, apiData.isRead, apiData.creatingDatetime, apiData.user, apiData.storageId);
         await message.init(prepend);
         this._messages[apiData.id] = message;
 
@@ -304,7 +304,7 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
         this._fullyLoaded = true;
     }
 
-    protected async _fillChatHistory(messages: ChatMessage[]): Promise<void> {
+    protected async _fillChatHistory(messages: Message[]): Promise<void> {
         for (let i in messages) {
             await addUserToApiData(messages[i]);
             await this.addMessage(messages[i], true);
@@ -328,7 +328,7 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
         return resultY;
     }
 
-    protected _lastReadOrFromThisUserMessage(): HTMLChatMessage {
+    protected _lastReadOrFromThisUserMessage(): HTMLMessage {
         let message = null;
         let ids = this._sortedMessagesIds();
         for (let i in ids) {
@@ -352,7 +352,7 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
         return ids;
     }
 
-    public updateTyping(apiData: ChatMessageTyping): void {
+    public updateTyping(apiData: MessageTyping): void {
         if (this._typingTimeoutId) {
             clearTimeout(this._typingTimeoutId);
         }
@@ -366,7 +366,7 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
     }
 
     protected _read(): void {
-        let message: HTMLChatMessage | null = this._lastVisibleMessage();
+        let message: HTMLMessage | null = this._lastVisibleMessage();
         if (!message) {
             return;
         }
@@ -374,20 +374,20 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
         if (!message.isRead && !message.fromThisUser) {
             message.setAsRead();
             sendWebSocketMessage({
-                type: WebSocketMessageType.CHAT_MESSAGE_WAS_READ,
+                type: WebSocketMessageType.MESSAGE_WAS_READ,
                 data: {
                     chatId: this._id,
-                    chatMessageId: message.id,
+                    messageId: message.id,
                 }
             });
         }
     }
 
-    protected _lastVisibleMessage(): HTMLChatMessage {
+    protected _lastVisibleMessage(): HTMLMessage {
         let lineAbsY = this._messagesLineBottomAbsY();
 
         let ids = this._sortedMessagesIds();
-        let message: HTMLChatMessage | null = null;
+        let message: HTMLMessage | null = null;
         for (let id of ids) {
             let messageBottomY = this._messages[id].getBoundingClientRect().bottom;
             if (messageBottomY <= lineAbsY) {

@@ -1,20 +1,20 @@
 import { User } from "../../common/apiDataInterfaces.js";
 import { HTTP_API_URLS } from "../../common/http/apiUrls.js";
 import { makeUrlWithParams } from "../../common/http/base.js";
-import { requestChatMessageFilenames } from "../../common/http/functions.js";
+import { requestMessageFilenames } from "../../common/http/functions.js";
 import { dateToTimeStr }  from "../datetime.js";
 import { makeHyperlinks, makeHighlights } from "../messageTextHighlighting.js";
 import { AbstractHTMLTemplatedElement } from "./abstractChatElement.js";
-import { HTMLChatMessageFile } from "./chatMessageFile.js";
-import { HTMLChatMessageImageFile } from "./chatMessageImageFile.js";
+import { HTMLMessageFile } from "./messageFile.js";
+import { HTMLMessageImageFile } from "./messageImageFile.js";
 
-export class HTMLChatMessage extends AbstractHTMLTemplatedElement {
+export class HTMLMessage extends AbstractHTMLTemplatedElement {
 
     protected static _IMAGE_FILE_EXTENSIONS = [
         ".png", ".jpg", ".jpeg", ".webp",
     ];
 
-    protected _thisElTemplateEl = <HTMLTemplateElement>document.getElementById("js-chat-message-temp");
+    protected _thisElTemplateEl = <HTMLTemplateElement>document.getElementById("js-message-temp");
     protected _userNameEl: HTMLElement;
     protected _textEl: HTMLElement;
     protected _timeEl: HTMLElement;
@@ -41,7 +41,7 @@ export class HTMLChatMessage extends AbstractHTMLTemplatedElement {
 
     public async init(prepend: boolean=false): Promise<void> {
         if (this._storageId) {
-            this._filenames = await requestChatMessageFilenames(this._storageId) ?? [];
+            this._filenames = await requestMessageFilenames(this._storageId) ?? [];
         } else {
             this._filenames = [];
         }
@@ -66,11 +66,11 @@ export class HTMLChatMessage extends AbstractHTMLTemplatedElement {
             let extension: string = filename.slice(filename.lastIndexOf('.')).toLowerCase();
             let url: string = this._makeUrl(filename);
 
-            let file: HTMLChatMessageFile | HTMLChatMessageImageFile;
-            if (HTMLChatMessage._IMAGE_FILE_EXTENSIONS.includes(extension)) {
-                file = new HTMLChatMessageImageFile(this._imageFilesEl, filename, url);
+            let file: HTMLMessageFile | HTMLMessageImageFile;
+            if (HTMLMessage._IMAGE_FILE_EXTENSIONS.includes(extension)) {
+                file = new HTMLMessageImageFile(this._imageFilesEl, filename, url);
             } else {
-                file = new HTMLChatMessageFile(this._filesEl, filename, url);
+                file = new HTMLMessageFile(this._filesEl, filename, url);
             }
             file.init();
 
@@ -88,7 +88,7 @@ export class HTMLChatMessage extends AbstractHTMLTemplatedElement {
     }
 
     protected _makeUrl(filename: string): string {
-        return makeUrlWithParams(HTTP_API_URLS.CHAT_MESSAGES_FILES_GET, {storageId: this._storageId, filename});
+        return makeUrlWithParams(HTTP_API_URLS.MESSAGES_FILES_GET, {storageId: this._storageId, filename});
     }
 
     public get id(): number {
@@ -114,7 +114,7 @@ export class HTMLChatMessage extends AbstractHTMLTemplatedElement {
 
 }
 
-export class HTMLChatMessageFromThisUser extends HTMLChatMessage {
+export class HTMLMessageFromThisUser extends HTMLMessage {
     
     protected _initThisEl(prepend: boolean) {
         super._initThisEl(prepend);

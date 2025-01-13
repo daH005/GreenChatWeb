@@ -14,10 +14,10 @@ export interface User {
 }
 
 export interface ChatHistory {
-    messages: ChatMessage[],
+    messages: Message[],
 }
 
-export interface ChatMessage {
+export interface Message {
     id: number,
     userId: number,
     chatId: number, 
@@ -28,15 +28,15 @@ export interface ChatMessage {
     user?: User,
 }
 
-export interface ChatMessageStorageId {
+export interface MessageStorageId {
     storageId: number,
 }
 
-export interface ChatMessageFilenames {
+export interface MessageFilenames {
     filenames: string[],
 }
 
-export interface ChatMessageTyping {
+export interface MessageTyping {
     userId: number,
     chatId: number,
     user?: User,
@@ -50,7 +50,7 @@ export interface Chat {
     id: number,
     name: string,
     isGroup: boolean,
-    lastMessage?: ChatMessage,
+    lastMessage?: Message,
     userIds: number[],
     unreadCount: number,
     users?: User[],
@@ -62,9 +62,9 @@ export interface NewUnreadCount {
     unreadCount: number,
 }
 
-export interface ReadChatMessagesIds {
+export interface ReadMessagesIds {
     chatId: number,
-    chatMessageIds: number[],
+    messageIds: number[],
 }
 
 export interface InterlocutorsOnlineStatuses {

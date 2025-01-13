@@ -19,12 +19,12 @@ export interface NewChat {
     isGroup?: boolean,
 }
 
-export interface NewChatMessage {
+export interface NewMessage {
     chatId: number,
     text: string,
     storageId?: number,
 }
 
-export interface ChatMessageWasRead {
-    chatMessageId: number,
+export interface MessageWasRead {
+    messageId: number,
 }

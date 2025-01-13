@@ -1,8 +1,8 @@
 import { AbstractHTMLTemplatedElement } from "./abstractChatElement.js";
 
-export class HTMLChatMessageFile extends AbstractHTMLTemplatedElement {
+export class HTMLMessageFile extends AbstractHTMLTemplatedElement {
 
-    protected _thisElTemplateEl = <HTMLTemplateElement>document.getElementById("js-chat-message-file-temp");
+    protected _thisElTemplateEl = <HTMLTemplateElement>document.getElementById("js-message-file-temp");
     protected declare _thisEl: HTMLAnchorElement;
     protected _filenameEl: HTMLElement;
 

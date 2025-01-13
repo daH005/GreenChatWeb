@@ -3,12 +3,12 @@ import { WebSocketMessage,
          UserId,
          ChatId,
          NewChat,
-         NewChatMessage,
-         ChatMessageWasRead,
+         NewMessage,
+         MessageWasRead,
        } from "./clientDataInterfaces.js";
 import { WebSocketMessageType } from "./messageTypes";
 
-export type AnyWebSocketMessageType = WebSocketMessage<UserId | ChatId | NewChat | NewChatMessage | ChatMessageWasRead>;
+export type AnyWebSocketMessageType = WebSocketMessage<UserId | ChatId | NewChat | NewMessage | MessageWasRead>;
 var websocket: WebSocket;
 
 export function initWebSocket(handlers: Partial<Record<WebSocketMessageType, Function>>): void {

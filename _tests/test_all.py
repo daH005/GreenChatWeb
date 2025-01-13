@@ -165,7 +165,7 @@ class TestAll:
 
     @classmethod
     def _check_message_creation(cls, text_message: str) -> None:
-        assert cls._cur_chat_el.find_elements(By.XPATH, Params.Xpaths.MAIN_CUR_CHAT_EACH_CHAT_MESSAGE_TEXT)[-1].text == text_message
+        assert cls._cur_chat_el.find_elements(By.XPATH, Params.Xpaths.MAIN_CUR_CHAT_EACH_MESSAGE_TEXT)[-1].text == text_message
 
     @classmethod
     def _change_users(cls, first_user: UserInfo,
@@ -186,7 +186,7 @@ class TestAll:
 
     @classmethod
     def _test_positive_history(cls, expected_history: list[str]) -> None:
-        text_messages_els = cls._cur_chat_el.find_elements(By.XPATH, Params.Xpaths.MAIN_CUR_CHAT_EACH_CHAT_MESSAGE_TEXT)
+        text_messages_els = cls._cur_chat_el.find_elements(By.XPATH, Params.Xpaths.MAIN_CUR_CHAT_EACH_MESSAGE_TEXT)
         for i, text_message_el in enumerate(text_messages_els):
             assert text_message_el.text == expected_history[i]
 

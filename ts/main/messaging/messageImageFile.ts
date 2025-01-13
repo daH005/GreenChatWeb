@@ -1,8 +1,8 @@
-import { HTMLChatMessageFile } from "./chatMessageFile.js";
+import { HTMLMessageFile } from "./messageFile.js";
 
-export class HTMLChatMessageImageFile extends HTMLChatMessageFile {
+export class HTMLMessageImageFile extends HTMLMessageFile {
 
-    protected _thisElTemplateEl = <HTMLTemplateElement>document.getElementById("js-chat-message-image-file-temp");
+    protected _thisElTemplateEl = <HTMLTemplateElement>document.getElementById("js-message-image-file-temp");
     protected _imageEl: HTMLImageElement;
     protected _downloadEl: HTMLAnchorElement;
 

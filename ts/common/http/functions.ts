@@ -3,8 +3,8 @@ import { AlreadyTakenFlag,
          User,
          ChatHistory,
          UserChats,
-         ChatMessageStorageId,
-         ChatMessageFilenames,
+         MessageStorageId,
+         MessageFilenames,
        } from "../apiDataInterfaces.js";
 import { notify } from "../notification.js";
 import { HTTP_API_URLS } from "./apiUrls.js";
@@ -143,13 +143,13 @@ export async function requestChatHistory(requestData: ChatHistoryRequestData): P
     return await response.json();
 }
 
-export async function requestToSaveChatMessageFiles(files: FileList): Promise<ChatMessageStorageId> {
+export async function requestToSaveMessageFiles(files: FileList): Promise<MessageStorageId> {
     let formData = new FormData();
     for (let i = 0; i < files.length; i++) {
         formData.append('files', files[i]);
     }
 
-    let response: Response = await commonFetch(HTTP_API_URLS.CHAT_MESSAGES_FILES_SAVE, {
+    let response: Response = await commonFetch(HTTP_API_URLS.MESSAGES_FILES_SAVE, {
         method: "POST",
         body: formData,
     });
@@ -161,8 +161,8 @@ export async function requestToSaveChatMessageFiles(files: FileList): Promise<Ch
     return await response.json();
 }
 
-export async function requestChatMessageFilenames(storageId: number): Promise<string[]> {
-    let response: Response = await commonFetch(makeUrlWithParams(HTTP_API_URLS.CHAT_MESSAGES_FILES_NAMES, {storageId}), {
+export async function requestMessageFilenames(storageId: number): Promise<string[]> {
+    let response: Response = await commonFetch(makeUrlWithParams(HTTP_API_URLS.MESSAGES_FILES_NAMES, {storageId}), {
         method: "GET",
     });
     let data = await response.json();

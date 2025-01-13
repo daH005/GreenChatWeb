@@ -1,7 +1,7 @@
 import { userById } from "./users.js";
-import { ChatMessage, ChatMessageTyping, Chat } from "./apiDataInterfaces.js";
+import { Message, MessageTyping, Chat } from "./apiDataInterfaces.js";
 
-export async function addUserToApiData(apiData: ChatMessage | ChatMessageTyping): Promise<void> {
+export async function addUserToApiData(apiData: Message | MessageTyping): Promise<void> {
     apiData.user = await userById(apiData.userId);
 }
 
