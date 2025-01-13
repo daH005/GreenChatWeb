@@ -1,7 +1,7 @@
 import { AlreadyTakenFlag,
          CodeIsValidFlag,
          User,
-         ChatHistory,
+         ChatMessages,
          UserChats,
          MessageStorageId,
          MessageFilenames,
@@ -12,7 +12,7 @@ import { EmailRequestData,
          EmailAndCodeRequestData,
          UserIdRequestData,
          UserEditRequestData,
-         ChatHistoryRequestData,
+         ChatMessagesRequestData,
        } from "./requestDataInterfaces.js";
 import { makeUrlWithParams, commonFetch, JSONFromResponseOrNull } from "./base.js";
 
@@ -136,8 +136,8 @@ export async function requestUserChats(): Promise<UserChats> {
     return await response.json();
 }
 
-export async function requestChatHistory(requestData: ChatHistoryRequestData): Promise<ChatHistory> {
-    let response: Response = await commonFetch(makeUrlWithParams(HTTP_API_URLS.CHAT_HISTORY, requestData), {
+export async function requestChatMessages(requestData: ChatMessagesRequestData): Promise<ChatMessages> {
+    let response: Response = await commonFetch(makeUrlWithParams(HTTP_API_URLS.CHAT_MESSAGES, requestData), {
         method: "GET",
     });
     return await response.json();

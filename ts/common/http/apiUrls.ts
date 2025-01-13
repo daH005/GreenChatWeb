@@ -18,7 +18,7 @@ export const HTTP_API_URLS = {
     USER_BACKGROUND_EDIT: _HTTP_API_BASE_URL + "/user/background/edit",
     USER_CHATS: _HTTP_API_BASE_URL + "/user/chats",
 
-    CHAT_HISTORY: _HTTP_API_BASE_URL + "/chat/history",
+    CHAT_MESSAGES: _HTTP_API_BASE_URL + "/chat/messages",
     MESSAGES_FILES_SAVE: _HTTP_API_BASE_URL + "/chat/messages/files/save",
     MESSAGES_FILES_NAMES: _HTTP_API_BASE_URL + "/chat/messages/files/names",
     MESSAGES_FILES_GET: _HTTP_API_BASE_URL + "/chat/messages/files/get",

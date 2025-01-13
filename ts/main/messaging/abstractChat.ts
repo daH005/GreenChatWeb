@@ -4,7 +4,7 @@ import { choose } from "../../common/random.js";
 import { thisUser } from "../../common/thisUser.js";
 import { userInWindow } from "../../common/userInWindowChecking.js";
 import { newMessageSound } from "../../common/audio.js";
-import { requestChatHistory, requestToSaveMessageFiles } from "../../common/http/functions.js";
+import { requestChatMessages, requestToSaveMessageFiles } from "../../common/http/functions.js";
 import { addUserToApiData } from "../../common/apiDataAdding.js";
 import { sendWebSocketMessage } from "../websocket/init.js";
 import { WebSocketMessageType } from "../websocket/messageTypes.js";
@@ -291,11 +291,11 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
 
     protected async _loadFull(): Promise<void> {
         let offset = Object.keys(this._messages).length;
-        let apiData = await requestChatHistory({
+        let apiData = await requestChatMessages({
             chatId: this._id, offset,
         });
 
-        await this._fillChatHistory(apiData.messages);
+        await this._fillChatMessages(apiData.messages);
 
         setTimeout(() => {
             this._scrollToLastReadOrFromThisUserMessage();
@@ -304,7 +304,7 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
         this._fullyLoaded = true;
     }
 
-    protected async _fillChatHistory(messages: Message[]): Promise<void> {
+    protected async _fillChatMessages(messages: Message[]): Promise<void> {
         for (let i in messages) {
             await addUserToApiData(messages[i]);
             await this.addMessage(messages[i], true);

@@ -13,7 +13,7 @@ export interface User {
     email?: string,
 }
 
-export interface ChatHistory {
+export interface ChatMessages {
     messages: Message[],
 }
 

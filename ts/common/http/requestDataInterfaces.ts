@@ -16,7 +16,7 @@ export interface UserEditRequestData {
     lastName: string,
 }
 
-export interface ChatHistoryRequestData {
+export interface ChatMessagesRequestData {
     chatId: number,
     offset?: number,
 }
