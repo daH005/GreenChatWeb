@@ -149,7 +149,7 @@ export async function requestToSaveMessageFiles(files: FileList): Promise<Messag
         formData.append('files', files[i]);
     }
 
-    let response: Response = await commonFetch(HTTP_API_URLS.MESSAGES_FILES_SAVE, {
+    let response: Response = await commonFetch(HTTP_API_URLS.CHAT_MESSAGE_FILES_SAVE, {
         method: "POST",
         body: formData,
     });
@@ -162,7 +162,7 @@ export async function requestToSaveMessageFiles(files: FileList): Promise<Messag
 }
 
 export async function requestMessageFilenames(storageId: number): Promise<string[]> {
-    let response: Response = await commonFetch(makeUrlWithParams(HTTP_API_URLS.MESSAGES_FILES_NAMES, {storageId}), {
+    let response: Response = await commonFetch(makeUrlWithParams(HTTP_API_URLS.CHAT_MESSAGE_FILES_NAMES, {storageId}), {
         method: "GET",
     });
     let data = await response.json();

@@ -88,7 +88,7 @@ export class HTMLMessage extends AbstractHTMLTemplatedElement {
     }
 
     protected _makeUrl(filename: string): string {
-        return makeUrlWithParams(HTTP_API_URLS.MESSAGES_FILES_GET, {storageId: this._storageId, filename});
+        return makeUrlWithParams(HTTP_API_URLS.CHAT_MESSAGE_FILES_GET, {storageId: this._storageId, filename});
     }
 
     public get id(): number {
