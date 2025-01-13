@@ -290,9 +290,9 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
     }
 
     protected async _loadFull(): Promise<void> {
-        let offsetFromEnd = Object.keys(this._messages).length;
+        let offset = Object.keys(this._messages).length;
         let apiData = await requestChatHistory({
-            chatId: this._id, offsetFromEnd,
+            chatId: this._id, offset,
         });
 
         await this._fillChatHistory(apiData.messages);

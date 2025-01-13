@@ -18,5 +18,5 @@ export interface UserEditRequestData {
 
 export interface ChatHistoryRequestData {
     chatId: number,
-    offsetFromEnd?: number,
+    offset?: number,
 }
