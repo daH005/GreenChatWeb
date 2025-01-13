@@ -1,8 +1,7 @@
 import { Message, User } from "../../common/apiDataInterfaces.js";
+import { requestNewChat } from "../../common/http/functions.js";
 import { thisUser } from "../../common/thisUser.js";
 import { makeUserAvatarURL } from "../avatars.js";
-import { sendWebSocketMessage } from "../websocket/init.js";
-import { WebSocketMessageType } from "../websocket/messageTypes.js";
 import { HTMLChatLink } from "./chatLink.js";
 import { AbstractHTMLChat } from "./abstractChat.js";
 
@@ -33,12 +32,6 @@ export class HTMLPrivateChat extends AbstractHTMLChat {
     }
 
     public static newChat(interlocutor: User): HTMLPrivateChat {
-        sendWebSocketMessage({
-            type: WebSocketMessageType.ONLINE_STATUS_TRACING_ADDING,
-            data: {
-                userId: interlocutor.id,
-            }
-        });
         return new HTMLPrivateChat(HTMLPrivateChat._NEW_CHAT_TEMP_ID, 0, interlocutor);
     }
 
@@ -50,25 +43,23 @@ export class HTMLPrivateChat extends AbstractHTMLChat {
         super._initChildEls();
         this._link.hide();
         this._onlineStatusEl = this._thisEl.querySelector(".avatar");
+        this.updateOnlineStatus(this._interlocutor.isOnline);
     }
 
     protected async _makeAvatarURL(): Promise<string> {
         return await makeUserAvatarURL(this._interlocutor.id);
     }
 
-    protected _sendTyping(): void {
+    protected async _sendTyping(): Promise<void> {
         if (!this._isNotCreatedOnServer) {
-            super._sendTyping();
+            await super._sendTyping();
         }
     }
 
     protected async _sendMessage(): Promise<void> {
         if (this._isNotCreatedOnServer) {
-            sendWebSocketMessage({
-                type: WebSocketMessageType.NEW_CHAT,
-                data: {
-                    userIds: [thisUser.id, this._interlocutor.id],
-                }
+            await requestNewChat({
+                userIds: [thisUser.id, this._interlocutor.id],
             });
         } else {
             await super._sendMessage();

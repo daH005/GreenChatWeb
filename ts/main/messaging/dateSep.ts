@@ -1,4 +1,4 @@
-import { AbstractHTMLTemplatedElement } from "./abstractChatElement.js";
+import { AbstractHTMLTemplatedElement } from "./abstractTemplatedElement.js";
 
 export class HTMLDateSep extends AbstractHTMLTemplatedElement {
 

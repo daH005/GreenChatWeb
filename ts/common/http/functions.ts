@@ -1,51 +1,39 @@
-import { AlreadyTakenFlag,
-         CodeIsValidFlag,
-         User,
-         ChatMessages,
-         UserChats,
-         MessageStorageId,
-         MessageFilenames,
+import { User,
+         Chat,
+         Message,
        } from "../apiDataInterfaces.js";
 import { notify } from "../notification.js";
 import { HTTP_API_URLS } from "./apiUrls.js";
-import { EmailRequestData,
-         EmailAndCodeRequestData,
-         UserIdRequestData,
+import { EmailAndCodeRequestData,
          UserEditRequestData,
-         ChatMessagesRequestData,
+         NewChatRequestData,
+         NewMessageRequestData,
+         MessagesRequestData,
        } from "./requestDataInterfaces.js";
-import { makeUrlWithParams, commonFetch, JSONFromResponseOrNull } from "./base.js";
+import { makeUrlWithParams, commonFetch } from "./base.js";
 
-export async function requestToCheckEmail(requestData: EmailRequestData): Promise<AlreadyTakenFlag> {
-    let response: Response = await commonFetch(makeUrlWithParams(HTTP_API_URLS.USER_EMAIL_CHECK, requestData), {
-        method: "GET",
-    });
-    return await response.json();
-}
-
-export async function requestToSendEmailCode(requestData: EmailRequestData): Promise<null> {
+export async function requestToSendEmailCode(email: string) {
     let response: Response = await commonFetch(HTTP_API_URLS.USER_EMAIL_CODE_SEND, {
         method: "POST",
-        body: requestData,
+        body: {email},
     });
 
-    if (response.status == 200) {
+    if (response.status == 202) {
         notify("Код успешно отправлен!")
     } else if (response.status == 409) {
         notify("Вы не можете отправлять более одного кода в минуту!");
     }
-
-    return await JSONFromResponseOrNull(response);
 }
 
-export async function requestToCheckEmailCode(requestData: EmailAndCodeRequestData): Promise<CodeIsValidFlag> {
+export async function requestToCheckEmailCode(requestData: EmailAndCodeRequestData): Promise<boolean> {
     let response: Response = await commonFetch(makeUrlWithParams(HTTP_API_URLS.USER_EMAIL_CODE_CHECK, requestData), {
         method: "GET",
     });
-    return await response.json();
+    let data = await response.json();
+    return data.codeIsValid;
 }
 
-export async function requestToLogin(requestData: EmailAndCodeRequestData): Promise<null> {
+export async function requestToLogin(requestData: EmailAndCodeRequestData) {
     let response: Response = await commonFetch(HTTP_API_URLS.USER_LOGIN, {
         method: "POST",
         body: requestData,
@@ -54,20 +42,20 @@ export async function requestToLogin(requestData: EmailAndCodeRequestData): Prom
     if (response.status == 403) {
         notify("Неверный логин или пароль!")
     }
-
-    return await JSONFromResponseOrNull(response);
 }
 
-export async function requestToLogout(): Promise<null> {
+export async function requestToLogout() {
     let response: Response = await commonFetch(HTTP_API_URLS.USER_LOGOUT, {
         method: "POST",
     });
-    return await JSONFromResponseOrNull(response);
 }
 
-export async function requestUser(requestData: UserIdRequestData | null): Promise<User> {
-    if (!requestData) {
-        requestData = <UserIdRequestData>{};
+export async function requestUser(userId: number | null): Promise<User> {
+    let requestData;
+    if (userId) {
+        requestData = {userId};
+    } else {
+        requestData = {};
     }
 
     let response: Response = await commonFetch(makeUrlWithParams(HTTP_API_URLS.USER, requestData), {
@@ -75,14 +63,15 @@ export async function requestUser(requestData: UserIdRequestData | null): Promis
     });
 
     if (response.status == 404) {
-        notify("Пользователь с таким ID не найден!")
+        notify("Пользователь с таким ID не найден!");
+        throw new Error();
     }
 
     return await response.json();
 }
 
-export async function requestUserAvatar(requestData: UserIdRequestData): Promise<Blob> {
-    let response: Response = await commonFetch(makeUrlWithParams(HTTP_API_URLS.USER_AVATAR, requestData), {
+export async function requestUserAvatar(userId: number): Promise<Blob> {
+    let response: Response = await commonFetch(makeUrlWithParams(HTTP_API_URLS.USER_AVATAR, {userId}), {
         method: "GET",
     });
     return await response.blob();
@@ -95,15 +84,14 @@ export async function requestUserBackground(): Promise<Blob> {
     return await response.blob();
 }
 
-export async function requestToEditUser(requestData: UserEditRequestData): Promise<null> {
+export async function requestToEditUser(requestData: UserEditRequestData) {
     let response: Response = await commonFetch(HTTP_API_URLS.USER_EDIT, {
         method: "PUT",
         body: requestData,
     });
-    return await JSONFromResponseOrNull(response);
 }
 
-export async function requestToEditUserAvatar(image: Blob): Promise<null> {
+export async function requestToEditUserAvatar(image: Blob) {
     let response: Response = await commonFetch(HTTP_API_URLS.USER_AVATAR_EDIT, {
         method: "PUT",
         body: image,
@@ -112,11 +100,9 @@ export async function requestToEditUserAvatar(image: Blob): Promise<null> {
     if (response.status == 413) {
         notify("Вес аватарки слишком велик, бро!");
     }
-
-    return await JSONFromResponseOrNull(response);
 }
 
-export async function requestToEditUserBackground(image: Blob): Promise<null> {
+export async function requestToEditUserBackground(image: Blob) {
     let response: Response = await commonFetch(HTTP_API_URLS.USER_BACKGROUND_EDIT, {
         method: "PUT",
         body: image,
@@ -125,25 +111,75 @@ export async function requestToEditUserBackground(image: Blob): Promise<null> {
     if (response.status == 413) {
         notify("А фончик ничего себе весит-то! Полегче...");
     }
-
-    return await JSONFromResponseOrNull(response);
 }
 
-export async function requestUserChats(): Promise<UserChats> {
+export async function requestUserChats(): Promise<Chat[]> {
     let response: Response = await commonFetch(HTTP_API_URLS.USER_CHATS, {
         method: "GET",
     });
-    return await response.json();
+    let data = await response.json();
+    return data.chats;
 }
 
-export async function requestChatMessages(requestData: ChatMessagesRequestData): Promise<ChatMessages> {
-    let response: Response = await commonFetch(makeUrlWithParams(HTTP_API_URLS.CHAT_MESSAGES, requestData), {
+export async function requestChat(chatId: number): Promise<Chat> {
+    let response: Response = await commonFetch(makeUrlWithParams(HTTP_API_URLS.CHAT, {chatId}), {
         method: "GET",
     });
     return await response.json();
 }
 
-export async function requestToSaveMessageFiles(files: FileList): Promise<MessageStorageId> {
+export async function requestNewChat(requestData: NewChatRequestData) {
+    let response: Response = await commonFetch(HTTP_API_URLS.CHAT_NEW, {
+        method: "POST",
+        body: requestData,
+    });
+}
+
+export async function requestTyping(chatId: number) {
+    let response: Response = await commonFetch(HTTP_API_URLS.CHAT_TYPING, {
+        method: "POST",
+        body: {chatId},
+    });
+}
+
+export async function requestUnreadCount(chatId: number): Promise<number> {
+    let response: Response = await commonFetch(makeUrlWithParams(HTTP_API_URLS.CHAT_UNREAD_COUNT, {chatId}), {
+        method: "GET",
+    });
+    let data = await response.json();
+    return data.unreadCount;
+}
+
+export async function requestMessage(messageId: number): Promise<Message> {
+    let response: Response = await commonFetch(makeUrlWithParams(HTTP_API_URLS.CHAT_MESSAGE, {messageId}), {
+        method: "GET",
+    });
+    return await response.json();
+}
+
+export async function requestNewMessage(requestData: NewMessageRequestData) {
+    let response: Response = await commonFetch(HTTP_API_URLS.CHAT_MESSAGE_NEW, {
+        method: "POST",
+        body: requestData,
+    });
+}
+
+export async function requestToReadMessage(messageId: number) {
+    let response: Response = await commonFetch(HTTP_API_URLS.CHAT_MESSAGE_READ, {
+        method: "PUT",
+        body: {messageId},
+    });
+}
+
+export async function requestMessages(requestData: MessagesRequestData): Promise<Message[]> {
+    let response: Response = await commonFetch(makeUrlWithParams(HTTP_API_URLS.CHAT_MESSAGES, requestData), {
+        method: "GET",
+    });
+    let data = await response.json();
+    return data.messages;
+}
+
+export async function requestToSaveMessageFiles(files: FileList): Promise<number> {
     let formData = new FormData();
     for (let i = 0; i < files.length; i++) {
         formData.append('files', files[i]);
@@ -156,9 +192,11 @@ export async function requestToSaveMessageFiles(files: FileList): Promise<Messag
 
     if (response.status == 413) {
         notify("Суммарный вес файлов слишком велик!");
+        throw new Error();
     }
 
-    return await response.json();
+    let data = await response.json();
+    return data.storageId;
 }
 
 export async function requestMessageFilenames(storageId: number): Promise<string[]> {

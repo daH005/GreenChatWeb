@@ -1,17 +1,8 @@
 import { WEBSOCKET_URL } from "./url.js";
-import { WebSocketMessage,
-         UserId,
-         ChatId,
-         NewChat,
-         NewMessage,
-         MessageWasRead,
-       } from "./clientDataInterfaces.js";
-import { WebSocketMessageType } from "./messageTypes";
 
-export type AnyWebSocketMessageType = WebSocketMessage<UserId | ChatId | NewChat | NewMessage | MessageWasRead>;
 var websocket: WebSocket;
 
-export function initWebSocket(handlers: Partial<Record<WebSocketMessageType, Function>>): void {
+export function initWebSocket(handlers): void {
     websocket = new WebSocket(WEBSOCKET_URL);
 
     websocket.onmessage = async (event: MessageEvent) => {
@@ -19,8 +10,4 @@ export function initWebSocket(handlers: Partial<Record<WebSocketMessageType, Fun
         await handlers[message.type](message.data);
     }
 
-}
-
-export function sendWebSocketMessage(data: AnyWebSocketMessageType): void {
-    websocket.send(JSON.stringify(data));
 }

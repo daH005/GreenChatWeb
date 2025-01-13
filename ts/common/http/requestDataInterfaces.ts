@@ -1,14 +1,6 @@
-export interface EmailRequestData {
-    email: string,
-}
-
-export interface EmailAndCodeRequestData extends EmailRequestData {
+export interface EmailAndCodeRequestData {
     email: string,
     code: number,
-}
-
-export interface UserIdRequestData {
-    userId: number,
 }
 
 export interface UserEditRequestData {
@@ -16,7 +8,19 @@ export interface UserEditRequestData {
     lastName: string,
 }
 
-export interface ChatMessagesRequestData {
+export interface NewChatRequestData {
+    userIds: number[],
+    isGroup?: boolean,
+    name?: string,
+}
+
+export interface NewMessageRequestData {
+    chatId: number,
+    text: string,
+    storageId?: number | null,
+}
+
+export interface MessagesRequestData {
     chatId: number,
     offset?: number,
 }

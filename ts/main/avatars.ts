@@ -5,8 +5,6 @@ export async function setUserAvatar(avatarImageEl: HTMLImageElement, userId: num
 }
 
 export async function makeUserAvatarURL(userId: number): Promise<string> {
-   let avatarFile = await requestUserAvatar({
-        userId,
-    });
+    let avatarFile = await requestUserAvatar(userId);
     return URL.createObjectURL(avatarFile);
 }

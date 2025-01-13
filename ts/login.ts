@@ -1,4 +1,7 @@
-import { requestToLogin, requestToCheckEmailCode, requestToSendEmailCode } from "./common/http/functions.js";
+import { requestToLogin,
+         requestToCheckEmailCode,
+         requestToSendEmailCode,
+       } from "./common/http/functions.js";
 import { redirectToMainPage } from "./common/redirects.js";
 import { setInputAsInvalidAndNotifyWithThrow, removeInvalidClassForAllInputs } from "./common/inputsHighlighting.js";
 
@@ -9,7 +12,7 @@ const buttonEl: HTMLButtonElement = <HTMLButtonElement>document.getElementById("
 
 sendEmailCodeButtonEl.onclick = async () => {
     await checkEmail();
-    await requestToSendEmailCode({email: emailInputEl.value});
+    await requestToSendEmailCode(emailInputEl.value);
     removeInvalidClassForAllInputs();
 }
 
@@ -26,23 +29,23 @@ buttonEl.onclick = async () => {
     redirectToMainPage();
 }
 
-async function checkEmail(): Promise<void> {
+async function checkEmail() {
     if (!emailInputEl.value.includes("@")) {
         setInputAsInvalidAndNotifyWithThrow(emailInputEl, "Введите почту!");
     }
 }
 
-async function checkEmailCode(): Promise<void> {
+async function checkEmailCode() {
     if (!emailCodeInputEl.value) {
         setInputAsInvalidAndNotifyWithThrow(emailCodeInputEl, "Введите код!");
         return;
     }
 
-    let flagData = await requestToCheckEmailCode({
+    let codeIsValid = await requestToCheckEmailCode({
         email: emailInputEl.value,
         code: Number(emailCodeInputEl.value),
     });
-    if (!flagData.codeIsValid) {
+    if (!codeIsValid) {
         setInputAsInvalidAndNotifyWithThrow(emailCodeInputEl, "Код подтверждения неверный!");
     }
 }

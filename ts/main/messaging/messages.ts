@@ -1,10 +1,10 @@
 import { User } from "../../common/apiDataInterfaces.js";
 import { HTTP_API_URLS } from "../../common/http/apiUrls.js";
 import { makeUrlWithParams } from "../../common/http/base.js";
-import { requestMessageFilenames } from "../../common/http/functions.js";
+import { requestToReadMessage, requestMessageFilenames } from "../../common/http/functions.js";
 import { dateToTimeStr }  from "../datetime.js";
 import { makeHyperlinks, makeHighlights } from "../messageTextHighlighting.js";
-import { AbstractHTMLTemplatedElement } from "./abstractChatElement.js";
+import { AbstractHTMLTemplatedElement } from "./abstractTemplatedElement.js";
 import { HTMLMessageFile } from "./messageFile.js";
 import { HTMLMessageImageFile } from "./messageImageFile.js";
 

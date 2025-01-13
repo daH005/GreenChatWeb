@@ -1,19 +1,22 @@
-import { User, Message, MessageTyping } from "../../common/apiDataInterfaces.js";
+import { User, Message } from "../../common/apiDataInterfaces.js";
 import { isMobile } from "../../common/mobileDetecting.js";
 import { choose } from "../../common/random.js";
 import { thisUser } from "../../common/thisUser.js";
 import { userInWindow } from "../../common/userInWindowChecking.js";
 import { newMessageSound } from "../../common/audio.js";
-import { requestChatMessages, requestToSaveMessageFiles } from "../../common/http/functions.js";
+import { requestNewMessage,
+         requestTyping,
+         requestToReadMessage,
+         requestMessages,
+         requestToSaveMessageFiles,
+       } from "../../common/http/functions.js";
 import { addUserToApiData } from "../../common/apiDataAdding.js";
-import { sendWebSocketMessage } from "../websocket/init.js";
-import { WebSocketMessageType } from "../websocket/messageTypes.js";
 import { dateToDateStr, normalizeDateTimezone } from "../datetime.js";
+import { Typing } from "../websocket/signalInterfaces.js";
 import { HTMLChatLink } from "./chatLink.js";
 import { HTMLDateSep } from "./dateSep.js";
 import { HTMLMessage, HTMLMessageFromThisUser } from "./messages.js";
-import { sendMessageToWebSocketAndClearInput } from "./websocketFunctions.js";
-import { AbstractHTMLTemplatedElement } from "./abstractChatElement.js";
+import { AbstractHTMLTemplatedElement } from "./abstractTemplatedElement.js";
 import { addDragUploadingForInput } from "./files/drag.js";
 import { NoOverwriteInputFilesMapper } from "./files/htmlMapping.js";
 
@@ -108,8 +111,8 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
             this._read();
         });
 
-        this._textareaEl.addEventListener("input", () => {
-            this._sendTyping();
+        this._textareaEl.addEventListener("input", async () => {
+            await this._sendTyping();
         });
         this._textareaEl.setAttribute("placeholder", choose(this._PHRASES));
 
@@ -138,13 +141,8 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
         this._link.updateUnreadCount(this._unreadCount);
     }
 
-    protected _sendTyping(): void {
-        sendWebSocketMessage({
-            type: WebSocketMessageType.NEW_MESSAGE_TYPING,
-            data: {
-                chatId: this._id,
-            }
-        });
+    protected async _sendTyping(): Promise<void> {
+        await requestTyping(this._id);
     }
 
     protected async _sendMessage(): Promise<void> {
@@ -152,8 +150,7 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
 
         let storageId: number | null = null;
         if (this._hasFiles()) {
-            let save = await requestToSaveMessageFiles(this._clipInputEl.files);
-            storageId = save.storageId;
+            storageId = await requestToSaveMessageFiles(this._clipInputEl.files);
             this._filesMapper.clear();
         } else if (!textIsMeaningful) {
             return;
@@ -164,14 +161,14 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
             text = "Файл(ы)";
         }
 
-        sendMessageToWebSocketAndClearInput({
-            type: WebSocketMessageType.NEW_MESSAGE,
-            data: {
-                chatId: this._id,
-                text,
-                storageId,
-            }
-        }, this._textareaEl);
+        await requestNewMessage({
+            chatId: this._id,
+            text,
+            storageId,
+        });
+
+        this._textareaEl.value = "";
+        this._textareaEl.style.height = "";
     }
 
     protected _messageTextIsMeaningful(): boolean {
@@ -211,6 +208,8 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
     }
 
     public async addMessage(apiData: Message, prepend: boolean=false): Promise<void> {
+        await addUserToApiData(apiData);
+
         apiData.creatingDatetime = new Date(apiData.creatingDatetime);
         normalizeDateTimezone(apiData.creatingDatetime);
 
@@ -262,7 +261,7 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
         }
 
         if (itIsNewInterlocutorMessage && userInWindow() && this._isOpened) {
-            this._read();
+            await this._read();
         }
 
         if (!prepend) {
@@ -290,11 +289,11 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
 
     protected async _loadFull(): Promise<void> {
         let offset = Object.keys(this._messages).length;
-        let apiData = await requestChatMessages({
+        let messages = await requestMessages({
             chatId: this._id, offset,
         });
 
-        await this._fillChatMessages(apiData.messages);
+        await this._fillChatMessages(messages);
 
         setTimeout(() => {
             this._scrollToLastReadOrFromThisUserMessage();
@@ -305,7 +304,6 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
 
     protected async _fillChatMessages(messages: Message[]): Promise<void> {
         for (let i in messages) {
-            await addUserToApiData(messages[i]);
             await this.addMessage(messages[i], true);
         }
     }
@@ -328,22 +326,25 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
     }
 
     protected _lastReadOrFromThisUserMessage(): HTMLMessage {
-        let message = null;
-        let ids = this._sortedMessagesIds();
+        let ids = this._sortedMessageIds();
+        ids = ids.reverse();
+        let unreadCountRest = this._unreadCount;
         for (let i in ids) {
             let id = ids[i];
 
             let curMessage = this._messages[id];
-            if ((!curMessage.fromThisUser && curMessage.isRead) || curMessage.fromThisUser) {
-                message = curMessage;
-            } else if (!curMessage.fromThisUser && !curMessage.isRead) {
-                break;
+            if (curMessage.fromThisUser) {
+                return curMessage;
+            }
+
+            unreadCountRest -= 1;
+            if (unreadCountRest <= 0) {
+                return curMessage;
             }
         }
-        return message;
     }
 
-    protected _sortedMessagesIds(): number[] {
+    protected _sortedMessageIds(): number[] {
         let ids: number[] = Object.keys(this._messages).map(Number);
         ids.sort((a, b) => {
             return a - b;
@@ -351,7 +352,9 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
         return ids;
     }
 
-    public updateTyping(apiData: MessageTyping): void {
+    public async updateTyping(apiData: Typing): Promise<void> {
+        await addUserToApiData(apiData);
+
         if (this._typingTimeoutId) {
             clearTimeout(this._typingTimeoutId);
         }
@@ -364,28 +367,21 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
         }, 1000);
     }
 
-    protected _read(): void {
+    protected async _read(): Promise<void> {
         let message: HTMLMessage | null = this._lastVisibleMessage();
         if (!message) {
             return;
         }
 
         if (!message.isRead && !message.fromThisUser) {
-            message.setAsRead();
-            sendWebSocketMessage({
-                type: WebSocketMessageType.MESSAGE_WAS_READ,
-                data: {
-                    chatId: this._id,
-                    messageId: message.id,
-                }
-            });
+            await requestToReadMessage(message.id);
         }
     }
 
     protected _lastVisibleMessage(): HTMLMessage {
         let lineAbsY = this._messagesLineBottomAbsY();
 
-        let ids = this._sortedMessagesIds();
+        let ids = this._sortedMessageIds();
         let message: HTMLMessage | null = null;
         for (let id of ids) {
             let messageBottomY = this._messages[id].getBoundingClientRect().bottom;
@@ -411,6 +407,7 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
     }
 
     public updateUnreadCount(count: number): void {
+        this._unreadCount = count;
         this._link.updateUnreadCount(count);
     }
 

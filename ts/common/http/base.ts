@@ -51,11 +51,3 @@ export function makeUrlWithParams(url: string, params): string {
     }
     return url + "?" + new URLSearchParams(params).toString();
 }
-
-export async function JSONFromResponseOrNull(response: Response) {
-    try {
-        return await response.json();
-    } catch (SyntaxError) {
-        return null;
-    }
-}

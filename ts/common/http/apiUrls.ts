@@ -4,7 +4,6 @@ if (!_HTTP_API_BASE_URL) {
 }
 
 export const HTTP_API_URLS = {
-    USER_EMAIL_CHECK: _HTTP_API_BASE_URL + "/user/login/email/check",
     USER_EMAIL_CODE_SEND: _HTTP_API_BASE_URL + "/user/login/email/code/send",
     USER_EMAIL_CODE_CHECK: _HTTP_API_BASE_URL + "/user/login/email/code/check",
     USER_LOGIN: _HTTP_API_BASE_URL + "/user/login",
@@ -18,6 +17,13 @@ export const HTTP_API_URLS = {
     USER_BACKGROUND_EDIT: _HTTP_API_BASE_URL + "/user/background/edit",
     USER_CHATS: _HTTP_API_BASE_URL + "/user/chats",
 
+    CHAT: _HTTP_API_BASE_URL + "/chat",
+    CHAT_NEW: _HTTP_API_BASE_URL + "/chat/new",
+    CHAT_TYPING: _HTTP_API_BASE_URL + "/chat/typing",
+    CHAT_UNREAD_COUNT: _HTTP_API_BASE_URL + "/chat/unreadCount",
+    CHAT_MESSAGE: _HTTP_API_BASE_URL + "/chat/message",
+    CHAT_MESSAGE_NEW: _HTTP_API_BASE_URL + "/chat/message/new",
+    CHAT_MESSAGE_READ: _HTTP_API_BASE_URL + "/chat/message/read",
     CHAT_MESSAGES: _HTTP_API_BASE_URL + "/chat/messages",
     CHAT_MESSAGE_FILES_SAVE: _HTTP_API_BASE_URL + "/chat/message/files/save",
     CHAT_MESSAGE_FILES_NAMES: _HTTP_API_BASE_URL + "/chat/message/files/names",
