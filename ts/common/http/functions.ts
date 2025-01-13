@@ -70,7 +70,7 @@ export async function requestUserInfo(requestData: UserIdRequestData | null): Pr
         requestData = <UserIdRequestData>{};
     }
 
-    let response: Response = await commonFetch(makeUrlWithParams(HTTP_API_URLS.USER_INFO, requestData), {
+    let response: Response = await commonFetch(makeUrlWithParams(HTTP_API_URLS.USER, requestData), {
         method: "GET",
     });
 
@@ -96,7 +96,7 @@ export async function requestUserBackground(): Promise<Blob> {
 }
 
 export async function requestToEditUserInfo(requestData: UserInfoEditRequestData): Promise<null> {
-    let response: Response = await commonFetch(HTTP_API_URLS.USER_INFO_EDIT, {
+    let response: Response = await commonFetch(HTTP_API_URLS.USER_EDIT, {
         method: "PUT",
         body: requestData,
     });
