@@ -4,12 +4,12 @@ from dataclasses import dataclass
 from _tests.util.user_num_counter import UserNumCounter
 
 __all__ = (
-    'UserInfo',
+    'User',
 )
 
 
 @dataclass
-class UserInfo:
+class User:
 
     email: str
     first_name: str

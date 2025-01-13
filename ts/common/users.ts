@@ -1,4 +1,4 @@
-import { requestUserInfo } from "./http/functions.js";
+import { requestUser } from "./http/functions.js";
 import { User } from "./apiDataInterfaces.js";
 
 var users: Record<number, User> = {}
@@ -14,7 +14,7 @@ export async function userById(userId: number | null = null): Promise<User> {
     } else {
         args = null;
     }
-    let user = await requestUserInfo(args);
+    let user = await requestUser(args);
     users[user.id] = user;
     return user;
 }

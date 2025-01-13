@@ -12,7 +12,7 @@ userIdParentEl.onclick = async () => {
     notify("ID успешно скопирован!");
 }
 
-export async function updateUserInfo(user: User): Promise<void> {
+export async function updateUser(user: User): Promise<void> {
     updateUserFullName(user.firstName + " " + user.lastName);
     userIdEl.textContent = String(user.id);
 

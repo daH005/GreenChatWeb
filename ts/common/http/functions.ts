@@ -11,7 +11,7 @@ import { HTTP_API_URLS } from "./apiUrls.js";
 import { EmailRequestData,
          EmailAndCodeRequestData,
          UserIdRequestData,
-         UserInfoEditRequestData,
+         UserEditRequestData,
          ChatHistoryRequestData,
        } from "./requestDataInterfaces.js";
 import { makeUrlWithParams, commonFetch, JSONFromResponseOrNull } from "./base.js";
@@ -65,7 +65,7 @@ export async function requestToLogout(): Promise<null> {
     return await JSONFromResponseOrNull(response);
 }
 
-export async function requestUserInfo(requestData: UserIdRequestData | null): Promise<User> {
+export async function requestUser(requestData: UserIdRequestData | null): Promise<User> {
     if (!requestData) {
         requestData = <UserIdRequestData>{};
     }
@@ -95,7 +95,7 @@ export async function requestUserBackground(): Promise<Blob> {
     return await response.blob();
 }
 
-export async function requestToEditUserInfo(requestData: UserInfoEditRequestData): Promise<null> {
+export async function requestToEditUser(requestData: UserEditRequestData): Promise<null> {
     let response: Response = await commonFetch(HTTP_API_URLS.USER_EDIT, {
         method: "PUT",
         body: requestData,

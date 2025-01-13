@@ -7,7 +7,7 @@ from itertools import combinations
 from typing import Iterator
 
 from _tests.util.drivers import new_chrome_driver
-from _tests.util.user_info import UserInfo
+from _tests.util.user_generator import User
 from _tests.data import (
     Params,
     SetForTest
@@ -17,11 +17,11 @@ from _tests.data import (
 class TestAll:
 
     _driver: Chrome = new_chrome_driver()
-    _users: list[UserInfo] = []
-    _users_pairs_with_histories: list[tuple[UserInfo, UserInfo, list[str]]] = []
+    _users: list[User] = []
+    _users_pairs_with_histories: list[tuple[User, User, list[str]]] = []
     _iter_histories: Iterator[list[str]] = iter(SetForTest.HISTORIES)
 
-    _cur_user: UserInfo
+    _cur_user: User
     _cur_chat_el: WebElement
 
     @classmethod
@@ -50,13 +50,13 @@ class TestAll:
 
     @classmethod
     def _register_new(cls) -> None:
-        user: UserInfo = UserInfo.new()
+        user: User = User.new()
         cls._users.append(user)
         cls._login(user)  # as registration
         cls._set_full_name()
 
     @classmethod
-    def _login(cls, user: UserInfo) -> None:
+    def _login(cls, user: User) -> None:
         cls._driver.get(Params.FullUrls.LOGIN)
 
         cls._driver.find_element(By.XPATH, Params.Xpaths.LOGIN_EMAIL).send_keys(user.email)
@@ -90,7 +90,7 @@ class TestAll:
         cls._driver.find_element(By.XPATH, Params.Xpaths.MAIN_SETTINGS_SAVE).click()
 
     @classmethod
-    def _test_positive_redirect_to_main_after_login(cls, user: UserInfo) -> None:
+    def _test_positive_redirect_to_main_after_login(cls, user: User) -> None:
         cls._login(user)
         assert cls._driver.current_url == Params.FullUrls.MAIN
 
@@ -111,7 +111,7 @@ class TestAll:
 
     @classmethod
     def _make_users_pairs_with_histories(cls) -> None:
-        users_pairs: list[tuple[UserInfo, UserInfo]] = combinations(cls._users, 2)
+        users_pairs: list[tuple[User, User]] = combinations(cls._users, 2)
         cur_history: list[str]
         for pair in users_pairs:
             cur_history = cls._next_history()
@@ -168,11 +168,11 @@ class TestAll:
         assert cls._cur_chat_el.find_elements(By.XPATH, Params.Xpaths.MAIN_CUR_CHAT_EACH_MESSAGE_TEXT)[-1].text == text_message
 
     @classmethod
-    def _change_users(cls, first_user: UserInfo,
-                      second_user: UserInfo,
+    def _change_users(cls, first_user: User,
+                      second_user: User,
                       ) -> None:
         old_user = cls._cur_user
-        new_user: UserInfo = first_user
+        new_user: User = first_user
         if old_user == first_user:
             new_user = second_user
         cls._close_cur_chat()

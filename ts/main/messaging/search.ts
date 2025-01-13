@@ -1,4 +1,4 @@
-import { requestUserInfo } from "../../common/http/functions.js";
+import { requestUser } from "../../common/http/functions.js";
 import { setInputAsInvalidAndNotifyWithThrow, removeInvalidClassForAllInputs } from "../../common/inputsHighlighting.js";
 import { thisUser } from "../../common/thisUser.js";
 import { User } from "../../common/apiDataInterfaces.js";
@@ -29,7 +29,7 @@ async function searchUserAndSwitchToChat(): Promise<void> {
         return;
     }
 
-    let interlocutor: User = await requestUserInfo({userId: interlocutorId});
+    let interlocutor: User = await requestUser({userId: interlocutorId});
 
     let chat: HTMLPrivateChat = HTMLPrivateChat.newChat(interlocutor);
     await chat.init();

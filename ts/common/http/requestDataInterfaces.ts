@@ -11,7 +11,7 @@ export interface UserIdRequestData {
     userId: number,
 }
 
-export interface UserInfoEditRequestData {
+export interface UserEditRequestData {
     firstName: string,
     lastName: string,
 }

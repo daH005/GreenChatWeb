@@ -1,9 +1,9 @@
 import { notify } from "../common/notification.js";
 import { thisUser } from "../common/thisUser.js";
-import { requestToEditUserInfo, requestToEditUserAvatar, requestToEditUserBackground } from "../common/http/functions.js";
+import { requestToEditUser, requestToEditUserAvatar, requestToEditUserBackground } from "../common/http/functions.js";
 import { setInputAsInvalidAndNotifyWithThrow, removeInvalidClassForAllInputs } from "../common/inputsHighlighting.js";
 import { updateBackgroundUrl } from "./background.js";
-import { updateUserFullName } from "./thisUserInfo.js";
+import { updateUserFullName } from "./thisUser.js";
 
 var avatarSrcBackup: string;
 var backgroundSrcBackup: string;
@@ -97,7 +97,7 @@ saveButtonEl.onclick = async () => {
         thisUser.firstName = firstNameInputEl.value;
         thisUser.lastName = lastNameInputEl.value;
 
-        await requestToEditUserInfo({
+        await requestToEditUser({
             firstName: firstNameInputEl.value,
             lastName: lastNameInputEl.value,
         });
