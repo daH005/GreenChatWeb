@@ -196,7 +196,7 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
             await this._loadFull();
         }
         this._link.open();
-        this._read();
+        await this._read();
     }
 
     public close(): void {
@@ -295,9 +295,9 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
 
         await this._fillMessages(messages);
 
-        setTimeout(() => {
-            this._scrollToLastReadOrFromThisUserMessage();
-        }, this._WAITING_FOR_CHAT_LOADING)
+        // setTimeout(() => {
+        this._scrollToLastReadOrFromThisUserMessage();
+        // }, this._WAITING_FOR_CHAT_LOADING)
 
         this._fullyLoaded = true;
     }
@@ -322,7 +322,55 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
         let messageBottomAbsY = message.getBoundingClientRect().bottom + scrollTop;
         let messagesContainerBottomAbsY = this._messagesEl.getBoundingClientRect().bottom;
         let resultY = messageBottomAbsY - messagesContainerBottomAbsY;
+        console.log(resultY);
         return resultY;
+    }
+
+    public async updateTyping(apiData: Typing): Promise<void> {
+        await addUserToApiData(apiData);
+
+        if (this._typingTimeoutId) {
+            clearTimeout(this._typingTimeoutId);
+        }
+
+        this._typingEl.textContent = apiData.user.firstName + " печатает...";
+
+        this._typingTimeoutId = setTimeout(() => {
+            this._typingEl.textContent = "";
+            this._typingTimeoutId = null;
+        }, 1000);
+    }
+
+    protected async _read(): Promise<void> {
+        let message: HTMLMessage | null = this._lastVisibleMessage();
+        if (!message) {
+            return;
+        }
+
+        if (message.id > this._lastReadOrFromThisUserMessage().id) {
+            await requestToReadMessage(message.id);
+        }
+    }
+
+    protected _lastVisibleMessage(): HTMLMessage {
+        let lineAbsY = this._messagesLineBottomAbsY();
+
+        let ids = this._sortedMessageIds();
+        let message: HTMLMessage | null = null;
+        for (let id of ids) {
+            let messageBottomY = this._messages[id].getBoundingClientRect().bottom;
+            if (messageBottomY <= lineAbsY) {
+                message = this._messages[id];
+            } else {
+                break;
+            }
+        }
+
+        return message;
+    }
+
+    protected _messagesLineBottomAbsY(): number {
+        return this._messagesEl.getBoundingClientRect().bottom;
     }
 
     protected _lastReadOrFromThisUserMessage(): HTMLMessage {
@@ -350,53 +398,6 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
             return a - b;
         });
         return ids;
-    }
-
-    public async updateTyping(apiData: Typing): Promise<void> {
-        await addUserToApiData(apiData);
-
-        if (this._typingTimeoutId) {
-            clearTimeout(this._typingTimeoutId);
-        }
-
-        this._typingEl.textContent = apiData.user.firstName + " печатает...";
-
-        this._typingTimeoutId = setTimeout(() => {
-            this._typingEl.textContent = "";
-            this._typingTimeoutId = null;
-        }, 1000);
-    }
-
-    protected async _read(): Promise<void> {
-        let message: HTMLMessage | null = this._lastVisibleMessage();
-        if (!message) {
-            return;
-        }
-
-        if (!message.isRead && !message.fromThisUser) {
-            await requestToReadMessage(message.id);
-        }
-    }
-
-    protected _lastVisibleMessage(): HTMLMessage {
-        let lineAbsY = this._messagesLineBottomAbsY();
-
-        let ids = this._sortedMessageIds();
-        let message: HTMLMessage | null = null;
-        for (let id of ids) {
-            let messageBottomY = this._messages[id].getBoundingClientRect().bottom;
-            if (messageBottomY <= lineAbsY) {
-                message = this._messages[id];
-            } else {
-                break;
-            }
-        }
-
-        return message;
-    }
-
-    protected _messagesLineBottomAbsY(): number {
-        return this._messagesEl.getBoundingClientRect().bottom;
     }
 
     public setMessagesAsRead(messagesIds: number[]): void {
