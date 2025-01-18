@@ -354,7 +354,7 @@
 }
 
 .chat__message__text .highlighted-text {
-    backdrop-filter: brightness(95%);
+    background: darkslategrey;
     padding: 5px;
     border-radius: 10px;
 }
