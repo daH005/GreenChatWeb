@@ -2,6 +2,9 @@ import { AbstractHTMLTemplatedElement } from "./abstractTemplatedElement.js";
 
 export class HTMLMessageFile extends AbstractHTMLTemplatedElement {
 
+    protected _DANGEROUS_EXTENSIONS: string[] = [
+        "exe", "cmd", "bat", "sh", "bash",
+    ];
     protected _thisElTemplateEl = <HTMLTemplateElement>document.getElementById("js-message-file-temp");
     protected declare _thisEl: HTMLAnchorElement;
     protected _filenameEl: HTMLElement;
@@ -20,6 +23,14 @@ export class HTMLMessageFile extends AbstractHTMLTemplatedElement {
 
         this._filenameEl = this._thisEl.querySelector(".chat__file__name");
         this._filenameEl.textContent = this._filename;
+
+        if (this._DANGEROUS_EXTENSIONS.includes(this._extractExtension())) {
+            this._thisEl.classList.add("chat__file--danger");
+        }
+    }
+
+    protected _extractExtension(): string {
+        return this._filename.split(".")[1];
     }
 
 }

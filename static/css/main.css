@@ -517,6 +517,10 @@ a.chat__file:hover {
     color: var(--main-3-color);
 }
 
+.chat__file.chat__file--danger .chat__file__icon {
+    color: var(--error-color);
+}
+
 .chat__file__name {
     margin-left: 1vw;
     color: white;
