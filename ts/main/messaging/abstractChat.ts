@@ -107,8 +107,8 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
         this._nameEl.textContent = this._name;
 
         this._messagesEl = this._thisEl.querySelector(".chat__messages");
-        this._messagesEl.addEventListener("scroll", () => {
-            this._read();
+        this._messagesEl.addEventListener("scroll", async () => {
+            await this._read();
         });
 
         this._textareaEl.addEventListener("input", async () => {
@@ -292,9 +292,9 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
 
         await this._fillMessages(messages);
 
-        // setTimeout(() => {
-        this._scrollToLastReadOrFromThisUserMessage();
-        // }, this._WAITING_FOR_CHAT_LOADING)
+        setTimeout(() => {
+            this._scrollToLastReadOrFromThisUserMessage();
+        }, this._WAITING_FOR_CHAT_LOADING)
 
         this._fullyLoaded = true;
     }
@@ -319,7 +319,6 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
         let messageBottomAbsY = message.getBoundingClientRect().bottom + scrollTop;
         let messagesContainerBottomAbsY = this._messagesEl.getBoundingClientRect().bottom;
         let resultY = messageBottomAbsY - messagesContainerBottomAbsY;
-        console.log(resultY);
         return resultY;
     }
 
@@ -373,7 +372,7 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
     protected _lastReadOrFromThisUserMessage(): HTMLMessage {
         let ids = this._sortedMessageIds();
         ids = ids.reverse();
-        let unreadCountRest = this._unreadCount;
+        let unreadCountRest = this._unreadCount + 1;
         for (let i in ids) {
             let id = ids[i];
 
