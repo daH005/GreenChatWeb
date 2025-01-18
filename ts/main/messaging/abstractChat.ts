@@ -300,8 +300,8 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
     }
 
     protected async _fillMessages(messages: Message[]): Promise<void> {
-        for (let i in messages) {
-            await this.addMessage(messages[i], true);
+        for (let message of messages) {
+            await this.addMessage(message, true);
         }
     }
 
@@ -370,12 +370,9 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
     }
 
     protected _lastReadOrFromThisUserMessage(): HTMLMessage {
-        let ids = this._sortedMessageIds();
-        ids = ids.reverse();
+        let ids = this._sortedMessageIds().reverse();
         let unreadCountRest = this._unreadCount + 1;
-        for (let i in ids) {
-            let id = ids[i];
-
+        for (let id of ids) {
             let curMessage = this._messages[id];
             if (curMessage.fromThisUser) {
                 return curMessage;
@@ -397,8 +394,7 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
     }
 
     public setMessagesAsRead(messagesIds: number[]): void {
-        for (let i in messagesIds) {
-            let id = messagesIds[i];
+        for (let id of messagesIds) {
             this._messages[id].setAsRead();
         }
     }

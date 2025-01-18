@@ -69,18 +69,17 @@ async function addPrivateChat(apiData: Chat): Promise<HTMLPrivateChat> {
     return chat;
 }
 
-export async function initMessaging() {
-    let chats = await requestUserChats();
+export async function initMessaging(): Promise<void> {
+    let chats: Chat[] = await requestUserChats();
     chats = chats.reverse();
 
-    let chat: AbstractHTMLChat;
-    for (let i in chats) {
-        if (!chats[i].isGroup) {
-            chat = await addPrivateChat(chats[i]);
-
-            if (chats[i].lastMessage) {
-                await chat.addMessage(chats[i].lastMessage);
-            }
+    let HTMLChat: AbstractHTMLChat;
+    for (let chat of chats) {
+        if (!chat.isGroup) {
+            HTMLChat = await addPrivateChat(chat);
+        }
+        if (chat.lastMessage) {
+            await HTMLChat.addMessage(chat.lastMessage);
         }
     }
 }
