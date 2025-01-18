@@ -16,17 +16,16 @@ export class HTMLChatLink extends AbstractHTMLTemplatedElement {
     protected _avatarURL: string;
     protected _chatName: string;
 
-    public constructor(chatName: string, avatarURL: string) {
+    public constructor(chatName: string, avatarURL: string, openChatFunc) {
         super(HTMLChatLink._chatLinkParentEl);
         this._chatName = chatName;
         this._avatarURL = avatarURL;
+        this._openChat = openChatFunc;
     }
 
     protected _initThisEl(prepend: boolean): void {
         super._initThisEl(prepend);
-        this._thisEl.onclick = () => {
-            this.openChat();
-        }
+        this._thisEl.onclick = this._openChat;
     }
 
     public _initChildEls(): void {
@@ -45,7 +44,7 @@ export class HTMLChatLink extends AbstractHTMLTemplatedElement {
         this._unreadCountEl = this._thisEl.querySelector(".chat-link__count");
     }
 
-    public openChat(): void {}
+    protected _openChat(): void {}
 
     public open(): void {
         this._thisEl.classList.add("chat-link--active");

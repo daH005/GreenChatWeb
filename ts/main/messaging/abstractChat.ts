@@ -133,10 +133,7 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
         this._filesToUploadEl = this._thisEl.querySelector(".chat__files-to-upload");
         this._filesMapper = new NoOverwriteInputFilesMapper(this._clipInputEl, this._filesToUploadEl, this._fileToUploadElTemp);
 
-        this._link = new HTMLChatLink(this._name, this._avatarURL);
-        this._link.openChat = () => {
-            this.open();
-        }
+        this._link = new HTMLChatLink(this._name, this._avatarURL, this.open.bind(this));
         this._link.init();
         this._link.updateUnreadCount(this._unreadCount);
     }
