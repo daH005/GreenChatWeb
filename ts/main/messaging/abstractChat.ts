@@ -293,7 +293,7 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
             chatId: this._id, offset,
         });
 
-        await this._fillChatMessages(messages);
+        await this._fillMessages(messages);
 
         setTimeout(() => {
             this._scrollToLastReadOrFromThisUserMessage();
@@ -302,7 +302,7 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
         this._fullyLoaded = true;
     }
 
-    protected async _fillChatMessages(messages: Message[]): Promise<void> {
+    protected async _fillMessages(messages: Message[]): Promise<void> {
         for (let i in messages) {
             await this.addMessage(messages[i], true);
         }
