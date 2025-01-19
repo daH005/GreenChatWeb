@@ -482,7 +482,7 @@
 }
 
 .chat__file {
-text-align: center;
+    text-align: center;
     position: relative;
     margin-top: 10px;
     margin-right: 10px;
@@ -524,6 +524,7 @@ a.chat__file:hover {
 .chat__file__name {
     margin-left: 1vw;
     color: white;
+    max-width: 200px;
 }
 
 .chat__file__delete {
