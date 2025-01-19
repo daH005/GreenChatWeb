@@ -89,6 +89,10 @@ export async function requestToEditUser(requestData: UserEditRequestData) {
         method: "PUT",
         body: requestData,
     });
+
+    if (response.status == 200) {
+        notify("Данные успешно обновлены!");
+    }
 }
 
 export async function requestToEditUserAvatar(image: Blob) {
@@ -99,6 +103,8 @@ export async function requestToEditUserAvatar(image: Blob) {
 
     if (response.status == 413) {
         notify("Вес аватарки слишком велик, бро!");
+    } else if (response.status == 200) {
+        notify("Данные успешно обновлены!");
     }
 }
 
@@ -110,6 +116,8 @@ export async function requestToEditUserBackground(image: Blob) {
 
     if (response.status == 413) {
         notify("А фончик ничего себе весит-то! Полегче...");
+    } else if (response.status == 200) {
+        notify("Данные успешно обновлены!");
     }
 }
 

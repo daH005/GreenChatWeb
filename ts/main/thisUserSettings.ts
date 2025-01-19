@@ -1,4 +1,3 @@
-import { notify } from "../common/notification.js";
 import { thisUser } from "../common/thisUser.js";
 import { requestToEditUser, requestToEditUserAvatar, requestToEditUserBackground } from "../common/http/functions.js";
 import { setInputAsInvalidAndNotifyWithThrow, removeInvalidClassForAllInputs } from "../common/inputsHighlighting.js";
@@ -69,20 +68,16 @@ backgroundInputEl.oninput = () => {
 }
 
 saveButtonEl.onclick = async () => {
-    let updatingWas = false;
-
     if (avatarInputEl.files.length) {
         await requestToEditUserAvatar(avatarInputEl.files[0]);
         avatarInputEl.value = "";
         updateAvatarSrcBackup();
-        updatingWas = true;
     }
 
     if (backgroundInputEl.files.length) {
         await requestToEditUserBackground(backgroundInputEl.files[0]);
         backgroundInputEl.value = "";
         updateBackgroundSrcBackup();
-        updatingWas = true;
     }
 
     if (!firstNameInputEl.value) {
@@ -101,15 +96,6 @@ saveButtonEl.onclick = async () => {
             firstName: firstNameInputEl.value,
             lastName: lastNameInputEl.value,
         });
-
-        updatingWas = true;
-    }
-
-    if (updatingWas) {
-        notify("Данные успешно обновлены!");
-    } else {
-        notify("Вы ничего не изменили!");
-        return;
     }
 
     removeInvalidClassForAllInputs();
