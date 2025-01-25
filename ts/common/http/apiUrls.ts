@@ -21,11 +21,12 @@ export const HTTP_API_URLS = {
     CHAT_NEW: _HTTP_API_BASE_URL + "/chat/new",
     CHAT_TYPING: _HTTP_API_BASE_URL + "/chat/typing",
     CHAT_UNREAD_COUNT: _HTTP_API_BASE_URL + "/chat/unreadCount",
-    CHAT_MESSAGE: _HTTP_API_BASE_URL + "/chat/message",
-    CHAT_MESSAGE_NEW: _HTTP_API_BASE_URL + "/chat/message/new",
-    CHAT_MESSAGE_READ: _HTTP_API_BASE_URL + "/chat/message/read",
     CHAT_MESSAGES: _HTTP_API_BASE_URL + "/chat/messages",
-    CHAT_MESSAGE_FILES_SAVE: _HTTP_API_BASE_URL + "/chat/message/files/save",
-    CHAT_MESSAGE_FILES_NAMES: _HTTP_API_BASE_URL + "/chat/message/files/names",
-    CHAT_MESSAGE_FILES_GET: _HTTP_API_BASE_URL + "/chat/message/files/get",
+
+    MESSAGE: _HTTP_API_BASE_URL + "/message",
+    MESSAGE_NEW: _HTTP_API_BASE_URL + "/message/new",
+    MESSAGE_READ: _HTTP_API_BASE_URL + "/message/read",
+    MESSAGE_FILES_SAVE: _HTTP_API_BASE_URL + "/message/files/save",
+    MESSAGE_FILES_NAMES: _HTTP_API_BASE_URL + "/message/files/names",
+    MESSAGE_FILES_GET: _HTTP_API_BASE_URL + "/message/files/get",
 }

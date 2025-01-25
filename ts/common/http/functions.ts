@@ -157,32 +157,32 @@ export async function requestUnreadCount(chatId: number): Promise<number> {
     return data.unreadCount;
 }
 
+export async function requestMessages(requestData: MessagesRequestData): Promise<Message[]> {
+    let response: Response = await commonFetch(makeUrlWithParams(HTTP_API_URLS.CHAT_MESSAGES, requestData), {
+        method: "GET",
+    });
+    return await response.json();
+}
+
 export async function requestMessage(messageId: number): Promise<Message> {
-    let response: Response = await commonFetch(makeUrlWithParams(HTTP_API_URLS.CHAT_MESSAGE, {messageId}), {
+    let response: Response = await commonFetch(makeUrlWithParams(HTTP_API_URLS.MESSAGE, {messageId}), {
         method: "GET",
     });
     return await response.json();
 }
 
 export async function requestNewMessage(requestData: NewMessageRequestData) {
-    let response: Response = await commonFetch(HTTP_API_URLS.CHAT_MESSAGE_NEW, {
+    let response: Response = await commonFetch(HTTP_API_URLS.MESSAGE_NEW, {
         method: "POST",
         body: requestData,
     });
 }
 
 export async function requestToReadMessage(messageId: number) {
-    let response: Response = await commonFetch(HTTP_API_URLS.CHAT_MESSAGE_READ, {
+    let response: Response = await commonFetch(HTTP_API_URLS.MESSAGE_READ, {
         method: "PUT",
         body: {messageId},
     });
-}
-
-export async function requestMessages(requestData: MessagesRequestData): Promise<Message[]> {
-    let response: Response = await commonFetch(makeUrlWithParams(HTTP_API_URLS.CHAT_MESSAGES, requestData), {
-        method: "GET",
-    });
-    return await response.json();
 }
 
 export async function requestToSaveMessageFiles(files: FileList): Promise<number> {
@@ -191,7 +191,7 @@ export async function requestToSaveMessageFiles(files: FileList): Promise<number
         formData.append('files', files[i]);
     }
 
-    let response: Response = await commonFetch(HTTP_API_URLS.CHAT_MESSAGE_FILES_SAVE, {
+    let response: Response = await commonFetch(HTTP_API_URLS.MESSAGE_FILES_SAVE, {
         method: "POST",
         body: formData,
     });
@@ -206,7 +206,7 @@ export async function requestToSaveMessageFiles(files: FileList): Promise<number
 }
 
 export async function requestMessageFilenames(storageId: number): Promise<string[]> {
-    let response: Response = await commonFetch(makeUrlWithParams(HTTP_API_URLS.CHAT_MESSAGE_FILES_NAMES, {storageId}), {
+    let response: Response = await commonFetch(makeUrlWithParams(HTTP_API_URLS.MESSAGE_FILES_NAMES, {storageId}), {
         method: "GET",
     });
     return await response.json();
