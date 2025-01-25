@@ -41,11 +41,11 @@ async function checkEmailCode() {
         return;
     }
 
-    let codeIsValid = await requestToCheckEmailCode({
+    let isThat = await requestToCheckEmailCode({
         email: emailInputEl.value,
         code: Number(emailCodeInputEl.value),
     });
-    if (!codeIsValid) {
+    if (!isThat) {
         setInputAsInvalidAndNotifyWithThrow(emailCodeInputEl, "Код подтверждения неверный!");
     }
 }

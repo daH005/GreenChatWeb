@@ -30,7 +30,7 @@ export async function requestToCheckEmailCode(requestData: EmailAndCodeRequestDa
         method: "GET",
     });
     let data = await response.json();
-    return data.codeIsValid;
+    return data.isThat;
 }
 
 export async function requestToLogin(requestData: EmailAndCodeRequestData) {
