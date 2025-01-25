@@ -135,11 +135,13 @@ export async function requestChat(chatId: number): Promise<Chat> {
     return await response.json();
 }
 
-export async function requestNewChat(requestData: NewChatRequestData) {
+export async function requestNewChat(requestData: NewChatRequestData): Promise<Chat> {
     let response: Response = await commonFetch(HTTP_API_URLS.CHAT_NEW, {
         method: "POST",
         body: requestData,
     });
+
+    return await response.json();
 }
 
 export async function requestTyping(chatId: number) {
@@ -171,11 +173,13 @@ export async function requestMessage(messageId: number): Promise<Message> {
     return await response.json();
 }
 
-export async function requestNewMessage(requestData: NewMessageRequestData) {
+export async function requestNewMessage(requestData: NewMessageRequestData): Promise<Message> {
     let response: Response = await commonFetch(HTTP_API_URLS.MESSAGE_NEW, {
         method: "POST",
         body: requestData,
     });
+
+    return await response.json();
 }
 
 export async function requestToReadMessage(messageId: number) {
@@ -185,14 +189,16 @@ export async function requestToReadMessage(messageId: number) {
     });
 }
 
-export async function requestToSaveMessageFiles(files: FileList): Promise<number> {
+export async function requestToUpdateMessageFiles(messageId: number,
+                                                  files: FileList,
+                                                  ) {
     let formData = new FormData();
     for (let i = 0; i < files.length; i++) {
         formData.append('files', files[i]);
     }
 
-    let response: Response = await commonFetch(HTTP_API_URLS.MESSAGE_FILES_SAVE, {
-        method: "POST",
+    let response: Response = await commonFetch(makeUrlWithParams(HTTP_API_URLS.MESSAGE_FILES_UPDATE, {messageId}), {
+        method: "PUT",
         body: formData,
     });
 
@@ -200,13 +206,10 @@ export async function requestToSaveMessageFiles(files: FileList): Promise<number
         notify("Суммарный вес файлов слишком велик!");
         throw new Error();
     }
-
-    let data = await response.json();
-    return data.storageId;
 }
 
-export async function requestMessageFilenames(storageId: number): Promise<string[]> {
-    let response: Response = await commonFetch(makeUrlWithParams(HTTP_API_URLS.MESSAGE_FILES_NAMES, {storageId}), {
+export async function requestMessageFilenames(messageId: number): Promise<string[]> {
+    let response: Response = await commonFetch(makeUrlWithParams(HTTP_API_URLS.MESSAGE_FILES_NAMES, {messageId}), {
         method: "GET",
     });
     return await response.json();

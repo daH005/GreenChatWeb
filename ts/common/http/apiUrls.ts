@@ -26,7 +26,7 @@ export const HTTP_API_URLS = {
     MESSAGE: _HTTP_API_BASE_URL + "/message",
     MESSAGE_NEW: _HTTP_API_BASE_URL + "/message/new",
     MESSAGE_READ: _HTTP_API_BASE_URL + "/message/read",
-    MESSAGE_FILES_SAVE: _HTTP_API_BASE_URL + "/message/files/save",
+    MESSAGE_FILES_UPDATE: _HTTP_API_BASE_URL + "/message/files/update",
     MESSAGE_FILES_NAMES: _HTTP_API_BASE_URL + "/message/files/names",
     MESSAGE_FILES_GET: _HTTP_API_BASE_URL + "/message/files/get",
 }

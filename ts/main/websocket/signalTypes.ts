@@ -3,6 +3,7 @@ export enum SignalType {
     TYPING = "TYPING",
     NEW_UNREAD_COUNT = "NEW_UNREAD_COUNT",
     NEW_MESSAGE = "NEW_MESSAGE",
+    FILES = "FILES",
     READ = "READ",
     ONLINE_STATUSES = "ONLINE_STATUSES",
 }

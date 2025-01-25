@@ -22,9 +22,9 @@ export interface Message {
     id: number,
     userId: number,
     chatId: number,
-    storageId: number | null,
     text: string,
     isRead: boolean,
+    hasFiles: boolean,
     creatingDatetime: string | Date,
     user?: User,
 }

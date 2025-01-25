@@ -10,6 +10,7 @@ import { HTMLMessageImageFile } from "./messageImageFile.js";
 
 export class HTMLMessage extends AbstractHTMLTemplatedElement {
 
+    protected static _messagesByIds: Record<number, HTMLMessage> = {};
     protected static _IMAGE_FILE_EXTENSIONS = [
         ".png", ".jpg", ".jpeg", ".webp",
     ];
@@ -26,26 +27,45 @@ export class HTMLMessage extends AbstractHTMLTemplatedElement {
     protected _isRead: boolean;
     protected _creatingDatetime: Date;
     protected _user: User;
-    protected _storageId: number | null;
+    protected _hasFiles: boolean;
     protected _filenames: string[];
 
-    public constructor(parentEl: HTMLElement, id: number, text: string, isRead: boolean, creatingDatetime: Date, user: User, storageId: number | null=null) {
+    public constructor(parentEl: HTMLElement, id: number, text: string, isRead: boolean, creatingDatetime: Date, user: User, hasFiles: boolean) {
         super(parentEl);
         this._id = id;
         this._text = text;
         this._isRead = isRead;
         this._creatingDatetime = creatingDatetime;
         this._user = user;
-        this._storageId = storageId;
+        this._hasFiles = hasFiles;
+        HTMLMessage._messagesByIds[id] = this;
+    }
+
+    public static byId(messageId: number): HTMLMessage | null {
+        return HTMLMessage._messagesByIds[messageId];
     }
 
     public async init(prepend: boolean=false): Promise<void> {
-        if (this._storageId) {
-            this._filenames = await requestMessageFilenames(this._storageId) ?? [];
+        if (this._hasFiles) {
+            this._filenames = await requestMessageFilenames(this._id) ?? [];
         } else {
             this._filenames = [];
         }
         super.init(prepend);
+    }
+
+    public async updateFiles(): Promise<void> {
+        let newFilenames = await requestMessageFilenames(this._id) ?? [];
+        if (!newFilenames.length) {
+            return;
+        }
+
+        for (let filename of newFilenames) {
+            if (this._filenames.includes(filename)) {
+                continue;
+            }
+            this._addFile(filename);
+        }
     }
 
     protected _initChildEls(): void {
@@ -62,19 +82,20 @@ export class HTMLMessage extends AbstractHTMLTemplatedElement {
         this._filesEl = this._thisEl.querySelector(".chat__message__files");
         this._imageFilesEl = this._thisEl.querySelector(".chat__message__image-files");
 
-        this._filenames.forEach(filename => {
-            let extension: string = filename.slice(filename.lastIndexOf('.')).toLowerCase();
-            let url: string = this._makeUrl(filename);
+        this._filenames.forEach(this._addFile.bind(this));
+    }
 
-            let file: HTMLMessageFile | HTMLMessageImageFile;
-            if (HTMLMessage._IMAGE_FILE_EXTENSIONS.includes(extension)) {
-                file = new HTMLMessageImageFile(this._imageFilesEl, filename, url);
-            } else {
-                file = new HTMLMessageFile(this._filesEl, filename, url);
-            }
-            file.init();
+    protected _addFile(filename: string): void {
+        let extension: string = filename.slice(filename.lastIndexOf('.')).toLowerCase();
+        let url: string = this._makeFileUrl(filename);
 
-        });
+        let file: HTMLMessageFile | HTMLMessageImageFile;
+        if (HTMLMessage._IMAGE_FILE_EXTENSIONS.includes(extension)) {
+            file = new HTMLMessageImageFile(this._imageFilesEl, filename, url);
+        } else {
+            file = new HTMLMessageFile(this._filesEl, filename, url);
+        }
+        file.init();
     }
 
     protected _formattedMessageTextHtml(html: string): string {
@@ -87,8 +108,8 @@ export class HTMLMessage extends AbstractHTMLTemplatedElement {
         return dateToTimeStr(this._creatingDatetime);
     }
 
-    protected _makeUrl(filename: string): string {
-        return makeUrlWithParams(HTTP_API_URLS.MESSAGE_FILES_GET, {storageId: this._storageId, filename});
+    protected _makeFileUrl(filename: string): string {
+        return makeUrlWithParams(HTTP_API_URLS.MESSAGE_FILES_GET, {messageId: this._id, filename});
     }
 
     public get id(): number {

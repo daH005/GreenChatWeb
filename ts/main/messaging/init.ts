@@ -14,8 +14,9 @@ import { ChatId,
          Read,
          OnlineStatuses,
        } from "../websocket/signalInterfaces.js";
-import { HTMLPrivateChat } from "./privateChat.js";
 import { AbstractHTMLChat } from "./abstractChat.js";
+import { HTMLPrivateChat } from "./privateChat.js";
+import { HTMLMessage } from "./messages.js";
 import "./search.js";
 
 export const handlersForWebsocket = {
@@ -36,20 +37,24 @@ export const handlersForWebsocket = {
 
     [SignalType.NEW_MESSAGE]: async (apiData: MessageId) => {
         let message = await requestMessage(apiData.messageId);
-        AbstractHTMLChat.getChatById(message.chatId).addMessage(message);
+        await AbstractHTMLChat.byId(message.chatId).addMessage(message);
+    },
+
+    [SignalType.FILES]: async (apiData: MessageId) => {
+        await HTMLMessage.byId(apiData.messageId).updateFiles();
     },
 
     [SignalType.TYPING]: async (apiData: Typing) => {
-        AbstractHTMLChat.getChatById(apiData.chatId).updateTyping(apiData);
+        AbstractHTMLChat.byId(apiData.chatId).updateTyping(apiData);
     },
 
     [SignalType.NEW_UNREAD_COUNT]: async (apiData: ChatId) => {
         let unreadCount: number = await requestUnreadCount(apiData.chatId);
-        AbstractHTMLChat.getChatById(apiData.chatId).updateUnreadCount(unreadCount);
+        AbstractHTMLChat.byId(apiData.chatId).updateUnreadCount(unreadCount);
     },
 
     [SignalType.READ]: async (apiData: Read) => {
-        AbstractHTMLChat.getChatById(apiData.chatId).setMessagesAsRead(apiData.messageIds);
+        AbstractHTMLChat.byId(apiData.chatId).setMessagesAsRead(apiData.messageIds);
     },
 
 }

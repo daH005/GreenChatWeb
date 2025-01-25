@@ -4,11 +4,12 @@ import { choose } from "../../common/random.js";
 import { thisUser } from "../../common/thisUser.js";
 import { userInWindow } from "../../common/userInWindowChecking.js";
 import { newMessageSound } from "../../common/audio.js";
-import { requestNewMessage,
+import { requestMessage,
+         requestNewMessage,
          requestTyping,
          requestToReadMessage,
          requestMessages,
-         requestToSaveMessageFiles,
+         requestToUpdateMessageFiles,
        } from "../../common/http/functions.js";
 import { addUserToApiData } from "../../common/apiDataAdding.js";
 import { dateToDateStr, normalizeDateTimezone } from "../datetime.js";
@@ -78,7 +79,7 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
         AbstractHTMLChat._chatsByIds[id] = this;
     }
 
-    public static getChatById(chatId: number): AbstractHTMLChat | null {
+    public static byId(chatId: number): AbstractHTMLChat | null {
         return AbstractHTMLChat._chatsByIds[chatId];
     }
 
@@ -144,12 +145,9 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
 
     protected async _sendMessage(): Promise<void> {
         let textIsMeaningful: boolean = this._messageTextIsMeaningful();
+        let hasFiles: boolean = this._hasFiles();
 
-        let storageId: number | null = null;
-        if (this._hasFiles()) {
-            storageId = await requestToSaveMessageFiles(this._clipInputEl.files);
-            this._filesMapper.clear();
-        } else if (!textIsMeaningful) {
+        if (!(textIsMeaningful || hasFiles)) {
             return;
         }
 
@@ -158,14 +156,18 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
             text = "Файл(ы)";
         }
 
-        await requestNewMessage({
+        let message = await requestNewMessage({
             chatId: this._id,
             text,
-            storageId,
         });
 
         this._textareaEl.value = "";
         this._textareaEl.style.height = "";
+
+        if (hasFiles) {
+            await requestToUpdateMessageFiles(message.id, this._clipInputEl.files);
+            this._filesMapper.clear();
+        }
     }
 
     protected _messageTextIsMeaningful(): boolean {
@@ -234,7 +236,7 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
         } else {
             messageType = HTMLMessageFromThisUser;
         }
-        let message: HTMLMessage = new messageType(this._messagesEl, apiData.id, apiData.text, apiData.isRead, apiData.creatingDatetime, apiData.user, apiData.storageId);
+        let message: HTMLMessage = new messageType(this._messagesEl, apiData.id, apiData.text, apiData.isRead, apiData.creatingDatetime, apiData.user, apiData.hasFiles);
         await message.init(prepend);
         this._messages[apiData.id] = message;
 
