@@ -125,8 +125,7 @@ export async function requestUserChats(): Promise<Chat[]> {
     let response: Response = await commonFetch(HTTP_API_URLS.USER_CHATS, {
         method: "GET",
     });
-    let data = await response.json();
-    return data.chats;
+    return await response.json();
 }
 
 export async function requestChat(chatId: number): Promise<Chat> {
@@ -183,8 +182,7 @@ export async function requestMessages(requestData: MessagesRequestData): Promise
     let response: Response = await commonFetch(makeUrlWithParams(HTTP_API_URLS.CHAT_MESSAGES, requestData), {
         method: "GET",
     });
-    let data = await response.json();
-    return data.messages;
+    return await response.json();
 }
 
 export async function requestToSaveMessageFiles(files: FileList): Promise<number> {
@@ -211,6 +209,5 @@ export async function requestMessageFilenames(storageId: number): Promise<string
     let response: Response = await commonFetch(makeUrlWithParams(HTTP_API_URLS.CHAT_MESSAGE_FILES_NAMES, {storageId}), {
         method: "GET",
     });
-    let data = await response.json();
-    return data.filenames;
+    return await response.json();
 }
