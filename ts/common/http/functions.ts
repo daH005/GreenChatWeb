@@ -50,7 +50,12 @@ export async function requestToLogout() {
     });
 }
 
-export async function requestUser(userId: number | null): Promise<User> {
+let __userCashes = {};
+export async function requestUser(userId: number | null = null): Promise<User> {
+    if (__userCashes[userId]) {
+        return __userCashes[userId];
+    }
+
     let requestData;
     if (userId) {
         requestData = {userId};
@@ -67,7 +72,8 @@ export async function requestUser(userId: number | null): Promise<User> {
         throw new Error();
     }
 
-    return await response.json();
+    __userCashes[userId] = await response.json();
+    return __userCashes[userId];
 }
 
 export async function requestUserAvatar(userId: number): Promise<Blob> {
