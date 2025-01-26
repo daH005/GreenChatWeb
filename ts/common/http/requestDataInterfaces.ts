@@ -17,7 +17,6 @@ export interface NewChatRequestData {
 export interface NewMessageRequestData {
     chatId: number,
     text: string,
-    storageId?: number | null,
 }
 
 export interface MessagesRequestData {
