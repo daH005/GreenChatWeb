@@ -4,6 +4,7 @@ import { requestToLogin,
        } from "./common/http/functions.js";
 import { redirectToMainPage } from "./common/redirects.js";
 import { setInputAsInvalidAndNotifyWithThrow, removeInvalidClassForAllInputs } from "./common/inputsHighlighting.js";
+import { CURRENT_LABELS } from "./common/languages/labels.js";
 
 const emailInputEl: HTMLInputElement = <HTMLInputElement>document.getElementById("js-email");
 const sendEmailCodeButtonEl: HTMLButtonElement = <HTMLButtonElement>document.getElementById("js-send-email-code");
@@ -31,13 +32,13 @@ buttonEl.onclick = async () => {
 
 async function checkEmail() {
     if (!emailInputEl.value.includes("@")) {
-        setInputAsInvalidAndNotifyWithThrow(emailInputEl, "Введите почту!");
+        setInputAsInvalidAndNotifyWithThrow(emailInputEl, CURRENT_LABELS.inputEmail);
     }
 }
 
 async function checkEmailCode() {
     if (!emailCodeInputEl.value) {
-        setInputAsInvalidAndNotifyWithThrow(emailCodeInputEl, "Введите код!");
+        setInputAsInvalidAndNotifyWithThrow(emailCodeInputEl, CURRENT_LABELS.inputCode);
         return;
     }
 
@@ -46,6 +47,6 @@ async function checkEmailCode() {
         code: Number(emailCodeInputEl.value),
     });
     if (!isThat) {
-        setInputAsInvalidAndNotifyWithThrow(emailCodeInputEl, "Код подтверждения неверный!");
+        setInputAsInvalidAndNotifyWithThrow(emailCodeInputEl, CURRENT_LABELS.invalidCode);
     }
 }

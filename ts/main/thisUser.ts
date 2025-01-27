@@ -1,5 +1,6 @@
 import { User } from "../common/apiDataInterfaces.js";
 import { notify } from "../common/notification.js";
+import { CURRENT_LABELS } from "../common/languages/labels.js";
 import { setUserAvatar } from "./avatars.js";
 
 const avatarImageEl: HTMLImageElement = <HTMLImageElement>document.getElementById("js-user-avatar");
@@ -9,7 +10,7 @@ const userIdEl: HTMLElement = document.getElementById("js-user-id");
 
 userIdParentEl.onclick = async () => {
     await navigator.clipboard.writeText(userIdEl.textContent);
-    notify("ID успешно скопирован!");
+    notify(CURRENT_LABELS.idWasCopied);
 }
 
 export async function updateUser(user: User): Promise<void> {

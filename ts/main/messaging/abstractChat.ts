@@ -12,6 +12,7 @@ import { requestMessage,
          requestToUpdateMessageFiles,
        } from "../../common/http/functions.js";
 import { addUserToApiData } from "../../common/apiDataAdding.js";
+import { CURRENT_LABELS } from "../../common/languages/labels.js";
 import { dateToDateStr, normalizeDateTimezone } from "../datetime.js";
 import { Typing } from "../websocket/signalInterfaces.js";
 import { HTMLChatLink } from "./chatLink.js";
@@ -31,15 +32,7 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
     protected static _curOpenedChat: AbstractHTMLChat = null;
 
     protected readonly _WAITING_FOR_CHAT_LOADING: number = 30;
-    protected readonly _PHRASES: string[] = [
-        "Что же написать...",
-        "Хм...",
-        "Короче, да...",
-        "В общем и целом...",
-        "Ваше слово?",
-        "Впиши в меня текст!",
-        "Наполни меня текстом!",
-    ];
+    protected readonly _PHRASES: string[] = CURRENT_LABELS.phrases;
 
     protected _backLinkEl: HTMLElement;
     protected _avatarEl: HTMLImageElement;
@@ -153,7 +146,7 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
 
         let text: string = this._textareaEl.value;
         if (!textIsMeaningful) {
-            text = "Файл(ы)";
+            text = CURRENT_LABELS.files;
         }
 
         let message = await requestNewMessage({
@@ -331,7 +324,7 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
             clearTimeout(this._typingTimeoutId);
         }
 
-        this._typingEl.textContent = apiData.user.firstName + " печатает...";
+        this._typingEl.textContent = apiData.user.firstName + " " + CURRENT_LABELS.typing;
 
         this._typingTimeoutId = setTimeout(() => {
             this._typingEl.textContent = "";
@@ -395,8 +388,8 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
         return ids;
     }
 
-    public setMessagesAsRead(messagesIds: number[]): void {
-        for (let id of messagesIds) {
+    public setMessagesAsRead(messageIds: number[]): void {
+        for (let id of messageIds) {
             this._messages[id].setAsRead();
         }
     }

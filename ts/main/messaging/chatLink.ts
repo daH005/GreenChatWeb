@@ -1,3 +1,4 @@
+import { CURRENT_LABELS } from "../../common/languages/labels.js";
 import { AbstractHTMLTemplatedElement } from "./abstractTemplatedElement.js";
 
 export class HTMLChatLink extends AbstractHTMLTemplatedElement {
@@ -57,11 +58,11 @@ export class HTMLChatLink extends AbstractHTMLTemplatedElement {
     public updateLastMessageFromThisUserMark(fromThisUser: boolean): void {
         let value: string;
         if (fromThisUser) {
-            value = "";
+            value = CURRENT_LABELS.you;
         } else {
-            value = "none";
+            value = "";
         }
-        this._lastMessageFromThisUserMarkEl.style.display = value;
+        this._lastMessageFromThisUserMarkEl.textContent = value;
     }
 
     public updateTextAndDate(text: string, dateStr: string): void {

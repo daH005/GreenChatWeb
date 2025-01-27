@@ -1,6 +1,7 @@
 import { thisUser } from "../common/thisUser.js";
 import { requestToEditUser, requestToEditUserAvatar, requestToEditUserBackground } from "../common/http/functions.js";
 import { setInputAsInvalidAndNotifyWithThrow, removeInvalidClassForAllInputs } from "../common/inputsHighlighting.js";
+import { CURRENT_LABELS } from "../common/languages/labels.js";
 import { updateBackgroundUrl } from "./background.js";
 import { updateUserFullName } from "./thisUser.js";
 
@@ -81,11 +82,11 @@ saveButtonEl.onclick = async () => {
     }
 
     if (!firstNameInputEl.value) {
-        setInputAsInvalidAndNotifyWithThrow(firstNameInputEl, "Введите имя!");
+        setInputAsInvalidAndNotifyWithThrow(firstNameInputEl, CURRENT_LABELS.inputFirstName);
     }
 
     if (!lastNameInputEl.value) {
-        setInputAsInvalidAndNotifyWithThrow(lastNameInputEl, "Введите фамилию!");
+        setInputAsInvalidAndNotifyWithThrow(lastNameInputEl, CURRENT_LABELS.inputLastName);
     }
 
     if (thisUser.firstName != firstNameInputEl.value || thisUser.lastName != lastNameInputEl.value) {

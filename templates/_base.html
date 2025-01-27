@@ -28,6 +28,7 @@
     let addrHeight = document.body.clientHeight - window.innerHeight;
     document.documentElement.style.setProperty('--addr-height', addrHeight + "px");
 </script>
+<script src="{{ url_for('static', filename='js/common/languages/initHtml.js') }}" type="module"></script>
 {% block js %}{% endblock %}
 
 </body>

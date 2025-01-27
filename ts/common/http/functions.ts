@@ -3,6 +3,7 @@ import { User,
          Message,
        } from "../apiDataInterfaces.js";
 import { notify } from "../notification.js";
+import { CURRENT_LABELS } from "../languages/labels.js";
 import { HTTP_API_URLS } from "./apiUrls.js";
 import { EmailAndCodeRequestData,
          UserEditRequestData,
@@ -19,9 +20,9 @@ export async function requestToSendEmailCode(email: string) {
     });
 
     if (response.status == 202) {
-        notify("Код успешно отправлен!")
+        notify(CURRENT_LABELS.codeWasSent)
     } else if (response.status == 409) {
-        notify("Вы не можете отправлять более одного кода в минуту!");
+        notify(CURRENT_LABELS.codeSpam);
     }
 }
 
@@ -40,7 +41,7 @@ export async function requestToLogin(requestData: EmailAndCodeRequestData) {
     });
 
     if (response.status == 403) {
-        notify("Неверный логин или пароль!")
+        notify(CURRENT_LABELS.invalidLogin);
     }
 }
 
@@ -68,7 +69,7 @@ export async function requestUser(userId: number | null = null): Promise<User> {
     });
 
     if (response.status == 404) {
-        notify("Пользователь с таким ID не найден!");
+        notify(CURRENT_LABELS.invalidUserId);
         throw new Error();
     }
 
@@ -97,7 +98,7 @@ export async function requestToEditUser(requestData: UserEditRequestData) {
     });
 
     if (response.status == 200) {
-        notify("Данные успешно обновлены!");
+        notify(CURRENT_LABELS.successUpdate);
     }
 }
 
@@ -108,9 +109,9 @@ export async function requestToEditUserAvatar(image: Blob) {
     });
 
     if (response.status == 413) {
-        notify("Вес аватарки слишком велик, бро!");
+        notify(CURRENT_LABELS.largeAvatar);
     } else if (response.status == 200) {
-        notify("Данные успешно обновлены!");
+        notify(CURRENT_LABELS.successUpdate);
     }
 }
 
@@ -121,9 +122,9 @@ export async function requestToEditUserBackground(image: Blob) {
     });
 
     if (response.status == 413) {
-        notify("А фончик ничего себе весит-то! Полегче...");
+        notify(CURRENT_LABELS.largeBackground);
     } else if (response.status == 200) {
-        notify("Данные успешно обновлены!");
+        notify(CURRENT_LABELS.successUpdate);
     }
 }
 
@@ -209,7 +210,7 @@ export async function requestToUpdateMessageFiles(messageId: number,
     });
 
     if (response.status == 413) {
-        notify("Суммарный вес файлов слишком велик!");
+        notify(CURRENT_LABELS.largeFiles);
         throw new Error();
     }
 }

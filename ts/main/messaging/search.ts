@@ -1,5 +1,6 @@
 import { requestUser } from "../../common/http/functions.js";
 import { setInputAsInvalidAndNotifyWithThrow, removeInvalidClassForAllInputs } from "../../common/inputsHighlighting.js";
+import { CURRENT_LABELS } from "../../common/languages/labels.js";
 import { thisUser } from "../../common/thisUser.js";
 import { User } from "../../common/apiDataInterfaces.js";
 import { HTMLPrivateChat } from "./privateChat.js";
@@ -16,11 +17,11 @@ async function searchUserAndSwitchToChat(): Promise<void> {
 
     let interlocutorId: number = Number(searchInputEl.value);
     if (!interlocutorId) {
-        setInputAsInvalidAndNotifyWithThrow(searchInputEl, "Введите нормальное число...")
+        setInputAsInvalidAndNotifyWithThrow(searchInputEl, CURRENT_LABELS.inputUserId)
     }
 
     if (interlocutorId == thisUser.id) {
-        setInputAsInvalidAndNotifyWithThrow(searchInputEl, "Нельзя найти себя самого!")
+        setInputAsInvalidAndNotifyWithThrow(searchInputEl, CURRENT_LABELS.invalidSelfUserId)
     }
 
     let maybeChat: HTMLPrivateChat = HTMLPrivateChat.getChatByInterlocutorId(interlocutorId);

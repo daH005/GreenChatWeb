@@ -8,23 +8,26 @@
 
 
 {% block main %}
-<div id="quit" class="quit">Выйти</div>
+<div id="quit" class="quit" data-language="textContent: quit"></div>
 
 <div class="messenger">
 
     <div class="sidebar">
-        <div class="sidebar__id" id="js-user-id-parent">ID: <span id="js-user-id">загрузка...</span></div>
+        <div class="sidebar__id" id="js-user-id-parent">
+            ID: <span id="js-user-id" data-language="textContent: loading"></span>
+        </div>
         <div class="sidebar__title" id="js-user-settings-open">
             <img class="avatar avatar--active"
                  id="js-user-avatar"
                  role="button"
                  src="">
-            <div class="sidebar__name cut-long-text" id="js-user-name">Загрузка...</div>
+            <div class="sidebar__name cut-long-text" id="js-user-name" data-language="textContent: loading"></div>
         </div>
 
         <div class="sidebar__search">
             <div class="input-and-inner-button-container js-click-by-press-enter">
-                <input class="js-click-by-press-enter-input" id="js-search-input" placeholder="Введите ID..." maxlength="100">
+                <input class="js-click-by-press-enter-input" id="js-search-input" maxlength="100"
+                       data-language="placeholder: userId">
                 <button class="js-click-by-press-enter-button" id="js-search-button">
                     <i class="fa fa-search" aria-hidden="true"></i>
                 </button>
@@ -37,16 +40,16 @@
             <input type="file" accept="image/*" id="js-user-settings-avatar-input">
             <button class="icon-button icon-button--file" id="js-user-settings-avatar-change-button">
                 <i class="fa fa-file-image" aria-hidden="true"></i>
-                Поменять аватар
+                <span data-language="textContent: avatar"></span>
             </button>
 
-            <input value="Загрузка..." placeholder="Как вас звать?" id="js-user-settings-first-name">
-            <input value="Загрузка..." placeholder="А фамилия?" id="js-user-settings-last-name">
+            <input id="js-user-settings-first-name" data-language="placeholder: firstName; value: loading">
+            <input id="js-user-settings-last-name" data-language="placeholder: lastName; value: loading">
 
             <input type="file" accept="image/*" id="js-user-settings-background-input">
             <button class="icon-button icon-button--file" id="js-user-settings-background-change-button">
                 <i class="fa fa-file-image" aria-hidden="true"></i>
-                Поменять фон
+                <span data-language="textContent: background"></span>
             </button>
 
             <div class="sidebar__user-settings__exit-buttons">
@@ -65,7 +68,7 @@
         <div class="chats" id="js-loaded-chats"></div>
 
         <div id="js-cur-chat-overlay" class="cur-chat-overlay">
-            <i class="fa fa-caret-left"></i> <span style="margin-left: 5px;">Выберите чат</span>
+            <i class="fa fa-caret-left"></i> <span style="margin-left: 5px;" data-language="textContent: selectChat"></span>
         </div>
 
     </div>
@@ -81,7 +84,7 @@
         </div>
 
         <div class="chat-link__last-message cut-long-text">
-            <span class="chat-link__self">Вы: </span>
+            <span class="chat-link__self"></span>
             <span class="chat-link__text"></span>
         </div>
 
@@ -110,7 +113,7 @@
 
             <div class="chat__interlocutor-write-hint"></div>
             <div class="input-and-inner-button-container js-click-by-press-enter">
-		        <textarea class="js-click-by-press-enter-input" placeholder="Что же написать..." maxlength="10000"></textarea>
+		        <textarea class="js-click-by-press-enter-input" maxlength="10000"></textarea>
 
                 <input class="chat__clip-input" type="file" multiple>
                 <button class="chat__clip">

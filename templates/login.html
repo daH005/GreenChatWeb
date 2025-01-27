@@ -15,15 +15,15 @@
         <h1 align="center">GreenChat</h1>
 
         <div class="input-and-inner-button-container">
-            <input id="js-email" type="email" placeholder="Ваша почта" maxlength="200">
+            <input id="js-email" type="email" maxlength="200" data-language="placeholder: email">
             <button id="js-send-email-code">
-                <small>Код</small>
+                <small data-language="textContent: sendCode"></small>
             </button>
         </div>
 
-        <input id="js-email-code" placeholder="Код подтверждения" maxlength="4">
+        <input id="js-email-code" maxlength="4" data-language="placeholder: code">
 
-        <button id="js-button">Вход & Регистрация</button>
+        <button id="js-button" data-language="textContent: loginOrRegistration"></button>
     </div>
 </div>
 

@@ -1,17 +1,6 @@
-const MONTHS_LABELS = {
-    1: "янв",
-    2: "фев",
-    3: "мар",
-    4: "апр",
-    5: "мая",
-    6: "июн",
-    7: "июл",
-    8: "авг",
-    9: "сен",
-    10: "окт",
-    11: "ноя",
-    12: "дек",
-}
+import { CURRENT_LABELS } from "../common/languages/labels.js";
+
+const MONTHS_LABELS = CURRENT_LABELS.months;
 
 export function nowDate(): Date {
     return new Date();
@@ -46,7 +35,7 @@ export function dateToTimeStr(date: Date): string {
     let yesterdayDate = nowDate();
     yesterdayDate.setDate(yesterdayDate.getDate() - 1);
     if (yesterdayDate.toLocaleDateString() == date.toLocaleDateString()) {
-        timeStr += " (вчера)";
+        timeStr += ` (${CURRENT_LABELS.yesterday})`;
     } else {
         timeStr += " (" + dateToDateStr(date) + ")";
     }
@@ -56,12 +45,12 @@ export function dateToTimeStr(date: Date): string {
 export function dateToDateStr(date: Date): string {
     let nowDate_ = nowDate();
     if (nowDate_.toLocaleDateString() == date.toLocaleDateString()) {
-        return "сегодня";
+        return CURRENT_LABELS.today;
     }
     let yesterdayDate = nowDate();
     yesterdayDate.setDate(yesterdayDate.getDate() - 1);
     if (yesterdayDate.toLocaleDateString() == date.toLocaleDateString()) {
-        return "вчера";
+        return CURRENT_LABELS.yesterday;
     }
     let dateStr = String(date.getDate()) + " " + MONTHS_LABELS[date.getMonth() + 1];
     if (nowDate_.getFullYear() != date.getFullYear()) {
