@@ -380,6 +380,71 @@
     color: white;
 }
 
+.chat__message__functions-button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: x-small;
+    color: var(--main-4-color);
+    cursor: pointer;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.chat__message.chat__message--self .chat__message__functions-button {
+    color: white;
+}
+
+.chat__message__functions {
+    width: fit-content;
+    border-radius: 10px;
+    padding: 10px;
+    top: 0;
+    right: 0;
+    position: absolute;
+    padding-right: 5px;
+    display: none;
+    background: white;
+    border: 1px solid var(--main-4-color);
+}
+
+.chat__message.chat__message--self .chat__message__functions {
+    background: var(--main-3-color);
+    border: 1px solid white;
+}
+
+.chat__message__functions-button:active + .chat__message__functions, .chat__message__functions:hover {
+    display: flex;
+}
+
+.chat__message__function {
+    margin-right: 10px;
+    cursor: pointer;
+    color: var(--main-4-color);
+}
+
+.chat__message.chat__message--self .chat__message__function {
+    margin-right: 10px;
+    cursor: pointer;
+    color: white;
+}
+
+.chat__message__function:hover {
+    color: var(--main-5-color);
+}
+
+.chat__message.chat__message--self .chat__message__function:hover {
+    color: var(--main-4-color);
+}
+
+.chat__message__function--edit {
+    display: none;
+}
+
+.chat__message.chat__message--self .chat__message__function--edit {
+    display: block;
+}
+
 .chat__input-container {
     padding: 1vw 5vw;
     padding-top: 2vw;
