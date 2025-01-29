@@ -519,10 +519,6 @@ a.chat__file:hover {
     color: white;
 }
 
-.chat__message.chat__message--self .chat__file__icon, .chat__files-to-upload .chat__file__icon {
-    color: var(--main-3-color);
-}
-
 .chat__file.chat__file--danger .chat__file__icon {
     color: var(--error-color);
 }
