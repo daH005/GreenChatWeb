@@ -1,5 +1,6 @@
 import { CURRENT_LABELS } from "../../common/languages/labels.js";
 import { AbstractHTMLTemplatedElement } from "./abstractTemplatedElement.js";
+import { AbstractHTMLChat } from "./abstractChat.js";
 
 export class HTMLChatLink extends AbstractHTMLTemplatedElement {
 
@@ -14,19 +15,20 @@ export class HTMLChatLink extends AbstractHTMLTemplatedElement {
     protected _lastMessageDateEl: HTMLElement;
     protected _unreadCountEl: HTMLElement;
 
+    protected _chat: AbstractHTMLChat;
     protected _avatarURL: string;
     protected _chatName: string;
 
-    public constructor(chatName: string, avatarURL: string, openChatFunc) {
+    public constructor(chat: AbstractHTMLChat, chatName: string, avatarURL: string) {
         super(HTMLChatLink._chatLinkParentEl);
+        this._chat = chat;
         this._chatName = chatName;
         this._avatarURL = avatarURL;
-        this._openChat = openChatFunc;
     }
 
     protected _initThisEl(prepend: boolean): void {
         super._initThisEl(prepend);
-        this._thisEl.onclick = this._openChat;
+        this._thisEl.onclick = this._chat.open.bind(this._chat);
     }
 
     public _initChildEls(): void {
@@ -44,8 +46,6 @@ export class HTMLChatLink extends AbstractHTMLTemplatedElement {
 
         this._unreadCountEl = this._thisEl.querySelector(".chat-link__count");
     }
-
-    protected _openChat(): void {}
 
     public open(): void {
         this._thisEl.classList.add("chat-link--active");

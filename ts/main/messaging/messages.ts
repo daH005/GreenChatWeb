@@ -5,6 +5,7 @@ import { requestToReadMessage, requestMessageFilenames } from "../../common/http
 import { dateToTimeStr }  from "../datetime.js";
 import { makeHyperlinks, makeHighlights } from "../messageTextHighlighting.js";
 import { AbstractHTMLTemplatedElement } from "./abstractTemplatedElement.js";
+import { AbstractHTMLChat } from "./abstractChat.js";
 import { HTMLMessageFile } from "./messageFile.js";
 import { HTMLMessageImageFile } from "./messageImageFile.js";
 
@@ -22,6 +23,7 @@ export class HTMLMessage extends AbstractHTMLTemplatedElement {
     protected _filesEl: HTMLElement;
     protected _imageFilesEl: HTMLElement;
 
+    protected _chat: AbstractHTMLChat;
     protected _id: number;
     protected _text: string;
     protected _isRead: boolean;
@@ -30,8 +32,17 @@ export class HTMLMessage extends AbstractHTMLTemplatedElement {
     protected _hasFiles: boolean;
     protected _filenames: string[];
 
-    public constructor(parentEl: HTMLElement, id: number, text: string, isRead: boolean, creatingDatetime: Date, user: User, hasFiles: boolean) {
+    public constructor(chat: AbstractHTMLChat,
+                       parentEl: HTMLElement,
+                       id: number,
+                       text: string,
+                       isRead: boolean,
+                       creatingDatetime: Date,
+                       user: User,
+                       hasFiles: boolean,
+                      ) {
         super(parentEl);
+        this._chat = chat;
         this._id = id;
         this._text = text;
         this._isRead = isRead;

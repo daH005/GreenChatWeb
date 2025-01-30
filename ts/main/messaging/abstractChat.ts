@@ -127,7 +127,7 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
         this._filesToUploadEl = this._thisEl.querySelector(".chat__files-to-upload");
         this._filesMapper = new NoOverwriteInputFilesMapper(this._clipInputEl, this._filesToUploadEl, this._fileToUploadElTemp);
 
-        this._link = new HTMLChatLink(this._name, this._avatarURL, this.open.bind(this));
+        this._link = new HTMLChatLink(this, this._name, this._avatarURL);
         this._link.init();
         this._link.updateUnreadCount(this._unreadCount);
     }
@@ -229,7 +229,10 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
         } else {
             messageType = HTMLMessageFromThisUser;
         }
-        let message: HTMLMessage = new messageType(this._messagesEl, apiData.id, apiData.text, apiData.isRead, apiData.creatingDatetime, apiData.user, apiData.hasFiles);
+        let message: HTMLMessage = new messageType(
+            this, this._messagesEl,
+            apiData.id, apiData.text, apiData.isRead, apiData.creatingDatetime, apiData.user, apiData.hasFiles,
+        );
         await message.init(prepend);
         this._messages[apiData.id] = message;
 
@@ -276,7 +279,6 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
         let dateSep = new HTMLDateSep(this._messagesEl, dateStr);
         dateSep.init(prepend);
         this._datesSeps[messageId] = dateSep;
-
     }
 
     protected async _loadFull(): Promise<void> {
