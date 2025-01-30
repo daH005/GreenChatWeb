@@ -68,7 +68,8 @@
         <div class="chats" id="js-loaded-chats"></div>
 
         <div id="js-cur-chat-overlay" class="cur-chat-overlay">
-            <i class="fa fa-caret-left"></i> <span style="margin-left: 5px;" data-language="textContent: selectChat"></span>
+            <i class="fa fa-caret-left"></i> <span style="margin-left: 5px;"
+                                                   data-language="textContent: selectChat"></span>
         </div>
 
     </div>
@@ -109,20 +110,34 @@
         <div class="chat__messages"></div>
 
         <div class="chat__input-container">
-            <div class="chat__files-to-upload"></div>
+            <div class="chat__input-panel">
+                <div class="chat__files-to-upload"></div>
 
-            <div class="chat__interlocutor-write-hint"></div>
-            <div class="input-and-inner-button-container js-click-by-press-enter">
-		        <textarea class="js-click-by-press-enter-input" maxlength="10000"></textarea>
+                <div class="chat__interlocutor-write-hint"></div>
+                <div class="input-and-inner-button-container js-click-by-press-enter">
+                    <textarea class="js-click-by-press-enter-input" maxlength="10000"></textarea>
 
-                <input class="chat__clip-input" type="file" multiple>
-                <button class="chat__clip">
-                    <i class="fa fa-paperclip" aria-hidden="true"></i>
-                </button>
+                    <input class="chat__clip-input" type="file" multiple>
+                    <button class="chat__clip">
+                        <i class="fa fa-paperclip" aria-hidden="true"></i>
+                    </button>
 
-                <button class="chat__send js-click-by-press-enter-button">
-                    <i class="fa fa-play"></i>
-                </button>
+                    <button class="chat__send js-click-by-press-enter-button">
+                        <i class="fa fa-play"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="chat__delete-panel">
+                <div class="chat__delete-panel__count-and_back">
+                    <div class="chat__delete-panel__back">
+                        <i class="fa fa-times"></i>
+                    </div>
+                    <div>
+                        <span class="chat__delete-panel__selected-count__label"></span>
+                        <span class="chat__delete-panel__selected-count"></span>
+                    </div>
+                </div>
+                <button class="chat__delete-panel__confirm"></button>
             </div>
         </div>
 

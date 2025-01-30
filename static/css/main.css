@@ -400,6 +400,10 @@
     display: none;
 }
 
+.chat__message__delete.chat__message__delete--selected {
+    background: var(--cancel-color);
+}
+
 .chat.chat--delete-mode .chat__message__delete {
     display: block;
 }
@@ -658,6 +662,36 @@ a.chat__file:hover {
 
 .chat__edit-mode--overlay.chat__edit-mode--overlay--hidden {
     display: none;
+}
+
+.chat__delete-panel {
+    display: none;
+    justify-content: space-between;
+}
+
+.chat.chat--delete-mode .chat__input-panel {
+    display: none;
+}
+
+.chat.chat--delete-mode .chat__delete-panel {
+    display: flex;
+}
+
+.chat__delete-panel__count-and_back {
+    display: flex;
+    align-items: center;
+}
+
+.chat__delete-panel__back {
+    padding: 10px;
+    margin-right: 10px;
+    color: var(--main-4-color);
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.chat__delete-panel__confirm {
+    background: var(--cancel-color);
 }
 
 .avatar {

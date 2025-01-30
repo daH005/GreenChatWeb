@@ -44,6 +44,9 @@ interface Labels {
     phrases: string[],
     files: string,
     typing: string,
+
+    selectedCount: string,
+    delete: string,
 }
 
 export const RUSSIAN_LABELS: Labels = {
@@ -110,6 +113,9 @@ export const RUSSIAN_LABELS: Labels = {
     ],
     files: "Файл(ы)",
     typing: "печатает...",
+
+    selectedCount: "Выбрано:",
+    delete: "Удалить",
 }
 
 export const ENGLISH_LABELS: Labels = {
@@ -176,6 +182,9 @@ export const ENGLISH_LABELS: Labels = {
     ],
     files: "File(s)",
     typing: "is typing..",
+
+    selectedCount: "Selected:",
+    delete: "Delete",
 }
 
 export const CURRENT_LABELS: Labels = {
