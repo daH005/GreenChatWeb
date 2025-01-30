@@ -300,9 +300,8 @@
 }
 
 .chat__message {
-    width: fit-content;
     margin-bottom: 20px;
-    max-width: 500px;
+    position: relative;
 }
 
 .chat__message__text a {
@@ -347,6 +346,7 @@
     color: var(--text-color);
     font-size: 0.9em;
     overflow-wrap: anywhere;
+    max-width: 500px;
 }
 
 .chat__message__image-files:not(:empty) + .chat__message__text-wrapper > .chat__message__text {
@@ -367,6 +367,7 @@
 
 .chat__message__text-wrapper {
     position: relative;
+    width: fit-content;
 }
 
 .chat__message__time {
@@ -378,6 +379,28 @@
 
 .chat__message.chat__message--self .chat__message__time {
     color: white;
+}
+
+.chat__message__delete {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--cancel-color);
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translate(0, -50%);
+    cursor: pointer;
+    border-radius: 5px;
+    margin-left: auto;
+    display: none;
+}
+
+.chat.chat--delete-mode .chat__message__delete {
+    display: block;
+}
+
+.chat.chat--delete-mode .chat__message.chat__message--self {
+    padding-right: 40px;
 }
 
 .chat__message__functions-button {
