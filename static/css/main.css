@@ -253,6 +253,7 @@
     color: white;
     box-sizing: border-box;
     align-items: center;
+    z-index: 1;
 
     box-sizing: border-box;
     min-height: 65px;
@@ -370,6 +371,10 @@
     width: fit-content;
 }
 
+.chat__message__text-wrapper.chat__message__text-wrapper--edit-mode-selected {
+    z-index: 1;
+}
+
 .chat__message__time {
     position: absolute;
     right: 5px;
@@ -474,6 +479,7 @@
     width: 100%;
     box-sizing: border-box;
     position: relative;
+    z-index: 1;
 }
 
 .chat__input-container .chat__interlocutor-write-hint {
@@ -637,6 +643,20 @@ a.chat__file:hover {
 }
 
 .chat__file img[src] ~ .chat__file__icon {
+    display: none;
+}
+
+.chat__edit-mode--overlay {
+    width: 100%;
+    height: 100%;
+    background: var(--main-6-color);
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 0;
+}
+
+.chat__edit-mode--overlay.chat__edit-mode--overlay--hidden {
     display: none;
 }
 
