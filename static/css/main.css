@@ -658,10 +658,19 @@ a.chat__file:hover {
     left: 0;
     top: 0;
     z-index: 0;
+    display: none;
 }
 
-.chat__edit-mode--overlay.chat__edit-mode--overlay--hidden {
+.chat.chat--edit-mode .chat__edit-mode--overlay {
+    display: block;
+}
+
+.chat__edit-panel {
     display: none;
+}
+
+.chat.chat--edit-mode .chat__edit-panel {
+    display: block;
 }
 
 .chat__delete-panel {
@@ -669,7 +678,7 @@ a.chat__file:hover {
     justify-content: space-between;
 }
 
-.chat.chat--delete-mode .chat__input-panel {
+.chat.chat--delete-mode .chat__main-panel, .chat.chat--edit-mode .chat__main-panel {
     display: none;
 }
 

@@ -110,7 +110,7 @@
         <div class="chat__messages"></div>
 
         <div class="chat__input-container">
-            <div class="chat__input-panel">
+            <div class="chat__main-panel">
                 <div class="chat__files-to-upload"></div>
 
                 <div class="chat__interlocutor-write-hint"></div>
@@ -127,6 +127,23 @@
                     </button>
                 </div>
             </div>
+
+            <div class="chat__edit-panel">
+                <div class="chat__files-to-upload"></div>
+                <div class="input-and-inner-button-container js-click-by-press-enter">
+                    <textarea class="js-click-by-press-enter-input" maxlength="10000"></textarea>
+
+                    <input class="chat__clip-input" type="file" multiple>
+                    <button class="chat__clip">
+                        <i class="fa fa-paperclip" aria-hidden="true"></i>
+                    </button>
+
+                    <button class="chat__send js-click-by-press-enter-button">
+                        <i class="fa fa-play"></i>
+                    </button>
+                </div>
+            </div>
+
             <div class="chat__delete-panel">
                 <div class="chat__delete-panel__count-and_back">
                     <div class="chat__delete-panel__back">
@@ -141,7 +158,7 @@
             </div>
         </div>
 
-        <div class="chat__edit-mode--overlay chat__edit-mode--overlay--hidden"></div>
+        <div class="chat__edit-mode--overlay"></div>
     </div>
 </template>
 
