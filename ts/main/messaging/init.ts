@@ -40,8 +40,13 @@ export const handlersForWebsocket = {
         await AbstractHTMLChat.byId(message.chatId).addMessage(message);
     },
 
+    [SignalType.MESSAGE_EDIT]: async (apiData: MessageId) => {
+        let message: Message = await requestMessage(apiData.messageId);
+        await HTMLMessage.byId(apiData.messageId).setText(message.text);
+    },
+
     [SignalType.FILES]: async (apiData: MessageId) => {
-        await HTMLMessage.byId(apiData.messageId).updateFiles();
+        await HTMLMessage.byId(apiData.messageId).resetFiles();
     },
 
     [SignalType.TYPING]: async (apiData: Typing) => {

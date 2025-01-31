@@ -371,7 +371,7 @@
     width: fit-content;
 }
 
-.chat__message__text-wrapper.chat__message__text-wrapper--edit-mode-selected {
+.chat__message.chat__message--edit-mode-selected {
     z-index: 1;
 }
 
@@ -678,8 +678,13 @@ a.chat__file:hover {
     justify-content: space-between;
 }
 
-.chat.chat--delete-mode .chat__main-panel, .chat.chat--edit-mode .chat__main-panel {
+.chat.chat--delete-mode .chat__main-panel, .chat.chat--edit-mode .chat__main-panel,
+.chat.chat--delete-mode .chat__message__functions, .chat.chat--edit-mode .chat__message__functions {
     display: none;
+}
+
+.chat.chat--edit-mode .chat__messages {
+    overflow-y: hidden;
 }
 
 .chat.chat--delete-mode .chat__delete-panel {

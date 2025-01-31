@@ -194,7 +194,7 @@ export async function requestNewMessage(requestData: NewMessageRequestData): Pro
 export async function requestToEditMessage(requestData: MessageEditRequestData) {
     let response: Response = await commonFetch(HTTP_API_URLS.MESSAGE_EDIT, {
         method: "PUT",
-        body: MessageEditRequestData,
+        body: requestData,
     });
 }
 
@@ -234,7 +234,7 @@ export async function requestToUpdateMessageFiles(messageId: number,
 export async function requestToDeleteMessageFiles(requestData: MessageFilesDeleteRequestData){
     let response: Response = await commonFetch(HTTP_API_URLS.MESSAGE_FILES_DELETE, {
         method: "DELETE",
-        body: MessageFilesDeleteRequestData,
+        body: requestData,
     });
 }
 

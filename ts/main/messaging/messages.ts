@@ -31,6 +31,7 @@ export class HTMLMessage extends AbstractHTMLTemplatedElement {
     protected _user: User;
     protected _hasFiles: boolean;
     protected _filenames: string[];
+    protected _urlsByFilenames: Record<string, string>;
 
     public constructor(chat: AbstractHTMLChat,
                        parentEl: HTMLElement,
@@ -49,6 +50,8 @@ export class HTMLMessage extends AbstractHTMLTemplatedElement {
         this._creatingDatetime = creatingDatetime;
         this._user = user;
         this._hasFiles = hasFiles;
+        this._filenames = [];
+        this._urlsByFilenames = {};
         HTMLMessage._messagesByIds[id] = this;
     }
 
@@ -56,36 +59,12 @@ export class HTMLMessage extends AbstractHTMLTemplatedElement {
         return HTMLMessage._messagesByIds[messageId];
     }
 
-    public async init(prepend: boolean=false): Promise<void> {
-        if (this._hasFiles) {
-            this._filenames = await requestMessageFilenames(this._id) ?? [];
-        } else {
-            this._filenames = [];
-        }
-        super.init(prepend);
-    }
-
-    public async updateFiles(): Promise<void> {
-        let newFilenames = await requestMessageFilenames(this._id) ?? [];
-        if (!newFilenames.length) {
-            return;
-        }
-
-        for (let filename of newFilenames) {
-            if (this._filenames.includes(filename)) {
-                continue;
-            }
-            this._addFile(filename);
-        }
-    }
-
     protected _initChildEls(): void {
         this._userNameEl = this._thisEl.querySelector(".chat__message__name");
         this._userNameEl.textContent = this._user.firstName;
 
         this._textEl = this._thisEl.querySelector(".chat__message__text");
-        this._textEl.textContent = this._text;
-        this._textEl.innerHTML = this._formattedMessageTextHtml(this._textEl.innerHTML);
+        this.setText(this._text);
 
         this._timeEl = this._thisEl.querySelector(".chat__message__time");
         this._timeEl.textContent = this._timeStr();
@@ -93,12 +72,35 @@ export class HTMLMessage extends AbstractHTMLTemplatedElement {
         this._filesEl = this._thisEl.querySelector(".chat__message__files");
         this._imageFilesEl = this._thisEl.querySelector(".chat__message__image-files");
 
-        this._filenames.forEach(this._addFile.bind(this));
+        if (this._hasFiles) {
+            this.resetFiles();
+        }
+    }
+
+    public setText(text: string): void {
+        this._text = text;
+        this._textEl.textContent = this._text;
+        this._textEl.innerHTML = this._formattedMessageTextHtml(this._textEl.innerHTML);
+    }
+
+    public async resetFiles(): Promise<void> {
+        this._imageFilesEl.innerHTML = "";
+        this._filesEl.innerHTML = "";
+
+        this._filenames = await requestMessageFilenames(this._id) ?? [];
+        if (!this._filenames.length) {
+            return;
+        }
+
+        for (let filename of this._filenames) {
+            this._addFile(filename);
+        }
     }
 
     protected _addFile(filename: string): void {
         let extension: string = filename.slice(filename.lastIndexOf('.')).toLowerCase();
         let url: string = this._makeFileUrl(filename);
+        this._urlsByFilenames[filename] = url;
 
         let file: HTMLMessageFile | HTMLMessageImageFile;
         if (HTMLMessage._IMAGE_FILE_EXTENSIONS.includes(extension)) {
@@ -135,6 +137,18 @@ export class HTMLMessage extends AbstractHTMLTemplatedElement {
         return this._isRead;
     }
 
+    public get text(): string {
+        return this._text;
+    }
+
+    public get filenames(): string[] {
+        return this._filenames;
+    }
+
+    public urlOfFile(filename: string): string {
+        return this._urlsByFilenames[filename];
+    }
+
     public setAsRead(): void {
         this._thisEl.classList.remove("chat__message--unread");
         this._isRead = true;
@@ -147,7 +161,9 @@ export class HTMLMessage extends AbstractHTMLTemplatedElement {
 }
 
 export class HTMLMessageFromThisUser extends HTMLMessage {
-    
+
+    protected _editModeButton: HTMLButtonElement;
+
     protected _initThisEl(prepend: boolean) {
         super._initThisEl(prepend);
 
@@ -157,8 +173,24 @@ export class HTMLMessageFromThisUser extends HTMLMessage {
         }
     }
 
+    protected _initChildEls(): void {
+        super._initChildEls();
+        this._editModeButton = this._thisEl.querySelector(".chat__message__function--edit");
+        this._editModeButton.onclick = () => {
+            this._chat.toEditMode(this);
+        }
+    }
+
     public get fromThisUser(): boolean {
         return true;
+    }
+
+    public selectToEdit(): void {
+        this._thisEl.classList.add("chat__message--edit-mode-selected");
+    }
+
+    public removeSelectToEdit(): void {
+        this._thisEl.classList.remove("chat__message--edit-mode-selected");
     }
 
 }

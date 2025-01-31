@@ -6,10 +6,13 @@ import { userInWindow } from "../../common/userInWindowChecking.js";
 import { newMessageSound } from "../../common/audio.js";
 import { requestMessage,
          requestNewMessage,
+         requestMessages,
          requestTyping,
          requestToReadMessage,
-         requestMessages,
+         requestToEditMessage,
+         requestToDeleteMessage,
          requestToUpdateMessageFiles,
+         requestToDeleteMessageFiles,
        } from "../../common/http/functions.js";
 import { addUserToApiData } from "../../common/apiDataAdding.js";
 import { CURRENT_LABELS } from "../../common/languages/labels.js";
@@ -45,13 +48,27 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
     protected _clipInputEl: HTMLInputElement;
     protected _filesToUploadEl: HTMLElement;
 
+    protected _editModeTextareaEl: HTMLTextAreaElement;
+    protected _editModeButtonEl: HTMLButtonElement;
+    protected _editModeClipButtonEl: HTMLButtonElement;
+    protected _editModeClipInputEl: HTMLInputElement;
+    protected _editModeFilesToUploadEl: HTMLElement;
+    protected _editModeFilesMapper: NoOverwriteInputFilesMapper;
+    protected _editModeSelectedMessage: HTMLMessageFromThisUser | null = null;
+
+    protected _deleteModeBackEl: HTMLElement;
+    protected _deleteModeSelectedCountLabelEl: HTMLElement;
+    protected _deleteModeSelectedCountEl: HTMLElement;
+    protected _deleteModeConfirmButtonEl: HTMLButtonElement;
+    protected _deleteModeSelectedMessages: HTMLMessage[];
+
     protected _filesMapper: NoOverwriteInputFilesMapper;
     protected _curMessageIsFirst: boolean = true;
     protected _isOpened: boolean = false;
     protected _avatarURL: string;
     protected _messages: Record<number, HTMLMessage>;
     protected _fullyLoaded: boolean = false;
-    protected _datesSeps: Record<number, HTMLDateSep> = {};
+    protected _datesSeps: Record<number, HTMLDateSep>;
     protected _link: HTMLChatLink;
     protected _topDateStr: string | null = null;
     protected _bottomDateStr: string | null = null;
@@ -69,6 +86,7 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
 
         this._messages = {};
         this._datesSeps = {};
+        this._deleteModeSelectedMessages = [];
         AbstractHTMLChat._chatsByIds[id] = this;
     }
 
@@ -93,43 +111,66 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
 
         this._avatarEl = this._thisEl.querySelector(".avatar");
         this._avatarEl.src = this._avatarURL;
+
         this._nameEl = this._thisEl.querySelector(".chat__name");
-
-        this._textareaEl = this._thisEl.querySelector("textarea");
-        this._buttonEl = this._thisEl.querySelector(".chat__send");
-
         this._nameEl.textContent = this._name;
 
         this._messagesEl = this._thisEl.querySelector(".chat__messages");
         this._messagesEl.addEventListener("scroll", async () => {
             await this._read();
         });
+        this._typingEl = this._thisEl.querySelector(".chat__interlocutor-write-hint");
 
+        this._textareaEl = this._thisEl.querySelector(".chat__main-panel textarea");
         this._textareaEl.addEventListener("input", async () => {
             await this._sendTyping();
         });
         this._textareaEl.setAttribute("placeholder", choose(this._PHRASES));
 
+        this._buttonEl = this._thisEl.querySelector(".chat__main-panel .chat__send");
         this._buttonEl.onclick = async () => {
             await this._sendMessage();
         }
 
-        this._typingEl = this._thisEl.querySelector(".chat__interlocutor-write-hint");
-
-        this._clipInputEl = this._thisEl.querySelector(".chat__clip-input");
+        this._clipInputEl = this._thisEl.querySelector(".chat__main-panel .chat__clip-input");
         addDragUploadingForInput(this._clipInputEl, this._thisEl);
 
-        this._clipButtonEl = this._thisEl.querySelector(".chat__clip");
+        this._clipButtonEl = this._thisEl.querySelector(".chat__main-panel .chat__clip");
         this._clipButtonEl.onclick = () => {
             this._clipInputEl.click();
         }
 
-        this._filesToUploadEl = this._thisEl.querySelector(".chat__files-to-upload");
+        this._filesToUploadEl = this._thisEl.querySelector(".chat__main-panel .chat__files-to-upload");
         this._filesMapper = new NoOverwriteInputFilesMapper(this._clipInputEl, this._filesToUploadEl, this._fileToUploadElTemp);
 
         this._link = new HTMLChatLink(this, this._name, this._avatarURL);
         this._link.init();
         this._link.updateUnreadCount(this._unreadCount);
+        
+        this._initEditModeEls();
+    }
+    
+    protected _initEditModeEls(): void {
+        this._editModeTextareaEl = this._thisEl.querySelector(".chat__edit-panel textarea");
+        this._editModeButtonEl = this._thisEl.querySelector(".chat__edit-panel .chat__send");
+        this._editModeButtonEl.onclick = async () => {
+            await this._editSelectedMessage();
+        }
+
+        this._editModeClipInputEl = this._thisEl.querySelector(".chat__edit-panel .chat__clip-input");
+        addDragUploadingForInput(this._editModeClipInputEl, this._thisEl);
+
+        this._editModeClipButtonEl = this._thisEl.querySelector(".chat__edit-panel .chat__clip");
+        this._editModeClipButtonEl.onclick = () => {
+            this._editModeClipInputEl.click();
+        }
+
+        this._editModeFilesToUploadEl = this._thisEl.querySelector(".chat__edit-panel .chat__files-to-upload");
+        this._editModeFilesMapper = new NoOverwriteInputFilesMapper(
+            this._editModeClipInputEl,
+            this._editModeFilesToUploadEl,
+            this._fileToUploadElTemp,
+        );
     }
 
     protected async _sendTyping(): Promise<void> {
@@ -399,6 +440,52 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
     public updateUnreadCount(count: number): void {
         this._unreadCount = count;
         this._link.updateUnreadCount(count);
+    }
+
+    public toEditMode(message: HTMLMessageFromThisUser): void {
+        this._thisEl.classList.add("chat--edit-mode");
+        this._editModeSelectedMessage = message;
+        this._editModeSelectedMessage.selectToEdit();
+
+        this._editModeTextareaEl.value = this._editModeSelectedMessage.text;
+        for (let filename of this._editModeSelectedMessage.filenames) {
+            this._editModeFilesMapper.addServerFile(filename, this._editModeSelectedMessage.urlOfFile(filename));
+        }
+    }
+
+    protected async _editSelectedMessage(): Promise<void> {
+        if (this._editModeTextareaEl.value != this._editModeSelectedMessage.text) {
+            await requestToEditMessage({
+                messageId: this._editModeSelectedMessage.id,
+                text: this._editModeTextareaEl.value,
+            });
+        }
+
+        let filenamesToDelete: string[] = this._editModeFilesMapper.getServerFilenamesToDelete();
+        if (filenamesToDelete.length) {
+            await requestToDeleteMessageFiles({
+                messageId: this._editModeSelectedMessage.id,
+                filenames: filenamesToDelete,
+            });
+        }
+
+        if (this._editModeClipInputEl.files.length) {
+            await requestToUpdateMessageFiles(this._editModeSelectedMessage.id, this._editModeClipInputEl.files);
+        }
+
+        this.clearMode();
+    }
+
+    public clearMode(): void {
+        this._thisEl.classList.remove("chat--edit-mode");
+        if (this._editModeSelectedMessage) {
+            this._editModeSelectedMessage.removeSelectToEdit();
+        }
+        this._editModeSelectedMessage = null;
+        this._editModeFilesMapper.clear();
+
+        this._thisEl.classList.remove("chat--delete-mode");
+        this._deleteModeSelectedMessages = [];
     }
 
 }
