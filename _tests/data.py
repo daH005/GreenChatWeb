@@ -33,7 +33,7 @@ class Params:
 
         MAIN_CHAT_LINK_TEMP = '//div[@id="js-all-chats-links"]//div[@class="chat-link__chat-name"][text()="{}"]'
         MAIN_CUR_CHAT = '//div[@class="chat" and not(@class="chat--hidden")]'
-        MAIN_CUR_CHAT_INPUT_CONTAINER = 'div[@class="chat__input-container"]'
+        MAIN_CUR_CHAT_INPUT_CONTAINER = './/div[@class="chat__main-panel"]'
         MAIN_CUR_CHAT_TEXTAREA = './/textarea'
         MAIN_CUR_CHAT_SEND_BUTTON = './/button[@class="chat__send js-click-by-press-enter-button"]'
         MAIN_CUR_CHAT_EACH_MESSAGE_TEXT = './/div[@class="chat__message__text"]'
