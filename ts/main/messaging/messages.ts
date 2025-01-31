@@ -22,6 +22,8 @@ export class HTMLMessage extends AbstractHTMLTemplatedElement {
     protected _timeEl: HTMLElement;
     protected _filesEl: HTMLElement;
     protected _imageFilesEl: HTMLElement;
+    protected _deleteModeButton: HTMLElement;
+    protected _selectToDeleteButton: HTMLElement;
 
     protected _chat: AbstractHTMLChat;
     protected _id: number;
@@ -32,6 +34,7 @@ export class HTMLMessage extends AbstractHTMLTemplatedElement {
     protected _hasFiles: boolean;
     protected _filenames: string[];
     protected _urlsByFilenames: Record<string, string>;
+    protected _isSelectedToDelete: boolean;
 
     public constructor(chat: AbstractHTMLChat,
                        parentEl: HTMLElement,
@@ -52,6 +55,7 @@ export class HTMLMessage extends AbstractHTMLTemplatedElement {
         this._hasFiles = hasFiles;
         this._filenames = [];
         this._urlsByFilenames = {};
+        this._isSelectedToDelete = false;
         HTMLMessage._messagesByIds[id] = this;
     }
 
@@ -74,6 +78,21 @@ export class HTMLMessage extends AbstractHTMLTemplatedElement {
 
         if (this._hasFiles) {
             this.resetFiles();
+        }
+
+        this._deleteModeButton = this._thisEl.querySelector(".chat__message__function--delete");
+        this._deleteModeButton.onclick = () => {
+            this._chat.toDeleteMode();
+            this._chat.selectMessageToDelete(this);
+        }
+
+        this._selectToDeleteButton = this._thisEl.querySelector(".chat__message__delete");
+        this._selectToDeleteButton.onclick = () => {
+            if (!this._isSelectedToDelete) {
+                this._chat.selectMessageToDelete(this);
+            } else {
+                this._chat.removeSelectMessageToDelete(this);
+            }
         }
     }
 
@@ -129,6 +148,10 @@ export class HTMLMessage extends AbstractHTMLTemplatedElement {
         return this._id;
     }
 
+    public get chat(): AbstractHTMLChat {
+        return this._chat;
+    }
+
     public get fromThisUser(): boolean {
         return false;
     }
@@ -158,11 +181,24 @@ export class HTMLMessage extends AbstractHTMLTemplatedElement {
         return this._thisEl.getBoundingClientRect();
     }
 
+    public selectToDelete(): void {
+        this._selectToDeleteButton.classList.add("chat__message__delete--selected");
+        this._isSelectedToDelete = true;
+    }
+
+    public removeSelectToDelete(): void {
+        this._selectToDeleteButton.classList.remove("chat__message__delete--selected");
+        this._isSelectedToDelete = false;
+    }
+
+    public delete(): void {
+        this._thisEl.remove();
+    }
+
 }
 
 export class HTMLMessageFromThisUser extends HTMLMessage {
-
-    protected _editModeButton: HTMLButtonElement;
+    protected _editModeButton: HTMLElement;
 
     protected _initThisEl(prepend: boolean) {
         super._initThisEl(prepend);

@@ -45,6 +45,10 @@ export const handlersForWebsocket = {
         await HTMLMessage.byId(apiData.messageId).setText(message.text);
     },
 
+    [SignalType.MESSAGE_DELETE]: async (apiData: MessageId) => {
+        await HTMLMessage.byId(apiData.messageId).chat.deleteMessage(apiData.messageId);
+    },
+
     [SignalType.FILES]: async (apiData: MessageId) => {
         await HTMLMessage.byId(apiData.messageId).resetFiles();
     },

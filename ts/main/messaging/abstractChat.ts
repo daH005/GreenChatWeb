@@ -53,6 +53,7 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
     protected _editModeClipButtonEl: HTMLButtonElement;
     protected _editModeClipInputEl: HTMLInputElement;
     protected _editModeFilesToUploadEl: HTMLElement;
+    protected _editModeBackButton: HTMLElement;
     protected _editModeFilesMapper: NoOverwriteInputFilesMapper;
     protected _editModeSelectedMessage: HTMLMessageFromThisUser | null = null;
 
@@ -148,6 +149,7 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
         this._link.updateUnreadCount(this._unreadCount);
         
         this._initEditModeEls();
+        this._initDeleteModeEls();
     }
     
     protected _initEditModeEls(): void {
@@ -171,8 +173,30 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
             this._editModeFilesToUploadEl,
             this._fileToUploadElTemp,
         );
-    }
 
+        this._editModeBackButton = this._thisEl.querySelector(".chat__edit-panel__back");
+        this._editModeBackButton.onclick = () => {
+            this._clearEditMode();
+        }
+    }
+    
+    protected _initDeleteModeEls(): void {
+        this._deleteModeBackEl = this._thisEl.querySelector(".chat__delete-panel__back");
+        this._deleteModeBackEl.onclick = () => {
+            this._clearDeleteMode();
+        }
+
+        this._deleteModeSelectedCountLabelEl = this._thisEl.querySelector(".chat__delete-panel__selected-count__label");
+        this._deleteModeSelectedCountLabelEl.textContent = CURRENT_LABELS.selectedCount;
+        this._deleteModeSelectedCountEl = this._thisEl.querySelector(".chat__delete-panel__selected-count");
+
+        this._deleteModeConfirmButtonEl = this._thisEl.querySelector(".chat__delete-panel__confirm");
+        this._deleteModeConfirmButtonEl.textContent = CURRENT_LABELS.delete;
+        this._deleteModeConfirmButtonEl.onclick = async () => {
+            await this._confirmDelete();
+        }
+    }
+    
     protected async _sendTyping(): Promise<void> {
         await requestTyping(this._id);
     }
@@ -473,19 +497,60 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
             await requestToUpdateMessageFiles(this._editModeSelectedMessage.id, this._editModeClipInputEl.files);
         }
 
-        this.clearMode();
+        this._clearEditMode();
     }
 
-    public clearMode(): void {
+    protected _clearEditMode(): void {
         this._thisEl.classList.remove("chat--edit-mode");
         if (this._editModeSelectedMessage) {
             this._editModeSelectedMessage.removeSelectToEdit();
         }
         this._editModeSelectedMessage = null;
         this._editModeFilesMapper.clear();
+    }
 
+    public toDeleteMode(): void {
+        this._thisEl.classList.add("chat--delete-mode");
+        this._deleteModeSelectedCountEl.textContent = "0";
+    }
+
+    public selectMessageToDelete(message: HTMLMessage): void {
+        message.selectToDelete();
+
+        this._deleteModeSelectedMessages.push(message);
+        this._updateSelectedToDeleteCount();
+    }
+
+    public removeSelectMessageToDelete(message: HTMLMessage): void {
+        message.removeSelectToDelete();
+
+        let index: number = this._deleteModeSelectedMessages.indexOf(message);
+        this._deleteModeSelectedMessages.splice(index, 1);
+        this._updateSelectedToDeleteCount();
+    }
+
+    protected _updateSelectedToDeleteCount(): void {
+        this._deleteModeSelectedCountEl.textContent = String(this._deleteModeSelectedMessages.length);
+    }
+
+    protected async _confirmDelete(): Promise<void> {
+        for (let message of this._deleteModeSelectedMessages) {
+            await requestToDeleteMessage(message.id);
+        }
+        this._clearDeleteMode();
+    }
+
+    protected _clearDeleteMode(): void {
         this._thisEl.classList.remove("chat--delete-mode");
+        for (let message of this._deleteModeSelectedMessages) {
+            message.removeSelectToDelete();
+        }
         this._deleteModeSelectedMessages = [];
+    }
+
+    public deleteMessage(messageId: number): void {
+        this._messages[messageId].delete();
+        delete this._messages[messageId];
     }
 
 }

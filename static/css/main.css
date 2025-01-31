@@ -667,15 +667,28 @@ a.chat__file:hover {
 
 .chat__edit-panel {
     display: none;
+    position: relative;
 }
 
 .chat.chat--edit-mode .chat__edit-panel {
     display: block;
 }
 
+.chat__edit-panel__back {
+    color: white;
+    right: 20px;
+    position: absolute;
+    top: -20px;
+    transform: translateY(-100%);
+    font-size: 20px;
+    cursor: pointer;
+}
+
 .chat__delete-panel {
     display: none;
     justify-content: space-between;
+    background: var(--main-5-color);
+    border-radius: 10px;
 }
 
 .chat.chat--delete-mode .chat__main-panel, .chat.chat--edit-mode .chat__main-panel,
@@ -694,18 +707,19 @@ a.chat__file:hover {
 .chat__delete-panel__count-and_back {
     display: flex;
     align-items: center;
+    color: white;
 }
 
 .chat__delete-panel__back {
     padding: 10px;
-    margin-right: 10px;
-    color: var(--main-4-color);
+    margin: 0 10px;
     font-size: 20px;
     cursor: pointer;
 }
 
 .chat__delete-panel__confirm {
     background: var(--cancel-color);
+    border-radius: 0 10px 10px 0;
 }
 
 .avatar {
