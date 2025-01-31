@@ -477,7 +477,7 @@
     display: block;
 }
 
-.chat__input-container {
+.chat__footer {
     padding: 1vw 5vw;
     padding-top: 2vw;
     width: 100%;
@@ -486,7 +486,7 @@
     z-index: 1;
 }
 
-.chat__input-container .chat__interlocutor-write-hint {
+.chat__footer .chat__interlocutor-write-hint {
     top: 0;
     position: absolute;
     transform: translateY(-100%);
@@ -494,7 +494,7 @@
     font-size: small;
 }
 
-.chat__input-container textarea {
+.chat__footer textarea {
     height: 50px;
     min-height: 50px;
     max-height: 100px;
@@ -502,17 +502,17 @@
     padding-right: 90px;
 }
 
-.chat__input-container button {
+.chat__footer button {
     padding: 5px 15px;
 }
 
-.chat__input-container .chat__clip {
+.chat__footer .chat__clip {
     right: 50px;
     border-right: 1px solid var(--main-5-color);
     border-radius: 0;
 }
 
-.chat__input-container input[type="file"] {
+.chat__footer input[type="file"] {
     display: none;
 }
 
