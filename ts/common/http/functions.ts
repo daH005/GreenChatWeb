@@ -10,6 +10,8 @@ import { EmailAndCodeRequestData,
          NewChatRequestData,
          NewMessageRequestData,
          MessagesRequestData,
+         MessageEditRequestData,
+         MessageFilesDeleteRequestData,
        } from "./requestDataInterfaces.js";
 import { makeUrlWithParams, commonFetch } from "./base.js";
 
@@ -189,6 +191,20 @@ export async function requestNewMessage(requestData: NewMessageRequestData): Pro
     return await response.json();
 }
 
+export async function requestToEditMessage(requestData: MessageEditRequestData) {
+    let response: Response = await commonFetch(HTTP_API_URLS.MESSAGE_EDIT, {
+        method: "PUT",
+        body: MessageEditRequestData,
+    });
+}
+
+export async function requestToDeleteMessage(messageId: number) {
+    let response: Response = await commonFetch(HTTP_API_URLS.MESSAGE_DELETE, {
+        method: "DELETE",
+        body: {messageId},
+    });
+}
+
 export async function requestToReadMessage(messageId: number) {
     let response: Response = await commonFetch(HTTP_API_URLS.MESSAGE_READ, {
         method: "PUT",
@@ -213,6 +229,13 @@ export async function requestToUpdateMessageFiles(messageId: number,
         notify(CURRENT_LABELS.largeFiles);
         throw new Error();
     }
+}
+
+export async function requestToDeleteMessageFiles(requestData: MessageFilesDeleteRequestData){
+    let response: Response = await commonFetch(HTTP_API_URLS.MESSAGE_FILES_DELETE, {
+        method: "DELETE",
+        body: MessageFilesDeleteRequestData,
+    });
 }
 
 export async function requestMessageFilenames(messageId: number): Promise<string[]> {

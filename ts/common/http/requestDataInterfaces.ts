@@ -23,3 +23,13 @@ export interface MessagesRequestData {
     chatId: number,
     offset?: number,
 }
+
+export interface MessageEditRequestData {
+    messageId: number,
+    text: string,
+}
+
+export interface MessageFilesDeleteRequestData {
+    messageId: number,
+    filenames: string[],
+}
