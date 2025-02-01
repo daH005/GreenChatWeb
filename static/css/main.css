@@ -300,18 +300,14 @@
     margin-top: auto;
 }
 
+.chat__message-els-wrapper {
+    max-width: 500px;
+    width: fit-content;
+}
+
 .chat__message {
     margin-bottom: 20px;
     position: relative;
-}
-
-.chat__message__text a {
-    color: darkmagenta;
-    opacity: 0.6;
-}
-
-.chat__message__text a:hover {
-    text-decoration: underline;
 }
 
 .chat__message.chat__message--self {
@@ -340,14 +336,22 @@
     white-space: pre-line;
     background: white;
     padding: 13px;
-    min-width: 100px;
-    width: 100%;
     box-sizing: border-box;
     border-radius: 0 10px 10px 10px;
     color: var(--text-color);
     font-size: 0.9em;
     overflow-wrap: anywhere;
-    max-width: 500px;
+    min-width: 100px;
+    width: 100%;
+}
+
+.chat__message__text a {
+    color: darkmagenta;
+    opacity: 0.6;
+}
+
+.chat__message__text a:hover {
+    text-decoration: underline;
 }
 
 .chat__message__image-files:not(:empty) + .chat__message__text-wrapper > .chat__message__text {
@@ -368,7 +372,6 @@
 
 .chat__message__text-wrapper {
     position: relative;
-    width: fit-content;
 }
 
 .chat__message.chat__message--edit-mode-selected {
@@ -502,6 +505,10 @@
     padding-right: 90px;
 }
 
+.chat__footer textarea::-webkit-scrollbar {
+    width: 0;
+}
+
 .chat__footer button {
     padding: 5px 15px;
 }
@@ -510,6 +517,7 @@
     right: 50px;
     border-right: 1px solid var(--main-5-color);
     border-radius: 0;
+    margin: 10px 0;
 }
 
 .chat__footer input[type="file"] {
@@ -539,10 +547,10 @@
 }
 
 .chat__message__image-file img {
-    height: 100%;
     display: block;
     margin: auto;
-    max-width: 100%;
+    height: 100%;
+    width: 100%;
     object-fit: cover;
 }
 
@@ -676,10 +684,6 @@ a.chat__file:hover {
 
 .chat__edit-panel__back {
     color: white;
-    right: 20px;
-    position: absolute;
-    top: -20px;
-    transform: translateY(-100%);
     font-size: 20px;
     cursor: pointer;
 }
@@ -708,12 +712,12 @@ a.chat__file:hover {
     display: flex;
     align-items: center;
     color: white;
+    font-size: small;
 }
 
 .chat__delete-panel__back {
-    padding: 10px;
+    padding: 15px;
     margin: 0 10px;
-    font-size: 20px;
     cursor: pointer;
 }
 

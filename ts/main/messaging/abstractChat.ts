@@ -53,7 +53,7 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
     protected _editModeClipButtonEl: HTMLButtonElement;
     protected _editModeClipInputEl: HTMLInputElement;
     protected _editModeFilesToUploadEl: HTMLElement;
-    protected _editModeBackButton: HTMLElement;
+    protected _editModeBackButton: HTMLButtonElement;
     protected _editModeFilesMapper: NoOverwriteInputFilesMapper;
     protected _editModeSelectedMessage: HTMLMessageFromThisUser | null = null;
 
@@ -472,6 +472,8 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
         this._editModeSelectedMessage.selectToEdit();
 
         this._editModeTextareaEl.value = this._editModeSelectedMessage.text;
+        this._editModeTextareaEl.style.height = "0px";
+        this._editModeTextareaEl.style.height = this._editModeTextareaEl.scrollHeight + "px";
         for (let filename of this._editModeSelectedMessage.filenames) {
             this._editModeFilesMapper.addServerFile(filename, this._editModeSelectedMessage.urlOfFile(filename));
         }

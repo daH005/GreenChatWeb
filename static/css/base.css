@@ -130,27 +130,34 @@ h1 {
 }
 
 .input-and-inner-button-container {
-    position: relative;
+    background: white;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
 }
 
 .input-and-inner-button-container input, .input-and-inner-button-container textarea {
     width: 100%;
-    padding-right: 60px;
 }
 
 .input-and-inner-button-container button {
     background: none;
     color: var(--main-2-color);
     font-size: 1.1em;
-    position: absolute;
-    right: 5px;
-    top: 50%;
-    transform: translateY(-50%);
-    margin: 0;
+    padding: 0 15px;
 }
 
 .input-and-inner-button-container button:hover {
     color: var(--main-3-color);
+}
+
+.input-and-inner-button-container input:hover, .input-and-inner-button-container input:focus,
+.input-and-inner-button-container textarea:hover, .input-and-inner-button-container textarea:focus {
+    outline: none;
+}
+
+.input-and-inner-button-container:hover, .input-and-inner-button-container:focus {
+    outline: 2px solid var(--main-3-color);
 }
 
 @media only screen and (max-width: 940px), only screen and (max-device-width: 940px) {
