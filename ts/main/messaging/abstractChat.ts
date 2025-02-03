@@ -34,7 +34,7 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
     protected static _chatsByIds: Record<number, AbstractHTMLChat> = {};
     protected static _curOpenedChat: AbstractHTMLChat = null;
 
-    protected readonly _WAITING_FOR_CHAT_LOADING: number = 30;
+    protected readonly _WAITING_FOR_CHAT_LOADING: number = 300;  // FixMe: it's so bad... I have not found a decision yet.
     protected readonly _PHRASES: string[] = CURRENT_LABELS.phrases;
 
     protected _backLinkEl: HTMLElement;
