@@ -103,14 +103,16 @@ export class HTMLMessage extends AbstractHTMLTemplatedElement {
     }
 
     public async resetFiles(): Promise<void> {
-        this._imageFilesEl.innerHTML = "";
-        this._filesEl.innerHTML = "";
+        let filenames: string[] = await requestMessageFilenames(this._id) ?? [];
+        let filesWereNotChanged = filenames == this._filenames;
+        this._filenames = filenames;
 
-        this._filenames = await requestMessageFilenames(this._id) ?? [];
-        if (!this._filenames.length) {
+        if (filesWereNotChanged) {
             return;
         }
 
+        this._imageFilesEl.innerHTML = "";
+        this._filesEl.innerHTML = "";
         for (let filename of this._filenames) {
             this._addFile(filename);
         }
