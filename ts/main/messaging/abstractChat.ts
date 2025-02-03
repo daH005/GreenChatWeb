@@ -74,6 +74,7 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
     protected _topDateStr: string | null = null;
     protected _bottomDateStr: string | null = null;
     protected _typingTimeoutId: number | null = null;
+    protected _lastMessage: HTMLMessage | null = null;
 
     protected _id: number;
     protected _name: string;
@@ -301,8 +302,8 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
         await message.init(prepend);
         this._messages[apiData.id] = message;
 
-        if (scrolledToBottomBackupBeforeMessageAdding && !prepend) {
-            this._scrollToBottom();
+        if ((scrolledToBottomBackupBeforeMessageAdding && !prepend) || fromThisUser) {
+            this.scrollToBottom();
         }
 
         if (this._curMessageIsFirst) {
@@ -327,6 +328,8 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
         if (!prepend) {
             this._link.updateLastMessageFromThisUserMark(fromThisUser);
             this._link.updateTextAndDate(apiData.text, dateStr);
+
+            this._lastMessage = message;
         }
 
         this._curMessageIsFirst = false;
@@ -336,7 +339,7 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
         return this._messagesEl.scrollHeight - this._messagesEl.scrollTop - this._messagesEl.clientHeight < 100;
     }
 
-    protected _scrollToBottom(): void {
+    public scrollToBottom(): void {
         this._messagesEl.scrollTop = this._messagesEl.scrollHeight;
     }
 
@@ -553,6 +556,10 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
     public deleteMessage(messageId: number): void {
         this._messages[messageId].delete();
         delete this._messages[messageId];
+    }
+
+    public get lastMessage(): HTMLMessage | null {
+        return this._lastMessage;
     }
 
 }

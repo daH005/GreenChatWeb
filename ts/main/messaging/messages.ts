@@ -32,9 +32,10 @@ export class HTMLMessage extends AbstractHTMLTemplatedElement {
     protected _creatingDatetime: Date;
     protected _user: User;
     protected _hasFiles: boolean;
+    protected _fromThisUser: boolean = false;
     protected _filenames: string[];
     protected _urlsByFilenames: Record<string, string>;
-    protected _isSelectedToDelete: boolean;
+    protected _isSelectedToDelete: boolean = false;
 
     public constructor(chat: AbstractHTMLChat,
                        parentEl: HTMLElement,
@@ -55,7 +56,6 @@ export class HTMLMessage extends AbstractHTMLTemplatedElement {
         this._hasFiles = hasFiles;
         this._filenames = [];
         this._urlsByFilenames = {};
-        this._isSelectedToDelete = false;
         HTMLMessage._messagesByIds[id] = this;
     }
 
@@ -116,6 +116,10 @@ export class HTMLMessage extends AbstractHTMLTemplatedElement {
         for (let filename of this._filenames) {
             this._addFile(filename);
         }
+
+        if (this._chat.lastMessage == this && this._fromThisUser) {
+            this._chat.scrollToBottom();
+        }
     }
 
     protected _addFile(filename: string): void {
@@ -155,7 +159,7 @@ export class HTMLMessage extends AbstractHTMLTemplatedElement {
     }
 
     public get fromThisUser(): boolean {
-        return false;
+        return this._fromThisUser;
     }
 
     public get isRead(): boolean {
@@ -201,6 +205,7 @@ export class HTMLMessage extends AbstractHTMLTemplatedElement {
 
 export class HTMLMessageFromThisUser extends HTMLMessage {
     protected _editModeButton: HTMLElement;
+    protected _fromThisUser: boolean = true;
 
     protected _initThisEl(prepend: boolean) {
         super._initThisEl(prepend);
@@ -217,10 +222,6 @@ export class HTMLMessageFromThisUser extends HTMLMessage {
         this._editModeButton.onclick = () => {
             this._chat.toEditMode(this);
         }
-    }
-
-    public get fromThisUser(): boolean {
-        return true;
     }
 
     public selectToEdit(): void {
