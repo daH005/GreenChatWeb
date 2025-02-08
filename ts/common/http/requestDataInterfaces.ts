@@ -19,11 +19,6 @@ export interface NewMessageRequestData {
     text: string,
 }
 
-export interface MessagesRequestData {
-    chatId: number,
-    offset?: number,
-}
-
 export interface MessageEditRequestData {
     messageId: number,
     text: string,
@@ -32,4 +27,9 @@ export interface MessageEditRequestData {
 export interface MessageFilesDeleteRequestData {
     messageId: number,
     filenames: string[],
+}
+
+export interface PaginationRequestData {
+    offset?: number,
+    size?: number,
 }

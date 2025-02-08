@@ -9,9 +9,9 @@ import { EmailAndCodeRequestData,
          UserEditRequestData,
          NewChatRequestData,
          NewMessageRequestData,
-         MessagesRequestData,
          MessageEditRequestData,
          MessageFilesDeleteRequestData,
+         PaginationRequestData,
        } from "./requestDataInterfaces.js";
 import { makeUrlWithParams, commonFetch } from "./base.js";
 
@@ -130,8 +130,8 @@ export async function requestToEditUserBackground(image: Blob) {
     }
 }
 
-export async function requestUserChats(): Promise<Chat[]> {
-    let response: Response = await commonFetch(HTTP_API_URLS.USER_CHATS, {
+export async function requestUserChats(pagination: PaginationRequestData = {}): Promise<Chat[]> {
+    let response: Response = await commonFetch(makeUrlWithParams(HTTP_API_URLS.USER_CHATS, pagination), {
         method: "GET",
     });
     return await response.json();
@@ -168,8 +168,10 @@ export async function requestUnreadCount(chatId: number): Promise<number> {
     return data.unreadCount;
 }
 
-export async function requestMessages(requestData: MessagesRequestData): Promise<Message[]> {
-    let response: Response = await commonFetch(makeUrlWithParams(HTTP_API_URLS.CHAT_MESSAGES, requestData), {
+export async function requestMessages(chatId: number,
+                                      pagination: PaginationRequestData = {},
+                                      ): Promise<Message[]> {
+    let response: Response = await commonFetch(makeUrlWithParams(HTTP_API_URLS.CHAT_MESSAGES, {chatId, ...pagination}), {
         method: "GET",
     });
     return await response.json();
