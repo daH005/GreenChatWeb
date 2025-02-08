@@ -32,7 +32,7 @@ async function searchUserAndSwitchToChat(): Promise<void> {
 
     let interlocutor: User = await requestUser(interlocutorId);
 
-    let chat: HTMLPrivateChat = HTMLPrivateChat.newChat(interlocutor);
+    let chat: HTMLPrivateChat = HTMLPrivateChat.new(interlocutor);
     await chat.init();
     await chat.open();
 }

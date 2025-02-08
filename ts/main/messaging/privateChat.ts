@@ -31,7 +31,7 @@ export class HTMLPrivateChat extends AbstractHTMLChat {
         }
     }
 
-    public static newChat(interlocutor: User): HTMLPrivateChat {
+    public static new(interlocutor: User): HTMLPrivateChat {
         return new HTMLPrivateChat(HTMLPrivateChat._NEW_CHAT_TEMP_ID, 0, interlocutor);
     }
 
