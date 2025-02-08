@@ -30,7 +30,7 @@ export class HTMLChatList {
     }
 
     public async addPrivateChat(apiData: Chat): Promise<HTMLPrivateChat> {
-        let chat: HTMLPrivateChat | null = HTMLPrivateChat.getChatByInterlocutorId(apiData.interlocutorId);
+        let chat: HTMLPrivateChat | null = HTMLPrivateChat.byInterlocutorId(apiData.interlocutorId);
         if (!chat) {
             let interlocutor: User = await requestUser(apiData.interlocutorId);
             chat = new HTMLPrivateChat(apiData.id, apiData.unreadCount, interlocutor);

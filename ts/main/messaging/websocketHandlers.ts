@@ -21,7 +21,7 @@ export const websocketHandlers = {
     [SignalType.ONLINE_STATUSES]: async (apiData: OnlineStatuses)=> {
         let chat: HTMLPrivateChat | null;
         for (let interlocutorId in apiData) {
-            chat = HTMLPrivateChat.getChatByInterlocutorId(Number(interlocutorId));
+            chat = HTMLPrivateChat.byInterlocutorId(Number(interlocutorId));
             chat.updateOnlineStatus(apiData[interlocutorId]);
         }
     },

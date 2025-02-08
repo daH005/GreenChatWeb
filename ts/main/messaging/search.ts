@@ -24,7 +24,7 @@ async function searchUserAndSwitchToChat(): Promise<void> {
         setInputAsInvalidAndNotifyWithThrow(searchInputEl, CURRENT_LABELS.invalidSelfUserId)
     }
 
-    let maybeChat: HTMLPrivateChat = HTMLPrivateChat.getChatByInterlocutorId(interlocutorId);
+    let maybeChat: HTMLPrivateChat = HTMLPrivateChat.byInterlocutorId(interlocutorId);
     if (maybeChat) {
         maybeChat.open();
         return;
