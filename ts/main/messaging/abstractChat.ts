@@ -350,8 +350,8 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
     }
 
     protected async _loadFull(): Promise<void> {
-        let offset = Object.keys(this._messages).length;
-        let messages = await requestMessages({
+        let offset: number = Object.keys(this._messages).length;
+        let messages: Message[] = await requestMessages({
             chatId: this._id, offset,
         });
 
@@ -375,14 +375,14 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
     }
 
     protected _calcScrollTopForLastReadOrFromThisUserMessageY(): number {
-        let message = this._lastReadOrFromThisUserMessage();
+        let message: HTMLMessage = this._lastReadOrFromThisUserMessage();
         if (!message) {
             return 0;
         }
 
-        let scrollTop = this._messagesEl.scrollTop;
-        let messageBottomAbsY = message.getBoundingClientRect().bottom + scrollTop;
-        let messagesContainerBottomAbsY = this._messagesEl.getBoundingClientRect().bottom;
+        let scrollTop: number = this._messagesEl.scrollTop;
+        let messageBottomAbsY: number = message.getBoundingClientRect().bottom + scrollTop;
+        let messagesContainerBottomAbsY: number = this._messagesEl.getBoundingClientRect().bottom;
         let resultY = messageBottomAbsY - messagesContainerBottomAbsY;
         return resultY;
     }
