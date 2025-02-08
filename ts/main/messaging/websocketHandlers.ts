@@ -1,12 +1,9 @@
-import { requestUser,
-         requestChat,
+import { requestChat,
          requestMessage,
          requestUnreadCount,
-         requestUserChats,
        } from "../../common/http/functions.js";
-import { addUserToApiData } from "../../common/apiDataAdding.js";
 import { thisUser } from "../../common/thisUser.js";
-import { User, Chat, Message } from "../../common/apiDataInterfaces.js";
+import { Chat, Message } from "../../common/apiDataInterfaces.js";
 import { SignalType } from "../websocket/signalTypes.js";
 import { ChatId,
          MessageId,
@@ -17,9 +14,10 @@ import { ChatId,
 import { AbstractHTMLChat } from "./abstractChat.js";
 import { HTMLPrivateChat } from "./privateChat.js";
 import { HTMLMessage } from "./messages.js";
+import { chatList } from "./chatList.js";
 import "./search.js";
 
-export const handlersForWebsocket = {
+export const websocketHandlers = {
     [SignalType.ONLINE_STATUSES]: async (apiData: OnlineStatuses)=> {
         let chat: HTMLPrivateChat | null;
         for (let interlocutorId in apiData) {
@@ -31,7 +29,7 @@ export const handlersForWebsocket = {
     [SignalType.NEW_CHAT]: async (apiData: ChatId) => {
         let chat: Chat = await requestChat(apiData.chatId);
         if (!chat.isGroup) {
-            await addPrivateChat(chat);
+            await chatList.addPrivateChat(chat);
         }
     },
 
@@ -66,34 +64,4 @@ export const handlersForWebsocket = {
         AbstractHTMLChat.byId(apiData.chatId).setMessagesAsRead(apiData.messageIds);
     },
 
-}
-
-async function addPrivateChat(apiData: Chat): Promise<HTMLPrivateChat> {
-    let chat: HTMLPrivateChat | null = HTMLPrivateChat.getChatByInterlocutorId(apiData.interlocutorId);
-    if (!chat) {
-        let interlocutor: User = await requestUser(apiData.interlocutorId);
-        chat = new HTMLPrivateChat(apiData.id, apiData.unreadCount, interlocutor);
-        await chat.init();
-    } else {
-        chat.setId(apiData.id);
-        await chat.setAsCreatedOnServer();
-    }
-    chat.showLink();
-
-    return chat;
-}
-
-export async function initMessaging(): Promise<void> {
-    let apiData: Chat[] = await requestUserChats();
-    apiData = apiData.reverse();
-
-    let chat: AbstractHTMLChat;
-    for (let oneApiData of apiData) {
-        if (!oneApiData.isGroup) {
-            chat = await addPrivateChat(oneApiData);
-        }
-        if (oneApiData.lastMessage) {
-            await chat.addMessage(oneApiData.lastMessage);
-        }
-    }
 }
