@@ -5,6 +5,7 @@ import { requestToReadMessage, requestMessageFilenames } from "../../common/http
 import { dateToTimeStr }  from "../datetime.js";
 import { makeHyperlinks, makeHighlights } from "../messageTextHighlighting.js";
 import { AbstractHTMLTemplatedElement } from "./abstractTemplatedElement.js";
+import { HTMLDateSep } from "./dateSep.js";
 import { AbstractHTMLChat } from "./abstractChat.js";
 import { HTMLMessageFile } from "./messageFile.js";
 import { HTMLMessageImageFile } from "./messageImageFile.js";
@@ -24,6 +25,9 @@ export class HTMLMessage extends AbstractHTMLTemplatedElement {
     protected _imageFilesEl: HTMLElement;
     protected _deleteModeButton: HTMLElement;
     protected _selectToDeleteButton: HTMLElement;
+
+    protected _dateSepTemplateEl = <HTMLTemplateElement>document.getElementById("js-chat-date-sep-temp");
+    protected _dateSeps: Record<string, HTMLElement>;
 
     protected _chat: AbstractHTMLChat;
     protected _id: number;
@@ -61,6 +65,22 @@ export class HTMLMessage extends AbstractHTMLTemplatedElement {
 
     public static byId(messageId: number): HTMLMessage | null {
         return HTMLMessage._messagesByIds[messageId];
+    }
+
+    public init(prepend: boolean=false): void {
+        super.init(prepend);
+
+        let dateSepId: string = this._makeDateSepId();
+        let dateSep: HTMLDateSep = HTMLDateSep.byId(dateSepId);
+        if (!dateSep) {
+            dateSep = new HTMLDateSep(this._parentEl, dateSepId, this._creatingDatetime);
+            dateSep.init();
+        }
+        dateSep.pushUp(this._el);
+    }
+
+    protected _makeDateSepId(): string {
+        return String(this._chat.id) + "_" + this._creatingDatetime.toISOString().split("T")[0]
     }
 
     protected _initChildEls(): void {

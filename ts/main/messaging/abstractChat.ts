@@ -92,6 +92,10 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
         return AbstractHTMLChat._chatsByIds[chatId];
     }
 
+    public get id(): number {
+        return this._id;
+    }
+
     public async init(prepend: boolean=false): Promise<void> {
         this._avatarURL = await this._makeAvatarURL();
         super.init(prepend);
