@@ -15,11 +15,9 @@ export class HTMLChatList {
 
     public async init(): Promise<void> {
         let apiData: APIChat[] = await requestUserChats();
-        // The reversing is necessary for the correct sorting of the chats after `ChatLink.updateTextAndDate`.
-        apiData = apiData.reverse();
 
         for (let oneApiData of apiData) {
-            this.addChat(oneApiData);
+            await this.addChat(oneApiData);
         }
     }
 
@@ -32,7 +30,7 @@ export class HTMLChatList {
         }
 
         if (apiData.lastMessage) {
-            await chat.addMessage(apiData.lastMessage);
+            await chat.addMessage(apiData.lastMessage, true);
         }
 
         return chat;

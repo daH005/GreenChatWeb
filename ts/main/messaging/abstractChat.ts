@@ -19,7 +19,6 @@ import { CURRENT_LABELS } from "../../common/languages/labels.js";
 import { dateToDateStr, normalizeDateTimezone } from "../datetime.js";
 import { Typing } from "../websocket/signalInterfaces.js";
 import { HTMLChatLink } from "./chatLink.js";
-import { HTMLDateSep } from "./dateSep.js";
 import { HTMLMessage, HTMLMessageFromThisUser } from "./messages.js";
 import { AbstractHTMLTemplatedElement } from "./abstractTemplatedElement.js";
 import { addDragUploadingForInput } from "./files/drag.js";
@@ -64,12 +63,10 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
     protected _deleteModeSelectedMessages: HTMLMessage[];
 
     protected _filesMapper: NoOverwriteInputFilesMapper;
-    protected _curMessageIsFirst: boolean = true;
     protected _isOpened: boolean = false;
     protected _avatarURL: string;
     protected _messages: Record<number, HTMLMessage>;
     protected _fullyLoaded: boolean = false;
-    protected _datesSeps: Record<number, HTMLDateSep>;
     protected _link: HTMLChatLink;
     protected _topDateStr: string | null = null;
     protected _bottomDateStr: string | null = null;
@@ -87,7 +84,6 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
         this._unreadCount = unreadCount;
 
         this._messages = {};
-        this._datesSeps = {};
         this._deleteModeSelectedMessages = [];
         AbstractHTMLChat._chatsByIds[id] = this;
     }
@@ -271,22 +267,7 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
         apiData.creatingDatetime = new Date(apiData.creatingDatetime);
         normalizeDateTimezone(apiData.creatingDatetime);
 
-        let dateStr = dateToDateStr(apiData.creatingDatetime);
-
-        if (!this._curMessageIsFirst) {
-            let dateStr_;
-            if (prepend && this._bottomDateStr != dateStr) {
-                dateStr_ = this._bottomDateStr;
-            } else if (!prepend && this._topDateStr != dateStr) {
-                dateStr_ = dateStr;
-            }
-            if (dateStr_) {
-                this._addDateSep(apiData.id, prepend, dateStr_);
-            }
-        }
-
         let scrolledToBottomBackupBeforeMessageAdding = this._scrolledToBottom()
-
         let fromThisUser: boolean = thisUser.id == apiData.user.id;
 
         let messageType: typeof HTMLMessage;
@@ -300,23 +281,12 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
             apiData.id, apiData.text, apiData.isRead, apiData.creatingDatetime, apiData.user, apiData.hasFiles,
         );
         await message.init(prepend);
-        this._messages[apiData.id] = message;
 
         if ((scrolledToBottomBackupBeforeMessageAdding && !prepend) || fromThisUser) {
             this.scrollToBottom();
         }
 
-        if (this._curMessageIsFirst) {
-            this._topDateStr = dateStr;
-            this._bottomDateStr = dateStr;
-        } else if (prepend) {
-            this._bottomDateStr = dateStr;
-        } else {
-            this._topDateStr = dateStr;
-        }
-
-        let itIsNewInterlocutorMessage = !fromThisUser && !prepend && !this._curMessageIsFirst;
-
+        let itIsNewInterlocutorMessage = !fromThisUser && !prepend;
         if (itIsNewInterlocutorMessage && (!userInWindow() || !this._isOpened)) {
             newMessageSound.play();
         }
@@ -325,14 +295,17 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
             await this._read();
         }
 
-        if (!prepend) {
-            this._link.updateLastMessageFromThisUserMark(fromThisUser);
-            this._link.updateTextAndDate(apiData.text, dateStr);
-
+        let isFirst: boolean = !Object.keys(this._messages).length;  // FixMe: `Object.keys(...).length` is slow
+        if (!prepend || isFirst) {
+            this._link.updateTextAndDate(apiData.text, dateToDateStr(apiData.creatingDatetime), fromThisUser);
             this._lastMessage = message;
         }
 
-        this._curMessageIsFirst = false;
+        if (!prepend) {
+            this._link.pushUp();
+        }
+
+        this._messages[apiData.id] = message;
     }
 
     protected _scrolledToBottom(): boolean {
@@ -341,12 +314,6 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
 
     public scrollToBottom(): void {
         this._messagesEl.scrollTop = this._messagesEl.scrollHeight;
-    }
-
-    protected _addDateSep(messageId: number, prepend: boolean, dateStr: string): void {
-        let dateSep = new HTMLDateSep(this._messagesEl, dateStr);
-        dateSep.init(prepend);
-        this._datesSeps[messageId] = dateSep;
     }
 
     protected async _loadFull(): Promise<void> {

@@ -59,7 +59,17 @@ export class HTMLChatLink extends AbstractHTMLTemplatedElement {
         this._el.classList.remove("chat-link--active");
     }
 
-    public updateLastMessageFromThisUserMark(fromThisUser: boolean): void {
+    public pushUp(): void {
+        this._parentEl.prepend(this._el);
+    }
+
+    public updateTextAndDate(text: string, dateStr: string, fromThisUser: boolean): void {
+        this._lastMessageTextEl.textContent = text;
+        this._lastMessageDateEl.textContent = dateStr;
+        this._updateLastMessageFromThisUserMark(fromThisUser);
+    }
+
+    protected _updateLastMessageFromThisUserMark(fromThisUser: boolean): void {
         let value: string;
         if (fromThisUser) {
             value = CURRENT_LABELS.you;
@@ -67,12 +77,6 @@ export class HTMLChatLink extends AbstractHTMLTemplatedElement {
             value = "";
         }
         this._lastMessageFromThisUserMarkEl.textContent = value;
-    }
-
-    public updateTextAndDate(text: string, dateStr: string): void {
-        this._lastMessageTextEl.textContent = text;
-        this._lastMessageDateEl.textContent = dateStr;
-        this._parentEl.prepend(this._el);
     }
 
     public updateUnreadCount(count: number): void {
