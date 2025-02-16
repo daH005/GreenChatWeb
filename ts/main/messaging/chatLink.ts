@@ -32,31 +32,31 @@ export class HTMLChatLink extends AbstractHTMLTemplatedElement {
 
     protected _initThisEl(prepend: boolean): void {
         super._initThisEl(prepend);
-        this._thisEl.onclick = this._chat.open.bind(this._chat);
+        this._el.onclick = this._chat.open.bind(this._chat);
     }
 
     public _initChildEls(): void {
-        this._avatarEl = this._thisEl.querySelector(".avatar");
+        this._avatarEl = this._el.querySelector(".avatar");
         this._avatarEl.src = this._avatarURL;
 
-        this._chatNameEl = this._thisEl.querySelector(".chat-link__chat-name");
+        this._chatNameEl = this._el.querySelector(".chat-link__chat-name");
         this._chatNameEl.textContent = this._chatName;
 
-        this._onlineStatusEl = this._thisEl.querySelector(".avatar");
+        this._onlineStatusEl = this._el.querySelector(".avatar");
 
-        this._lastMessageFromThisUserMarkEl = this._thisEl.querySelector(".chat-link__last-message .chat-link__self");
-        this._lastMessageTextEl = this._thisEl.querySelector(".chat-link__last-message .chat-link__text");
-        this._lastMessageDateEl = this._thisEl.querySelector(".chat-link__date");
+        this._lastMessageFromThisUserMarkEl = this._el.querySelector(".chat-link__last-message .chat-link__self");
+        this._lastMessageTextEl = this._el.querySelector(".chat-link__last-message .chat-link__text");
+        this._lastMessageDateEl = this._el.querySelector(".chat-link__date");
 
-        this._unreadCountEl = this._thisEl.querySelector(".chat-link__count");
+        this._unreadCountEl = this._el.querySelector(".chat-link__count");
     }
 
     public open(): void {
-        this._thisEl.classList.add("chat-link--active");
+        this._el.classList.add("chat-link--active");
     }
 
     public close(): void {
-        this._thisEl.classList.remove("chat-link--active");
+        this._el.classList.remove("chat-link--active");
     }
 
     public updateLastMessageFromThisUserMark(fromThisUser: boolean): void {
@@ -72,7 +72,7 @@ export class HTMLChatLink extends AbstractHTMLTemplatedElement {
     public updateTextAndDate(text: string, dateStr: string): void {
         this._lastMessageTextEl.textContent = text;
         this._lastMessageDateEl.textContent = dateStr;
-        this._parentEl.prepend(this._thisEl);
+        this._parentEl.prepend(this._el);
     }
 
     public updateUnreadCount(count: number): void {
@@ -96,7 +96,7 @@ export class HTMLChatLink extends AbstractHTMLTemplatedElement {
     }
 
     protected _toggle(isHidden: boolean): void {
-        this._thisEl.classList.toggle("chat-link--hidden", isHidden);
+        this._el.classList.toggle("chat-link--hidden", isHidden);
     }
 
 }

@@ -11,7 +11,7 @@ export class HTMLDateSep extends AbstractHTMLTemplatedElement {
     }
 
     public _initChildEls(): void {
-        this._thisEl.textContent = this._dateStr;
+        this._el.textContent = this._dateStr;
     }
 
 }

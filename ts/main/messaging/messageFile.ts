@@ -6,7 +6,7 @@ export class HTMLMessageFile extends AbstractHTMLTemplatedElement {
         "exe", "cmd", "bat", "sh", "bash",
     ];
     protected _templateEl = <HTMLTemplateElement>document.getElementById("js-message-file-temp");
-    protected declare _thisEl: HTMLAnchorElement;
+    protected declare _el: HTMLAnchorElement;
     protected _filenameEl: HTMLElement;
 
     protected _filename: string;
@@ -19,13 +19,13 @@ export class HTMLMessageFile extends AbstractHTMLTemplatedElement {
     }
 
     public _initChildEls(): void {
-        this._thisEl.href = this._url;
+        this._el.href = this._url;
 
-        this._filenameEl = this._thisEl.querySelector(".chat__file__name");
+        this._filenameEl = this._el.querySelector(".chat__file__name");
         this._filenameEl.textContent = this._filename;
 
         if (this._DANGEROUS_EXTENSIONS.includes(this._extractExtension())) {
-            this._thisEl.classList.add("chat__file--danger");
+            this._el.classList.add("chat__file--danger");
         }
     }
 

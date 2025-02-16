@@ -2,7 +2,7 @@ export abstract class AbstractHTMLTemplatedElement {
 
     protected _parentEl: HTMLElement;
     protected _templateEl: HTMLTemplateElement;
-    protected _thisEl: HTMLElement;
+    protected _el: HTMLElement;
 
     public constructor(parentEl: HTMLElement) {
         this._parentEl = parentEl;
@@ -17,10 +17,10 @@ export abstract class AbstractHTMLTemplatedElement {
         let node: Node = this._templateEl.content.cloneNode(true);
         if (prepend) {
             this._parentEl.prepend(node);
-            this._thisEl = <HTMLElement>this._parentEl.firstElementChild;
+            this._el = <HTMLElement>this._parentEl.firstElementChild;
         } else {
             this._parentEl.append(node);
-            this._thisEl = <HTMLElement>this._parentEl.lastElementChild;
+            this._el = <HTMLElement>this._parentEl.lastElementChild;
         }
     }
 

@@ -42,7 +42,7 @@ export class HTMLPrivateChat extends AbstractHTMLChat {
     protected _initChildEls(): void {
         super._initChildEls();
         this._link.hide();
-        this._onlineStatusEl = this._thisEl.querySelector(".avatar");
+        this._onlineStatusEl = this._el.querySelector(".avatar");
         this.updateOnlineStatus(this._interlocutor.isOnline);
     }
 

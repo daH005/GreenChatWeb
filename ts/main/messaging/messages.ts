@@ -64,29 +64,29 @@ export class HTMLMessage extends AbstractHTMLTemplatedElement {
     }
 
     protected _initChildEls(): void {
-        this._userNameEl = this._thisEl.querySelector(".chat__message__name");
+        this._userNameEl = this._el.querySelector(".chat__message__name");
         this._userNameEl.textContent = this._user.firstName;
 
-        this._textEl = this._thisEl.querySelector(".chat__message__text");
+        this._textEl = this._el.querySelector(".chat__message__text");
         this.setText(this._text);
 
-        this._timeEl = this._thisEl.querySelector(".chat__message__time");
+        this._timeEl = this._el.querySelector(".chat__message__time");
         this._timeEl.textContent = this._timeStr();
 
-        this._filesEl = this._thisEl.querySelector(".chat__message__files");
-        this._imageFilesEl = this._thisEl.querySelector(".chat__message__image-files");
+        this._filesEl = this._el.querySelector(".chat__message__files");
+        this._imageFilesEl = this._el.querySelector(".chat__message__image-files");
 
         if (this._hasFiles) {
             this.resetFiles();
         }
 
-        this._deleteModeButton = this._thisEl.querySelector(".chat__message__function--delete");
+        this._deleteModeButton = this._el.querySelector(".chat__message__function--delete");
         this._deleteModeButton.onclick = () => {
             this._chat.toDeleteMode();
             this._chat.selectMessageToDelete(this);
         }
 
-        this._selectToDeleteButton = this._thisEl.querySelector(".chat__message__delete");
+        this._selectToDeleteButton = this._el.querySelector(".chat__message__delete");
         this._selectToDeleteButton.onclick = () => {
             if (!this._isSelectedToDelete) {
                 this._chat.selectMessageToDelete(this);
@@ -179,12 +179,12 @@ export class HTMLMessage extends AbstractHTMLTemplatedElement {
     }
 
     public setAsRead(): void {
-        this._thisEl.classList.remove("chat__message--unread");
+        this._el.classList.remove("chat__message--unread");
         this._isRead = true;
     }
 
     public getBoundingClientRect(): DOMRect {
-        return this._thisEl.getBoundingClientRect();
+        return this._el.getBoundingClientRect();
     }
 
     public selectToDelete(): void {
@@ -198,7 +198,7 @@ export class HTMLMessage extends AbstractHTMLTemplatedElement {
     }
 
     public delete(): void {
-        this._thisEl.remove();
+        this._el.remove();
     }
 
 }
@@ -210,26 +210,26 @@ export class HTMLMessageFromThisUser extends HTMLMessage {
     protected _initThisEl(prepend: boolean) {
         super._initThisEl(prepend);
 
-        this._thisEl.classList.add("chat__message--self");
+        this._el.classList.add("chat__message--self");
         if (!this._isRead) {
-            this._thisEl.classList.add("chat__message--unread");
+            this._el.classList.add("chat__message--unread");
         }
     }
 
     protected _initChildEls(): void {
         super._initChildEls();
-        this._editModeButton = this._thisEl.querySelector(".chat__message__function--edit");
+        this._editModeButton = this._el.querySelector(".chat__message__function--edit");
         this._editModeButton.onclick = () => {
             this._chat.toEditMode(this);
         }
     }
 
     public selectToEdit(): void {
-        this._thisEl.classList.add("chat__message--edit-mode-selected");
+        this._el.classList.add("chat__message--edit-mode-selected");
     }
 
     public removeSelectToEdit(): void {
-        this._thisEl.classList.remove("chat__message--edit-mode-selected");
+        this._el.classList.remove("chat__message--edit-mode-selected");
     }
 
 }
