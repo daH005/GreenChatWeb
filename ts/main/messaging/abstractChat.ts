@@ -26,11 +26,11 @@ import { NoOverwriteInputFilesMapper } from "./files/htmlMapping.js";
 
 export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
 
-    protected static _chatParentEl: HTMLElement = document.getElementById("js-loaded-chats");
+    protected static __parentEl: HTMLElement = document.getElementById("js-loaded-chats");
     protected _templateEl: HTMLTemplateElement = <HTMLTemplateElement>document.getElementById("js-chat-temp");
     protected _fileToUploadElTemp: HTMLTemplateElement = <HTMLTemplateElement>document.getElementById("js-chat-file-to-upload-temp");
 
-    protected static _chatsByIds: Record<number, AbstractHTMLChat> = {};
+    protected static _byIds: Record<number, AbstractHTMLChat> = {};
     protected static _curOpenedChat: AbstractHTMLChat = null;
 
     protected readonly _WAITING_FOR_CHAT_LOADING: number = 300;  // FixMe: it's so bad... I have not found a decision yet.
@@ -78,18 +78,18 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
     protected _unreadCount: number;
 
     public constructor(id: number, name: string, unreadCount: number) {
-        super(AbstractHTMLChat._chatParentEl);
+        super(AbstractHTMLChat.__parentEl);
         this._id = id;
         this._name = name;
         this._unreadCount = unreadCount;
 
         this._messages = {};
         this._deleteModeSelectedMessages = [];
-        AbstractHTMLChat._chatsByIds[id] = this;
+        AbstractHTMLChat._byIds[this._id] = this;
     }
 
-    public static byId(chatId: number): AbstractHTMLChat | null {
-        return AbstractHTMLChat._chatsByIds[chatId];
+    public static byId(id: number): AbstractHTMLChat | null {
+        return AbstractHTMLChat._byIds[id];
     }
 
     public get id(): number {

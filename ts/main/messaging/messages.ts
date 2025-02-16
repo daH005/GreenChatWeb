@@ -12,7 +12,7 @@ import { HTMLMessageImageFile } from "./messageImageFile.js";
 
 export class HTMLMessage extends AbstractHTMLTemplatedElement {
 
-    protected static _messagesByIds: Record<number, HTMLMessage> = {};
+    protected static _byIds: Record<number, HTMLMessage> = {};
     protected static _IMAGE_FILE_EXTENSIONS = [
         ".png", ".jpg", ".jpeg", ".webp",
     ];
@@ -60,11 +60,11 @@ export class HTMLMessage extends AbstractHTMLTemplatedElement {
         this._hasFiles = hasFiles;
         this._filenames = [];
         this._urlsByFilenames = {};
-        HTMLMessage._messagesByIds[id] = this;
+        HTMLMessage._byIds[this._id] = this;
     }
 
-    public static byId(messageId: number): HTMLMessage | null {
-        return HTMLMessage._messagesByIds[messageId];
+    public static byId(id: number): HTMLMessage | null {
+        return HTMLMessage._byIds[id];
     }
 
     public init(prepend: boolean=false): void {

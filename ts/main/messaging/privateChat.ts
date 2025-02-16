@@ -10,7 +10,7 @@ export class HTMLPrivateChat extends AbstractHTMLChat {
     protected _templateEl = <HTMLTemplateElement>document.getElementById("js-chat-temp");
     protected _onlineStatusEl: HTMLElement;
 
-    protected static _chatsByInterlocutorsIds: Record<number, HTMLPrivateChat> = {};
+    protected static _byInterlocutorIds: Record<number, HTMLPrivateChat> = {};
     protected static _NEW_CHAT_TEMP_ID: number = -1;
     protected _isNotCreatedOnServer: boolean;
 
@@ -20,7 +20,7 @@ export class HTMLPrivateChat extends AbstractHTMLChat {
         let interlocutorFullName: string = interlocutor.firstName + " " + interlocutor.lastName;
         super(id, interlocutorFullName, unreadCount);
 
-        HTMLPrivateChat._chatsByInterlocutorsIds[interlocutor.id] = this;
+        HTMLPrivateChat._byInterlocutorIds[interlocutor.id] = this;
         this._interlocutor = interlocutor;
 
         if (id == HTMLPrivateChat._NEW_CHAT_TEMP_ID) {
@@ -36,7 +36,7 @@ export class HTMLPrivateChat extends AbstractHTMLChat {
     }
 
     public static byInterlocutorId(interlocutorId: number): HTMLPrivateChat | null {
-        return HTMLPrivateChat._chatsByInterlocutorsIds[interlocutorId];
+        return HTMLPrivateChat._byInterlocutorIds[interlocutorId];
     }
 
     protected _initChildEls(): void {
@@ -71,9 +71,9 @@ export class HTMLPrivateChat extends AbstractHTMLChat {
         await this._sendMessage();
     }
 
-    public setId(chatId: number): void {
-        this._id = chatId;
-        AbstractHTMLChat._chatsByIds[chatId] = this;
+    public setId(id: number): void {
+        this._id = id;
+        AbstractHTMLChat._byIds[id] = this;
     }
 
     public showLink(): void {
