@@ -80,7 +80,7 @@ export class HTMLMessage extends AbstractHTMLTemplatedElement {
     }
 
     protected _makeDateSepId(): string {
-        return String(this._chat.id) + "_" + this._creatingDatetime.toISOString().split("T")[0]
+        return String(this._chat.id) + "_" + this._creatingDatetime.toISOString().split("T")[0];
     }
 
     protected _initChildEls(): void {

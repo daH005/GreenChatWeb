@@ -4,7 +4,7 @@ import { AbstractHTMLChat } from "./abstractChat.js";
 
 export class HTMLChatLink extends AbstractHTMLTemplatedElement {
 
-    protected static _chatLinkParentEl: HTMLElement;
+    protected static _parentEl: HTMLElement;
     protected _templateEl = <HTMLTemplateElement>document.getElementById("js-chat-link-temp");
 
     protected _avatarEl: HTMLImageElement;
@@ -20,14 +20,14 @@ export class HTMLChatLink extends AbstractHTMLTemplatedElement {
     protected _chatName: string;
 
     public constructor(chat: AbstractHTMLChat, chatName: string, avatarURL: string) {
-        super(HTMLChatLink._chatLinkParentEl);
+        super(HTMLChatLink._parentEl);
         this._chat = chat;
         this._chatName = chatName;
         this._avatarURL = avatarURL;
     }
 
     public static setParentEl(parentEl: HTMLElement): void {
-        HTMLChatLink._chatLinkParentEl = parentEl;
+        HTMLChatLink._parentEl = parentEl;
     }
 
     protected _initThisEl(prepend: boolean): void {
