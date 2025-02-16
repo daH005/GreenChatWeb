@@ -4,12 +4,19 @@ export function setInputAsInvalidAndNotifyWithThrow(inputEl: HTMLInputElement, m
     if (message) {
         notify(message);
     }
-    inputEl.classList.add("invalid");
+    _thisOrParentEl(inputEl).classList.add("invalid");
     throw Error(message);
 }
 
 export function removeInvalidClassForAllInputs(): void {
     document.querySelectorAll("input").forEach((el) => {
-        el.classList.remove("invalid");
+        _thisOrParentEl(el).classList.remove("invalid");
     });
+}
+
+function _thisOrParentEl(el: HTMLInputElement): HTMLInputElement | HTMLElement {
+    if (el.hasAttribute("data-invalid-parent")) {
+        return el.parentElement;
+    }
+    return el;
 }

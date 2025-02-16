@@ -89,8 +89,8 @@ input:hover, input:focus, textarea:hover, textarea:focus {
     outline: 2px solid var(--main-3-color);
 }
 
-input.invalid {
-    outline: 2px solid var(--error-color);
+.invalid, .invalid:hover {
+    outline: 2px solid var(--error-color) !important;
 }
 
 h1 {
