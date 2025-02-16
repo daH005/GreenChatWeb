@@ -7,14 +7,44 @@ import { HTMLPrivateChat } from "./privateChat.js";
 import { HTMLChatLink } from "./chatLink.js";
 
 export class HTMLChatList {
+
     protected _el: HTMLElement = document.getElementById("js-all-chats-links");
+    protected readonly _SIZE: number = 20;
+    protected _currentOffset: number = 0;
+    protected _requestedOffset: number = 0;
 
     public constructor() {
         HTMLChatLink.setParentEl(this._el);
+        this._startScrollEvent();
+    }
+
+    protected _startScrollEvent(): void {
+        this._el.onscroll = async () => {
+            if (!this._scrolledToBottom()) {
+                return;
+            }
+            await this._loadNext();
+        }
+    }
+
+    protected _scrolledToBottom(): boolean {
+        return this._el.scrollHeight - this._el.scrollTop - this._el.clientHeight < 100;
     }
 
     public async init(): Promise<void> {
-        let apiData: APIChat[] = await requestUserChats();
+        await this._loadNext();
+    }
+
+    protected async _loadNext(): Promise<void> {
+        if (this._currentOffset < this._requestedOffset) {
+            return;
+        }
+
+        this._requestedOffset += this._SIZE;
+        let apiData: APIChat[] = await requestUserChats({
+            offset: this._requestedOffset - this._SIZE,
+            size: this._SIZE,
+        });
 
         for (let oneApiData of apiData) {
             await this.addChat(oneApiData);
@@ -33,6 +63,7 @@ export class HTMLChatList {
             await chat.addMessage(apiData.lastMessage, true);
         }
 
+        this._currentOffset += 1;
         return chat;
     }
 
