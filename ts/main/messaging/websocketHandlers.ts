@@ -3,7 +3,7 @@ import { requestChat,
          requestUnreadCount,
        } from "../../common/http/functions.js";
 import { thisUser } from "../../common/thisUser.js";
-import { Chat, Message } from "../../common/apiDataInterfaces.js";
+import { APIChat, APIMessage } from "../../common/apiDataInterfaces.js";
 import { SignalType } from "../websocket/signalTypes.js";
 import { ChatId,
          MessageId,
@@ -27,19 +27,19 @@ export const websocketHandlers = {
     },
 
     [SignalType.NEW_CHAT]: async (apiData: ChatId) => {
-        let chat: Chat = await requestChat(apiData.chatId);
+        let chat: APIChat = await requestChat(apiData.chatId);
         if (!chat.isGroup) {
             await chatList.addPrivateChat(chat);
         }
     },
 
     [SignalType.NEW_MESSAGE]: async (apiData: MessageId) => {
-        let message: Message = await requestMessage(apiData.messageId);
+        let message: APIMessage = await requestMessage(apiData.messageId);
         await AbstractHTMLChat.byId(message.chatId).addMessage(message);
     },
 
     [SignalType.MESSAGE_EDIT]: async (apiData: MessageId) => {
-        let message: Message = await requestMessage(apiData.messageId);
+        let message: APIMessage = await requestMessage(apiData.messageId);
         await HTMLMessage.byId(apiData.messageId).setText(message.text);
     },
 

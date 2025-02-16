@@ -1,4 +1,4 @@
-import { User } from "../common/apiDataInterfaces.js";
+import { APIUser } from "../common/apiDataInterfaces.js";
 import { notify } from "../common/notification.js";
 import { CURRENT_LABELS } from "../common/languages/labels.js";
 import { setUserAvatar } from "./avatars.js";
@@ -13,7 +13,7 @@ userIdParentEl.onclick = async () => {
     notify(CURRENT_LABELS.idWasCopied);
 }
 
-export async function updateUser(user: User): Promise<void> {
+export async function updateUser(user: APIUser): Promise<void> {
     updateUserFullName(user.firstName + " " + user.lastName);
     userIdEl.textContent = String(user.id);
 

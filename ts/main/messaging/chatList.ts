@@ -1,7 +1,7 @@
 import { requestUser,
          requestUserChats,
        } from "../../common/http/functions.js";
-import { User, Chat } from "../../common/apiDataInterfaces.js";
+import { APIUser, APIChat } from "../../common/apiDataInterfaces.js";
 import { AbstractHTMLChat } from "./abstractChat.js";
 import { HTMLPrivateChat } from "./privateChat.js";
 import { HTMLChatLink } from "./chatLink.js";
@@ -14,7 +14,7 @@ export class HTMLChatList {
     }
 
     public async init(): Promise<void> {
-        let apiData: Chat[] = await requestUserChats();
+        let apiData: APIChat[] = await requestUserChats();
         // The reversing is necessary for the correct sorting of the chats after `ChatLink.updateTextAndDate`.
         apiData = apiData.reverse();
 
@@ -29,10 +29,10 @@ export class HTMLChatList {
         }
     }
 
-    public async addPrivateChat(apiData: Chat): Promise<HTMLPrivateChat> {
+    public async addPrivateChat(apiData: APIChat): Promise<HTMLPrivateChat> {
         let chat: HTMLPrivateChat | null = HTMLPrivateChat.byInterlocutorId(apiData.interlocutorId);
         if (!chat) {
-            let interlocutor: User = await requestUser(apiData.interlocutorId);
+            let interlocutor: APIUser = await requestUser(apiData.interlocutorId);
             chat = new HTMLPrivateChat(apiData.id, apiData.unreadCount, interlocutor);
             await chat.init();
         } else {

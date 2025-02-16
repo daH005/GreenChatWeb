@@ -1,4 +1,4 @@
-import { User } from "../../common/apiDataInterfaces.js";
+import { APIUser } from "../../common/apiDataInterfaces.js";
 import { HTTP_API_URLS } from "../../common/http/apiUrls.js";
 import { makeUrlWithParams } from "../../common/http/base.js";
 import { requestToReadMessage, requestMessageFilenames } from "../../common/http/functions.js";
@@ -30,7 +30,7 @@ export class HTMLMessage extends AbstractHTMLTemplatedElement {
     protected _text: string;
     protected _isRead: boolean;
     protected _creatingDatetime: Date;
-    protected _user: User;
+    protected _user: APIUser;
     protected _hasFiles: boolean;
     protected _fromThisUser: boolean = false;
     protected _filenames: string[];
@@ -43,7 +43,7 @@ export class HTMLMessage extends AbstractHTMLTemplatedElement {
                        text: string,
                        isRead: boolean,
                        creatingDatetime: Date,
-                       user: User,
+                       user: APIUser,
                        hasFiles: boolean,
                       ) {
         super(parentEl);

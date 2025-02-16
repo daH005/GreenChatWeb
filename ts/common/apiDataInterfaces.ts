@@ -1,4 +1,4 @@
-export interface User {
+export interface APIUser {
     id: number;
     firstName: string,
     lastName: string,
@@ -6,19 +6,19 @@ export interface User {
     email?: string,
 }
 
-export interface Chat {
+export interface APIChat {
     id: number,
     name: string,
     isGroup: boolean,
-    lastMessage: Message | null,
+    lastMessage: APIMessage | null,
     unreadCount: number,
     userIds: number[],
     interlocutorId: number | null,
-    users?: User[],
-    interlocutor?: User,
+    users?: APIUser[],
+    interlocutor?: APIUser,
 }
 
-export interface Message {
+export interface APIMessage {
     id: number,
     userId: number,
     chatId: number,
@@ -26,5 +26,5 @@ export interface Message {
     isRead: boolean,
     hasFiles: boolean,
     creatingDatetime: string | Date,
-    user?: User,
+    user?: APIUser,
 }

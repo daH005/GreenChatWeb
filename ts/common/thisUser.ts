@@ -1,4 +1,4 @@
-import { User } from "./apiDataInterfaces.js"
+import { APIUser } from "./apiDataInterfaces.js"
 import { requestUser } from "./http/functions.js";
 
-export var thisUser: User = await requestUser();
+export var thisUser: APIUser = await requestUser();

@@ -2,7 +2,7 @@ import { requestUser } from "../../common/http/functions.js";
 import { setInputAsInvalidAndNotifyWithThrow, removeInvalidClassForAllInputs } from "../../common/inputsHighlighting.js";
 import { CURRENT_LABELS } from "../../common/languages/labels.js";
 import { thisUser } from "../../common/thisUser.js";
-import { User } from "../../common/apiDataInterfaces.js";
+import { APIUser } from "../../common/apiDataInterfaces.js";
 import { HTMLPrivateChat } from "./privateChat.js";
 
 const searchInputEl: HTMLInputElement = <HTMLInputElement>document.getElementById("js-search-input");
@@ -30,7 +30,7 @@ async function searchUserAndSwitchToChat(): Promise<void> {
         return;
     }
 
-    let interlocutor: User = await requestUser(interlocutorId);
+    let interlocutor: APIUser = await requestUser(interlocutorId);
 
     let chat: HTMLPrivateChat = HTMLPrivateChat.new(interlocutor);
     await chat.init();

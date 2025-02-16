@@ -1,4 +1,4 @@
-import { User } from "../../common/apiDataInterfaces.js";
+import { APIUser } from "../../common/apiDataInterfaces.js";
 
 export interface ChatId {
     chatId: number,
@@ -11,7 +11,7 @@ export interface MessageId {
 export interface Typing {
     chatId: number,
     userId: number,
-    user?: User,
+    user?: APIUser,
 }
 
 export interface Read {

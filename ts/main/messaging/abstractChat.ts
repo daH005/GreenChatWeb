@@ -1,4 +1,4 @@
-import { User, Message } from "../../common/apiDataInterfaces.js";
+import { APIUser, APIMessage } from "../../common/apiDataInterfaces.js";
 import { isMobile } from "../../common/mobileDetecting.js";
 import { choose } from "../../common/random.js";
 import { thisUser } from "../../common/thisUser.js";
@@ -265,7 +265,7 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
         AbstractHTMLChat._curOpenedChat = null;
     }
 
-    public async addMessage(apiData: Message, prepend: boolean=false): Promise<void> {
+    public async addMessage(apiData: APIMessage, prepend: boolean=false): Promise<void> {
         await addUserToApiData(apiData);
 
         apiData.creatingDatetime = new Date(apiData.creatingDatetime);
@@ -351,7 +351,7 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
 
     protected async _loadFull(): Promise<void> {
         let offset: number = Object.keys(this._messages).length;
-        let messages: Message[] = await requestMessages(
+        let messages: APIMessage[] = await requestMessages(
             this._id, {offset},
         );
 
@@ -364,7 +364,7 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
         this._fullyLoaded = true;
     }
 
-    protected async _fillMessages(messages: Message[]): Promise<void> {
+    protected async _fillMessages(messages: APIMessage[]): Promise<void> {
         for (let message of messages) {
             await this.addMessage(message, true);
         }

@@ -1,6 +1,6 @@
-import { User,
-         Chat,
-         Message,
+import { APIUser,
+         APIChat,
+         APIMessage,
        } from "../apiDataInterfaces.js";
 import { notify } from "../notification.js";
 import { CURRENT_LABELS } from "../languages/labels.js";
@@ -54,7 +54,7 @@ export async function requestToLogout() {
 }
 
 let __userCashes = {};
-export async function requestUser(userId: number | null = null): Promise<User> {
+export async function requestUser(userId: number | null = null): Promise<APIUser> {
     if (__userCashes[userId]) {
         return __userCashes[userId];
     }
@@ -130,21 +130,21 @@ export async function requestToEditUserBackground(image: Blob) {
     }
 }
 
-export async function requestUserChats(pagination: PaginationRequestData = {}): Promise<Chat[]> {
+export async function requestUserChats(pagination: PaginationRequestData = {}): Promise<APIChat[]> {
     let response: Response = await commonFetch(makeUrlWithParams(HTTP_API_URLS.USER_CHATS, pagination), {
         method: "GET",
     });
     return await response.json();
 }
 
-export async function requestChat(chatId: number): Promise<Chat> {
+export async function requestChat(chatId: number): Promise<APIChat> {
     let response: Response = await commonFetch(makeUrlWithParams(HTTP_API_URLS.CHAT, {chatId}), {
         method: "GET",
     });
     return await response.json();
 }
 
-export async function requestNewChat(requestData: NewChatRequestData): Promise<Chat> {
+export async function requestNewChat(requestData: NewChatRequestData): Promise<APIChat> {
     let response: Response = await commonFetch(HTTP_API_URLS.CHAT_NEW, {
         method: "POST",
         body: requestData,
@@ -170,21 +170,21 @@ export async function requestUnreadCount(chatId: number): Promise<number> {
 
 export async function requestMessages(chatId: number,
                                       pagination: PaginationRequestData = {},
-                                      ): Promise<Message[]> {
+                                      ): Promise<APIMessage[]> {
     let response: Response = await commonFetch(makeUrlWithParams(HTTP_API_URLS.CHAT_MESSAGES, {chatId, ...pagination}), {
         method: "GET",
     });
     return await response.json();
 }
 
-export async function requestMessage(messageId: number): Promise<Message> {
+export async function requestMessage(messageId: number): Promise<APIMessage> {
     let response: Response = await commonFetch(makeUrlWithParams(HTTP_API_URLS.MESSAGE, {messageId}), {
         method: "GET",
     });
     return await response.json();
 }
 
-export async function requestNewMessage(requestData: NewMessageRequestData): Promise<Message> {
+export async function requestNewMessage(requestData: NewMessageRequestData): Promise<APIMessage> {
     let response: Response = await commonFetch(HTTP_API_URLS.MESSAGE_NEW, {
         method: "POST",
         body: requestData,

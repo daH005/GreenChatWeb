@@ -1,4 +1,4 @@
-import { Message, User } from "../../common/apiDataInterfaces.js";
+import { APIMessage, APIUser } from "../../common/apiDataInterfaces.js";
 import { requestNewChat } from "../../common/http/functions.js";
 import { thisUser } from "../../common/thisUser.js";
 import { makeUserAvatarURL } from "../avatars.js";
@@ -14,9 +14,9 @@ export class HTMLPrivateChat extends AbstractHTMLChat {
     protected static _NEW_CHAT_TEMP_ID: number = -1;
     protected _isNotCreatedOnServer: boolean;
 
-    protected _interlocutor: User;
+    protected _interlocutor: APIUser;
 
-    public constructor(id: number, unreadCount: number, interlocutor: User) {
+    public constructor(id: number, unreadCount: number, interlocutor: APIUser) {
         let interlocutorFullName: string = interlocutor.firstName + " " + interlocutor.lastName;
         super(id, interlocutorFullName, unreadCount);
 
@@ -31,7 +31,7 @@ export class HTMLPrivateChat extends AbstractHTMLChat {
         }
     }
 
-    public static new(interlocutor: User): HTMLPrivateChat {
+    public static new(interlocutor: APIUser): HTMLPrivateChat {
         return new HTMLPrivateChat(HTMLPrivateChat._NEW_CHAT_TEMP_ID, 0, interlocutor);
     }
 
