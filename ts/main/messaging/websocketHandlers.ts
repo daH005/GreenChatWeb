@@ -22,23 +22,32 @@ export const websocketHandlers = {
         let chat: HTMLPrivateChat | null;
         for (let interlocutorId in apiData) {
             chat = HTMLPrivateChat.byInterlocutorId(Number(interlocutorId));
+            if (!chat) {
+                continue;
+            }
             chat.updateOnlineStatus(apiData[interlocutorId]);
         }
     },
 
     [SignalType.NEW_CHAT]: async (apiData: ChatId) => {
-        let chat: APIChat = await requestChat(apiData.chatId);
-        await chatList.addChat(chat);
+        let apiChat: APIChat = await requestChat(apiData.chatId);
+        await chatList.addChat(apiChat);
     },
 
     [SignalType.NEW_MESSAGE]: async (apiData: MessageId) => {
-        let message: APIMessage = await requestMessage(apiData.messageId);
-        await AbstractHTMLChat.byId(message.chatId).addMessage(message);
+        let apiMessage: APIMessage = await requestMessage(apiData.messageId);
+        let chat: AbstractHTMLChat | null = AbstractHTMLChat.byId(apiMessage.chatId);
+        if (!chat) {
+            chat = await chatList.addChat(
+                await requestChat(apiMessage.chatId),
+            );
+        }
+        await chat.addMessage(apiMessage);
     },
 
     [SignalType.MESSAGE_EDIT]: async (apiData: MessageId) => {
-        let message: APIMessage = await requestMessage(apiData.messageId);
-        await HTMLMessage.byId(apiData.messageId).setText(message.text);
+        let apiMessage: APIMessage = await requestMessage(apiData.messageId);
+        await HTMLMessage.byId(apiMessage.id).setText(apiMessage.text);
     },
 
     [SignalType.MESSAGE_DELETE]: async (apiData: MessageId) => {
