@@ -20,8 +20,8 @@ export class HTMLPrivateChat extends AbstractHTMLChat {
         let interlocutorFullName: string = interlocutor.firstName + " " + interlocutor.lastName;
         super(id, interlocutorFullName, unreadCount);
 
-        HTMLPrivateChat._byInterlocutorIds[interlocutor.id] = this;
         this._interlocutor = interlocutor;
+        HTMLPrivateChat._byInterlocutorIds[this._interlocutor.id] = this;
 
         if (id == HTMLPrivateChat._NEW_CHAT_TEMP_ID) {
             this._isNotCreatedOnServer = true;

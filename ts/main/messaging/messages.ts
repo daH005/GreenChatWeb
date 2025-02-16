@@ -26,9 +26,6 @@ export class HTMLMessage extends AbstractHTMLTemplatedElement {
     protected _deleteModeButton: HTMLElement;
     protected _selectToDeleteButton: HTMLElement;
 
-    protected _dateSepTemplateEl = <HTMLTemplateElement>document.getElementById("js-chat-date-sep-temp");
-    protected _dateSeps: Record<string, HTMLElement>;
-
     protected _chat: AbstractHTMLChat;
     protected _id: number;
     protected _text: string;
