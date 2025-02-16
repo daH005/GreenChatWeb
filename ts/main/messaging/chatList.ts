@@ -18,18 +18,27 @@ export class HTMLChatList {
         // The reversing is necessary for the correct sorting of the chats after `ChatLink.updateTextAndDate`.
         apiData = apiData.reverse();
 
-        let chat: AbstractHTMLChat;
         for (let oneApiData of apiData) {
-            if (!oneApiData.isGroup) {
-                chat = await this.addPrivateChat(oneApiData);
-            }
-            if (oneApiData.lastMessage) {
-                await chat.addMessage(oneApiData.lastMessage);
-            }
+            this.addChat(oneApiData);
         }
     }
 
-    public async addPrivateChat(apiData: APIChat): Promise<HTMLPrivateChat> {
+    public async addChat(apiData: APIChat): Promise<AbstractHTMLChat> {
+        let chat: AbstractHTMLChat;
+        if (!apiData.isGroup) {
+            chat = await this._addPrivateChat(apiData);
+        } else {
+            // chat = await this._addGroupChat(apiData);
+        }
+
+        if (apiData.lastMessage) {
+            await chat.addMessage(apiData.lastMessage);
+        }
+
+        return chat;
+    }
+
+    protected async _addPrivateChat(apiData: APIChat): Promise<HTMLPrivateChat> {
         let chat: HTMLPrivateChat | null = HTMLPrivateChat.byInterlocutorId(apiData.interlocutorId);
         if (!chat) {
             let interlocutor: APIUser = await requestUser(apiData.interlocutorId);
@@ -43,6 +52,8 @@ export class HTMLChatList {
 
         return chat;
     }
+
+    // protected async _addGroupChat(apiData: APIChat): {}  // Will be implemented in the future
 
 }
 

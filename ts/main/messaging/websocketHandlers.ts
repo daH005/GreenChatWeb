@@ -28,9 +28,7 @@ export const websocketHandlers = {
 
     [SignalType.NEW_CHAT]: async (apiData: ChatId) => {
         let chat: APIChat = await requestChat(apiData.chatId);
-        if (!chat.isGroup) {
-            await chatList.addPrivateChat(chat);
-        }
+        await chatList.addChat(chat);
     },
 
     [SignalType.NEW_MESSAGE]: async (apiData: MessageId) => {
