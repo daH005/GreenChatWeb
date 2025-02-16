@@ -3,7 +3,7 @@ import { AbstractHTMLTemplatedElement } from "./abstractTemplatedElement.js";
 export class HTMLDateSep extends AbstractHTMLTemplatedElement {
 
     protected _dateStr: string;
-    protected _thisElTemplateEl = <HTMLTemplateElement>document.getElementById("js-chat-date-sep-temp");
+    protected _templateEl = <HTMLTemplateElement>document.getElementById("js-chat-date-sep-temp");
 
     public constructor(parentEl: HTMLElement, dateStr: string) {
         super(parentEl);

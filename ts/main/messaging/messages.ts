@@ -16,7 +16,7 @@ export class HTMLMessage extends AbstractHTMLTemplatedElement {
         ".png", ".jpg", ".jpeg", ".webp",
     ];
 
-    protected _thisElTemplateEl = <HTMLTemplateElement>document.getElementById("js-message-temp");
+    protected _templateEl = <HTMLTemplateElement>document.getElementById("js-message-temp");
     protected _userNameEl: HTMLElement;
     protected _textEl: HTMLElement;
     protected _timeEl: HTMLElement;

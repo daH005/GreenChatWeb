@@ -5,7 +5,7 @@ export class HTMLMessageFile extends AbstractHTMLTemplatedElement {
     protected _DANGEROUS_EXTENSIONS: string[] = [
         "exe", "cmd", "bat", "sh", "bash",
     ];
-    protected _thisElTemplateEl = <HTMLTemplateElement>document.getElementById("js-message-file-temp");
+    protected _templateEl = <HTMLTemplateElement>document.getElementById("js-message-file-temp");
     protected declare _thisEl: HTMLAnchorElement;
     protected _filenameEl: HTMLElement;
 

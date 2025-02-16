@@ -28,7 +28,7 @@ import { NoOverwriteInputFilesMapper } from "./files/htmlMapping.js";
 export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
 
     protected static _chatParentEl: HTMLElement = document.getElementById("js-loaded-chats");
-    protected _thisElTemplateEl: HTMLTemplateElement = <HTMLTemplateElement>document.getElementById("js-chat-temp");
+    protected _templateEl: HTMLTemplateElement = <HTMLTemplateElement>document.getElementById("js-chat-temp");
     protected _fileToUploadElTemp: HTMLTemplateElement = <HTMLTemplateElement>document.getElementById("js-chat-file-to-upload-temp");
 
     protected static _chatsByIds: Record<number, AbstractHTMLChat> = {};

@@ -7,7 +7,7 @@ import { AbstractHTMLChat } from "./abstractChat.js";
 
 export class HTMLPrivateChat extends AbstractHTMLChat {
 
-    protected _thisElTemplateEl = <HTMLTemplateElement>document.getElementById("js-chat-temp");
+    protected _templateEl = <HTMLTemplateElement>document.getElementById("js-chat-temp");
     protected _onlineStatusEl: HTMLElement;
 
     protected static _chatsByInterlocutorsIds: Record<number, HTMLPrivateChat> = {};

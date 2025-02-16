@@ -5,7 +5,7 @@ import { AbstractHTMLChat } from "./abstractChat.js";
 export class HTMLChatLink extends AbstractHTMLTemplatedElement {
 
     protected static _chatLinkParentEl: HTMLElement;
-    protected _thisElTemplateEl = <HTMLTemplateElement>document.getElementById("js-chat-link-temp");
+    protected _templateEl = <HTMLTemplateElement>document.getElementById("js-chat-link-temp");
 
     protected _avatarEl: HTMLImageElement;
     protected _chatNameEl: HTMLElement;

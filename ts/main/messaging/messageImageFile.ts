@@ -2,7 +2,7 @@ import { HTMLMessageFile } from "./messageFile.js";
 
 export class HTMLMessageImageFile extends HTMLMessageFile {
 
-    protected _thisElTemplateEl = <HTMLTemplateElement>document.getElementById("js-message-image-file-temp");
+    protected _templateEl = <HTMLTemplateElement>document.getElementById("js-message-image-file-temp");
     protected _imageEl: HTMLImageElement;
     protected _downloadEl: HTMLAnchorElement;
 
