@@ -67,6 +67,9 @@ export class HTMLMessage extends AbstractHTMLTemplatedElement {
     public init(prepend: boolean=false): void {
         super.init(prepend);
 
+        if (!prepend) {
+            return;
+        }
         let dateSepId: string = this._makeDateSepId();
         let dateSep: HTMLDateSep = HTMLDateSep.byId(dateSepId);
         if (!dateSep) {
