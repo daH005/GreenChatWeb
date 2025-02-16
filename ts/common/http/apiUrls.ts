@@ -18,6 +18,7 @@ export const HTTP_API_URLS = {
     USER_CHATS: _HTTP_API_BASE_URL + "/user/chats",
 
     CHAT: _HTTP_API_BASE_URL + "/chat",
+    CHAT_BY_INTERLOCUTOR: _HTTP_API_BASE_URL + "/chat/byInterlocutor",
     CHAT_NEW: _HTTP_API_BASE_URL + "/chat/new",
     CHAT_TYPING: _HTTP_API_BASE_URL + "/chat/typing",
     CHAT_UNREAD_COUNT: _HTTP_API_BASE_URL + "/chat/unreadCount",

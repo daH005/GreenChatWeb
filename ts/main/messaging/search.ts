@@ -1,8 +1,7 @@
-import { requestUser } from "../../common/http/functions.js";
+import { requestUser, requestChatByInterlocutor } from "../../common/http/functions.js";
 import { setInputAsInvalidAndNotifyWithThrow, removeInvalidClassForAllInputs } from "../../common/inputsHighlighting.js";
 import { CURRENT_LABELS } from "../../common/languages/labels.js";
 import { thisUser } from "../../common/thisUser.js";
-import { APIUser } from "../../common/apiDataInterfaces.js";
 import { HTMLPrivateChat } from "./privateChat.js";
 
 const searchInputEl: HTMLInputElement = <HTMLInputElement>document.getElementById("js-search-input");
@@ -24,15 +23,16 @@ async function searchUserAndSwitchToChat(): Promise<void> {
         setInputAsInvalidAndNotifyWithThrow(searchInputEl, CURRENT_LABELS.invalidSelfUserId)
     }
 
-    let maybeChat: HTMLPrivateChat = HTMLPrivateChat.byInterlocutorId(interlocutorId);
-    if (maybeChat) {
-        maybeChat.open();
+    try {
+        await requestChatByInterlocutor(interlocutorId);
+    } catch {
+        let chat: HTMLPrivateChat = HTMLPrivateChat.new(
+            await requestUser(interlocutorId),
+        );
+        await chat.init();
+        await chat.open();
         return;
     }
 
-    let interlocutor: APIUser = await requestUser(interlocutorId);
-
-    let chat: HTMLPrivateChat = HTMLPrivateChat.new(interlocutor);
-    await chat.init();
-    await chat.open();
+    setInputAsInvalidAndNotifyWithThrow(searchInputEl, CURRENT_LABELS.chatWithThisUserExists);
 }

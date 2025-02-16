@@ -40,6 +40,7 @@ interface Labels {
 
     inputUserId: string,
     invalidSelfUserId: string,
+    chatWithThisUserExists: string,
 
     phrases: string[],
     files: string,
@@ -101,6 +102,7 @@ export const RUSSIAN_LABELS: Labels = {
 
     inputUserId: "Введите нормальное число...",
     invalidSelfUserId: "Нельзя найти себя самого!",
+    chatWithThisUserExists: "Ваш чат с данным пользователем уже существует!",
 
     phrases: [
         "Что же написать...",
@@ -170,6 +172,7 @@ export const ENGLISH_LABELS: Labels = {
 
     inputUserId: "Write a user ID...",
     invalidSelfUserId: "You can't find yourself!",
+    chatWithThisUserExists: "Your chat with this user is already exists!",
 
     phrases: [
         "What to write...",

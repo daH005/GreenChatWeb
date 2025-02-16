@@ -144,6 +144,13 @@ export async function requestChat(chatId: number): Promise<APIChat> {
     return await response.json();
 }
 
+export async function requestChatByInterlocutor(interlocutorId: number): Promise<APIChat> {
+    let response: Response = await commonFetch(makeUrlWithParams(HTTP_API_URLS.CHAT_BY_INTERLOCUTOR, {interlocutorId}), {
+        method: "GET",
+    });
+    return await response.json();
+}
+
 export async function requestNewChat(requestData: NewChatRequestData): Promise<APIChat> {
     let response: Response = await commonFetch(HTTP_API_URLS.CHAT_NEW, {
         method: "POST",
