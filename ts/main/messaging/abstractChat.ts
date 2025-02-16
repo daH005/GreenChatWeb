@@ -280,7 +280,7 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
             this, this._messagesEl,
             apiData.id, apiData.text, apiData.isRead, apiData.creatingDatetime, apiData.user, apiData.hasFiles,
         );
-        await message.init(prepend);
+        message.init(prepend);
 
         if ((scrolledToBottomBackupBeforeMessageAdding && !prepend) || fromThisUser) {
             this.scrollToBottom();
