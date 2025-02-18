@@ -37,6 +37,7 @@ export class HTMLMessage extends AbstractHTMLTemplatedElement {
     protected _filenames: string[];
     protected _urlsByFilenames: Record<string, string>;
     protected _isSelectedToDelete: boolean = false;
+    protected _dateSep: HTMLDateSep;
 
     public constructor(chat: AbstractHTMLChat,
                        parentEl: HTMLElement,
@@ -72,15 +73,12 @@ export class HTMLMessage extends AbstractHTMLTemplatedElement {
     protected _updateDateSep(): void {
         let dateSepId: string = this._makeDateSepId();
         let dateSep: HTMLDateSep | null = HTMLDateSep.byId(dateSepId);
-        let createdNew: boolean = false;
         if (!dateSep) {
             dateSep = new HTMLDateSep(this._parentEl, dateSepId, this._creatingDatetime);
             dateSep.init();
-            createdNew = true;
         }
-        if (this._creatingDatetime < dateSep.creatingDatetime || createdNew) {
-            dateSep.update(this._el, this._creatingDatetime);
-        }
+        this._dateSep = dateSep;
+        this._dateSep.update(this._el, this._creatingDatetime);
     }
 
     protected _makeDateSepId(): string {
@@ -223,6 +221,8 @@ export class HTMLMessage extends AbstractHTMLTemplatedElement {
 
     public delete(): void {
         this._el.remove();
+        delete HTMLMessage._byIds[this._id];
+        this._dateSep.deleteIfAllMessagesAreDeleted();
     }
 
 }
