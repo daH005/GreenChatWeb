@@ -66,17 +66,21 @@ export class HTMLMessage extends AbstractHTMLTemplatedElement {
 
     public init(prepend: boolean=false): void {
         super.init(prepend);
+        this._updateDateSep();
+    }
 
-        if (!prepend) {
-            return;
-        }
+    protected _updateDateSep(): void {
         let dateSepId: string = this._makeDateSepId();
-        let dateSep: HTMLDateSep = HTMLDateSep.byId(dateSepId);
+        let dateSep: HTMLDateSep | null = HTMLDateSep.byId(dateSepId);
+        let createdNew: boolean = false;
         if (!dateSep) {
             dateSep = new HTMLDateSep(this._parentEl, dateSepId, this._creatingDatetime);
             dateSep.init();
+            createdNew = true;
         }
-        dateSep.pushUp(this._el);
+        if (this._creatingDatetime < dateSep.creatingDatetime || createdNew) {
+            dateSep.update(this._el, this._creatingDatetime);
+        }
     }
 
     protected _makeDateSepId(): string {

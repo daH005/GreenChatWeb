@@ -7,12 +7,12 @@ export class HTMLDateSep extends AbstractHTMLTemplatedElement {
     protected _templateEl = <HTMLTemplateElement>document.getElementById("js-chat-date-sep-temp");
 
     protected _id: string;
-    protected _date: Date;
+    protected _creatingDatetime: Date;
 
-    public constructor(parentEl: HTMLElement, id: string, date: Date) {
+    public constructor(parentEl: HTMLElement, id: string, creatingDatetime: Date) {
         super(parentEl);
         this._id = id;
-        this._date = date;
+        this._creatingDatetime = creatingDatetime;
 
         HTMLDateSep._byIds[this._id] = this;
     }
@@ -22,11 +22,16 @@ export class HTMLDateSep extends AbstractHTMLTemplatedElement {
     }
 
     public _initChildEls(): void {
-        this._el.textContent = dateToDateStr(this._date);
+        this._el.textContent = dateToDateStr(this._creatingDatetime);
     }
 
-    public pushUp(messageEl: HTMLElement): void {
+    public get creatingDatetime(): Date {
+        return this._creatingDatetime;
+    }
+
+    public update(messageEl: HTMLElement, creatingDatetime: Date): void {
         this._parentEl.insertBefore(this._el, messageEl);
+        this._creatingDatetime = creatingDatetime;
     }
 
 }
