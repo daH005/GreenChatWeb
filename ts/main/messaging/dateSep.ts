@@ -22,7 +22,7 @@ export class HTMLDateSep extends AbstractHTMLTemplatedElement {
         return HTMLDateSep._byIds[id];
     }
 
-    public _initChildEls(): void {
+    protected _initChildEls(): void {
         this._el.textContent = dateToDateStr(this._creatingDatetime);
     }
 

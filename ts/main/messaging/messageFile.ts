@@ -18,7 +18,7 @@ export class HTMLMessageFile extends AbstractHTMLTemplatedElement {
         this._url = url;
     }
 
-    public _initChildEls(): void {
+    protected _initChildEls(): void {
         this._el.href = this._url;
 
         this._filenameEl = this._el.querySelector(".chat__file__name");

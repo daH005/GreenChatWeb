@@ -35,7 +35,7 @@ export class HTMLChatLink extends AbstractHTMLTemplatedElement {
         this._el.onclick = this._chat.open.bind(this._chat);
     }
 
-    public _initChildEls(): void {
+    protected _initChildEls(): void {
         this._avatarEl = this._el.querySelector(".avatar");
         this._avatarEl.src = this._avatarURL;
 

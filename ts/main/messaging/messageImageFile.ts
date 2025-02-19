@@ -6,7 +6,7 @@ export class HTMLMessageImageFile extends HTMLMessageFile {
     protected _imageEl: HTMLImageElement;
     protected _downloadEl: HTMLAnchorElement;
 
-    public _initChildEls(): void {
+    protected _initChildEls(): void {
         this._filenameEl = this._el.querySelector(".chat__message__image-file__name");
         this._filenameEl.textContent = this._filename;
 
