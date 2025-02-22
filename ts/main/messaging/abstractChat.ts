@@ -4,7 +4,8 @@ import { choose } from "../../common/random.js";
 import { thisUser } from "../../common/thisUser.js";
 import { userInWindow } from "../../common/userInWindowChecking.js";
 import { newMessageSound } from "../../common/audio.js";
-import { requestMessage,
+import { requestUser,
+         requestMessage,
          requestNewMessage,
          requestMessages,
          requestTyping,
@@ -14,7 +15,6 @@ import { requestMessage,
          requestToUpdateMessageFiles,
          requestToDeleteMessageFiles,
        } from "../../common/http/functions.js";
-import { addUserToApiData } from "../../common/apiDataAdding.js";
 import { CURRENT_LABELS } from "../../common/languages/labels.js";
 import { Typing } from "../websocket/signalInterfaces.js";
 import { HTMLChatLink } from "./chatLink.js";
@@ -354,13 +354,13 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
     }
 
     public async updateTyping(apiData: Typing): Promise<void> {
-        await addUserToApiData(apiData);
+        let user: APIUser = await requestUser(apiData.userId);
 
         if (this._typingTimeoutId) {
             clearTimeout(this._typingTimeoutId);
         }
 
-        this._typingEl.textContent = apiData.user.firstName + " " + CURRENT_LABELS.typing;
+        this._typingEl.textContent = user.firstName + " " + CURRENT_LABELS.typing;
 
         this._typingTimeoutId = setTimeout(() => {
             this._typingEl.textContent = "";
