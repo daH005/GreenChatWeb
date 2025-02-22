@@ -26,12 +26,12 @@ export class HTMLDateSep extends AbstractHTMLTemplatedElement {
         this._el.textContent = dateToDateStr(this._creatingDatetime);
     }
 
-    public update(messageEl: HTMLElement, creatingDatetime: Date): void {
+    public update(parentEl: HTMLElement, messageEl: HTMLElement, creatingDatetime: Date): void {
         if (creatingDatetime > this._creatingDatetime) {
             return;
         }
 
-        this._parentEl.insertBefore(this._el, messageEl);
+        parentEl.insertBefore(this._el, messageEl);
         this._creatingDatetime = creatingDatetime;
         this._increaseMessageCount();
     }

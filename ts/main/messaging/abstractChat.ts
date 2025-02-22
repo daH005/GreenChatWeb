@@ -16,10 +16,10 @@ import { requestMessage,
        } from "../../common/http/functions.js";
 import { addUserToApiData } from "../../common/apiDataAdding.js";
 import { CURRENT_LABELS } from "../../common/languages/labels.js";
-import { dateToDateStr, normalizeDateTimezone } from "../datetime.js";
 import { Typing } from "../websocket/signalInterfaces.js";
 import { HTMLChatLink } from "./chatLink.js";
 import { HTMLMessage, HTMLMessageFromThisUser } from "./messages.js";
+import { HTMLChatSection, HTMLChatLastMessageSection } from "./chatSection.js";
 import { AbstractHTMLTemplatedElement } from "./abstractTemplatedElement.js";
 import { addDragUploadingForInput } from "./files/drag.js";
 import { NoOverwriteInputFilesMapper } from "./files/htmlMapping.js";
@@ -33,7 +33,6 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
     protected static _byIds: Record<number, AbstractHTMLChat> = {};
     protected static _curOpenedChat: AbstractHTMLChat = null;
 
-    protected readonly _WAITING_FOR_CHAT_LOADING: number = 300;  // FixMe: it's so bad... I have not found a decision yet.
     protected readonly _PHRASES: string[] = CURRENT_LABELS.phrases;
 
     protected _backLinkEl: HTMLElement;
@@ -66,12 +65,18 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
     protected _isOpened: boolean = false;
     protected _avatarURL: string;
     protected _messages: Record<number, HTMLMessage>;
-    protected _fullyLoaded: boolean = false;
+    protected _firstOpeningWas: boolean = false;
     protected _link: HTMLChatLink;
     protected _topDateStr: string | null = null;
     protected _bottomDateStr: string | null = null;
     protected _typingTimeoutId: number | null = null;
-    protected _lastMessage: HTMLMessage | null = null;
+    protected _lastReadMessageId: number = -Infinity;
+    protected _lastMessageSection: HTMLChatLastMessageSection;
+    protected _historySection: HTMLChatSection;
+
+    protected _topSection: HTMLChatSection;
+    protected _bottomSection: HTMLChatSection;
+    protected _sections: HTMLChatSection[];
 
     protected _id: number;
     protected _name: string;
@@ -85,6 +90,7 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
 
         this._messages = {};
         this._deleteModeSelectedMessages = [];
+        this._sections = [];
         AbstractHTMLChat._byIds[this._id] = this;
     }
 
@@ -119,6 +125,7 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
 
         this._messagesEl = this._el.querySelector(".chat__messages");
         this._messagesEl.addEventListener("scroll", async () => {
+            await this._loadNextMessagesIfScrolled();
             await this._read();
         });
         this._typingEl = this._el.querySelector(".chat__interlocutor-write-hint");
@@ -148,7 +155,13 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
         this._link = new HTMLChatLink(this, this._name, this._avatarURL);
         this._link.init();
         this._link.updateUnreadCount(this._unreadCount);
-        
+
+        this._lastMessageSection = new HTMLChatLastMessageSection(this, this._sections, this._messagesEl, 0, this._messages);
+        this._lastMessageSection.init();
+
+        this._historySection = new HTMLChatSection(this, this._sections, this._messagesEl, this._unreadCount, this._messages);
+        this._historySection.init();
+
         this._initEditModeEls();
         this._initDeleteModeEls();
     }
@@ -250,8 +263,8 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
 
         this._isOpened = true;
 
-        if (!(this._fullyLoaded)) {
-            await this._loadFull();
+        if (!(this._firstOpeningWas)) {
+            await this._loadInitial();
         }
         this._link.open();
         await this._read();
@@ -265,97 +278,79 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
         AbstractHTMLChat._curOpenedChat = null;
     }
 
-    public async addMessage(apiData: APIMessage, prepend: boolean=false): Promise<void> {
-        await addUserToApiData(apiData);
-
-        apiData.creatingDatetime = new Date(apiData.creatingDatetime);
-        normalizeDateTimezone(apiData.creatingDatetime);
-
-        let scrolledToBottomBackupBeforeMessageAdding = this._scrolledToBottom()
-        let fromThisUser: boolean = thisUser.id == apiData.user.id;
-
-        let messageType: typeof HTMLMessage;
-        if (!fromThisUser) {
-            messageType = HTMLMessage;
-        } else {
-            messageType = HTMLMessageFromThisUser;
+    protected async _loadNextMessagesIfScrolled(): Promise<void> {
+        if (this._scrolledToTop()) {
+            await this._topSection.loadNextTopMessages();
+        } else if (this._scrolledToBottom()) {
+            await this._bottomSection.loadNextBottomMessages();
         }
-        let message: HTMLMessage = new messageType(
-            this, this._messagesEl,
-            apiData.id, apiData.text, apiData.isRead, apiData.creatingDatetime, apiData.user, apiData.hasFiles,
+    }
+
+    public async addLastMessage(apiMessage: APIMessage, isNew: boolean = true): Promise<HTMLMessage> {
+        let scrolledToBottom: boolean = this._scrolledToBottom();
+
+        let message: HTMLMessage = await this._lastMessageSection.addMessage(apiMessage);
+        if ((scrolledToBottom || message.fromThisUser) && isNew) {
+            await this._lastMessageSection.switch();
+            this._scrollToBottom();
+        }
+
+        this._link.updateTextAndDate(
+            message.text,
+            message.creatingDatetime,
+            message.fromThisUser,
         );
-        message.init(prepend);
 
-        if ((scrolledToBottomBackupBeforeMessageAdding && !prepend) || fromThisUser) {
-            this.scrollToBottom();
+        if (!isNew) {
+            return;
         }
 
-        let itIsNewInterlocutorMessage = !fromThisUser && !prepend;
-        if (itIsNewInterlocutorMessage && (!userInWindow() || !this._isOpened)) {
+        if (this._focused()) {
+            await this._read();
+        } else {
             newMessageSound.play();
         }
+        this._link.pushUp();
+    }
 
-        if (itIsNewInterlocutorMessage && userInWindow() && this._isOpened) {
-            await this._read();
-        }
+    protected _focused(): boolean {
+        return userInWindow() && this._isOpened;
+    }
 
-        let isFirst: boolean = !Object.keys(this._messages).length;  // FixMe: `Object.keys(...).length` is slow
-        if (!prepend || isFirst) {
-            this._link.updateTextAndDate(apiData.text, dateToDateStr(apiData.creatingDatetime), fromThisUser);
-            this._lastMessage = message;
-        }
-
-        if (!prepend) {
-            this._link.pushUp();
-        }
-
-        this._messages[apiData.id] = message;
+    protected _scrolledToTop(): boolean {
+        return this._messagesEl.scrollTop < 100;
     }
 
     protected _scrolledToBottom(): boolean {
         return this._messagesEl.scrollHeight - this._messagesEl.scrollTop - this._messagesEl.clientHeight < 100;
     }
 
-    public scrollToBottom(): void {
+    protected _scrollToBottom(): void {
         this._messagesEl.scrollTop = this._messagesEl.scrollHeight;
     }
 
-    protected async _loadFull(): Promise<void> {
-        let offset: number = Object.keys(this._messages).length;
-        let messages: APIMessage[] = await requestMessages(
-            this._id, {offset},
-        );
-
-        await this._fillMessages(messages);
-
-        setTimeout(() => {
-            this._scrollToLastReadOrFromThisUserMessage();
-        }, this._WAITING_FOR_CHAT_LOADING)
-
-        this._fullyLoaded = true;
+    public setTopSection(section: HTMLChatSection): void {
+        this._topSection = section;
     }
 
-    protected async _fillMessages(messages: APIMessage[]): Promise<void> {
-        for (let message of messages) {
-            await this.addMessage(message, true);
+    public setBottomSection(section: HTMLChatSection): void {
+        this._bottomSection = section;
+    }
+
+    public hideSections(): void {
+        for (let section of this._sections) {
+            section.hide();
         }
     }
 
-    protected _scrollToLastReadOrFromThisUserMessage(): void {
-        this._messagesEl.scrollTop = this._calcScrollTopForLastReadOrFromThisUserMessageY();
+    protected async _loadInitial(): Promise<void> {
+        await this._historySection.switch();
+        this._scrollToInitial();
+        this._firstOpeningWas = true;
     }
 
-    protected _calcScrollTopForLastReadOrFromThisUserMessageY(): number {
-        let message: HTMLMessage = this._lastReadOrFromThisUserMessage();
-        if (!message) {
-            return 0;
-        }
-
-        let scrollTop: number = this._messagesEl.scrollTop;
-        let messageBottomAbsY: number = message.getBoundingClientRect().bottom + scrollTop;
-        let messagesContainerBottomAbsY: number = this._messagesEl.getBoundingClientRect().bottom;
-        let resultY = messageBottomAbsY - messagesContainerBottomAbsY;
-        return resultY;
+    protected _scrollToInitial(): void {
+        this._messagesEl.scrollTop = this._messagesEl.scrollHeight - 150;
     }
 
     public async updateTyping(apiData: Typing): Promise<void> {
@@ -379,8 +374,9 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
             return;
         }
 
-        if (message.id > this._lastReadOrFromThisUserMessage().id) {
+        if (message.id > this._lastReadMessageId) {
             await requestToReadMessage(message.id);
+            this._lastReadMessageId = message.id;
         }
     }
 
@@ -403,22 +399,6 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
 
     protected _messagesLineBottomAbsY(): number {
         return this._messagesEl.getBoundingClientRect().bottom;
-    }
-
-    protected _lastReadOrFromThisUserMessage(): HTMLMessage {
-        let ids = this._sortedMessageIds().reverse();
-        let unreadCountRest = this._unreadCount + 1;
-        for (let id of ids) {
-            let curMessage = this._messages[id];
-            if (curMessage.fromThisUser) {
-                return curMessage;
-            }
-
-            unreadCountRest -= 1;
-            if (unreadCountRest <= 0) {
-                return curMessage;
-            }
-        }
     }
 
     protected _sortedMessageIds(): number[] {
@@ -527,10 +507,6 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
     public deleteMessage(messageId: number): void {
         this._messages[messageId].delete();
         delete this._messages[messageId];
-    }
-
-    public get lastMessage(): HTMLMessage | null {
-        return this._lastMessage;
     }
 
 }

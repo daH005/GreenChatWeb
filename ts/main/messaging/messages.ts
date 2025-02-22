@@ -9,6 +9,7 @@ import { HTMLDateSep } from "./dateSep.js";
 import { AbstractHTMLChat } from "./abstractChat.js";
 import { HTMLMessageFile } from "./messageFile.js";
 import { HTMLMessageImageFile } from "./messageImageFile.js";
+import { HTMLChatSection } from "./chatSection.js";
 
 export class HTMLMessage extends AbstractHTMLTemplatedElement {
 
@@ -27,6 +28,7 @@ export class HTMLMessage extends AbstractHTMLTemplatedElement {
     protected _selectToDeleteButton: HTMLElement;
 
     protected _chat: AbstractHTMLChat;
+    protected _section: HTMLChatSection;
     protected _id: number;
     protected _text: string;
     protected _isRead: boolean;
@@ -40,6 +42,7 @@ export class HTMLMessage extends AbstractHTMLTemplatedElement {
     protected _dateSep: HTMLDateSep;
 
     public constructor(chat: AbstractHTMLChat,
+                       section: HTMLChatSection,
                        parentEl: HTMLElement,
                        id: number,
                        text: string,
@@ -50,6 +53,7 @@ export class HTMLMessage extends AbstractHTMLTemplatedElement {
                       ) {
         super(parentEl);
         this._chat = chat;
+        this._section = section;
         this._id = id;
         this._text = text;
         this._isRead = isRead;
@@ -78,7 +82,7 @@ export class HTMLMessage extends AbstractHTMLTemplatedElement {
             dateSep.init();
         }
         this._dateSep = dateSep;
-        this._dateSep.update(this._el, this._creatingDatetime);
+        this._dateSep.update(this._parentEl, this._el, this._creatingDatetime);
     }
 
     protected _makeDateSepId(): string {
@@ -138,10 +142,6 @@ export class HTMLMessage extends AbstractHTMLTemplatedElement {
         for (let filename of this._filenames) {
             this._addFile(filename);
         }
-
-        if (this._chat.lastMessage == this && this._fromThisUser) {
-            this._chat.scrollToBottom();
-        }
     }
 
     protected _addFile(filename: string): void {
@@ -180,8 +180,16 @@ export class HTMLMessage extends AbstractHTMLTemplatedElement {
         return this._chat;
     }
 
+    public get section(): HTMLChatSection {
+        return this._section;
+    }
+
     public get fromThisUser(): boolean {
         return this._fromThisUser;
+    }
+
+    public get creatingDatetime(): Date {
+        return this._creatingDatetime;
     }
 
     public get isRead(): boolean {

@@ -1,4 +1,5 @@
 import { CURRENT_LABELS } from "../../common/languages/labels.js";
+import { dateToDateStr } from "../datetime.js";
 import { AbstractHTMLTemplatedElement } from "./abstractTemplatedElement.js";
 import { AbstractHTMLChat } from "./abstractChat.js";
 
@@ -63,9 +64,9 @@ export class HTMLChatLink extends AbstractHTMLTemplatedElement {
         this._parentEl.prepend(this._el);
     }
 
-    public updateTextAndDate(text: string, dateStr: string, fromThisUser: boolean): void {
+    public updateTextAndDate(text: string, date: Date, fromThisUser: boolean): void {
         this._lastMessageTextEl.textContent = text;
-        this._lastMessageDateEl.textContent = dateStr;
+        this._lastMessageDateEl.textContent = dateToDateStr(date);
         this._updateLastMessageFromThisUserMark(fromThisUser);
     }
 

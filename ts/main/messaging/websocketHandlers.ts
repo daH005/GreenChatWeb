@@ -42,7 +42,7 @@ export const websocketHandlers = {
                 await requestChat(apiMessage.chatId),
             );
         }
-        await chat.addMessage(apiMessage);
+        await chat.addLastMessage(apiMessage);
     },
 
     [SignalType.MESSAGE_EDIT]: async (apiData: MessageId) => {

@@ -284,6 +284,16 @@
     font-size: small;
 }
 
+.chat__section {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.chat__section.chat__section--hidden {
+    display: none;
+}
+
 .chat__messages {
     overflow-y: auto;
     padding: 20px 5vw;
@@ -294,10 +304,6 @@
     justify-content: flex-start;
     margin-top: auto;
     margin-bottom: 10px;
-}
-
-.chat__messages > .chat__message:first-child {
-    margin-top: auto;
 }
 
 .chat__message-els-wrapper {

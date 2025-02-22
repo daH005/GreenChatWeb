@@ -60,7 +60,7 @@ export class HTMLChatList {
         }
 
         if (apiData.lastMessage) {
-            await chat.addMessage(apiData.lastMessage, true);
+            await chat.addLastMessage(apiData.lastMessage, false);
         }
 
         this._currentOffset += 1;

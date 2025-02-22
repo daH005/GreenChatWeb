@@ -14,8 +14,6 @@ export interface APIChat {
     unreadCount: number,
     userIds: number[],
     interlocutorId: number | null,
-    users?: APIUser[],
-    interlocutor?: APIUser,
 }
 
 export interface APIMessage {
@@ -26,5 +24,4 @@ export interface APIMessage {
     isRead: boolean,
     hasFiles: boolean,
     creatingDatetime: string | Date,
-    user?: APIUser,
 }
