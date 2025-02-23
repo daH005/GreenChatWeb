@@ -264,17 +264,16 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
         }
         AbstractHTMLChat._curOpenedChat = this;
 
+        this._link.open();
         this._el.classList.remove("chat--hidden");
         if (!isMobile) {
             this._textareaEl.focus();
         }
-
         this._isOpened = true;
 
         if (!(this._firstOpeningWas)) {
             await this._loadInitial();
         }
-        this._link.open();
         await this._read();
     }
 
@@ -353,8 +352,8 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
 
     protected async _loadInitial(): Promise<void> {
         await this._historySection.switch();
-        this._scrollToInitial();
         this._firstOpeningWas = true;
+        this._scrollToInitial();
     }
 
     protected _scrollToInitial(): void {
