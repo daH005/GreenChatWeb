@@ -70,6 +70,7 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
     protected _topDateStr: string | null = null;
     protected _bottomDateStr: string | null = null;
     protected _typingTimeoutId: number | null = null;
+    protected _messageIsSending: boolean = false;
     protected _lastReadMessageId: number = -Infinity;
     protected _lastMessageSection: HTMLChatLastMessageSection;
     protected _historySection: HTMLChatSection;
@@ -216,6 +217,11 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
     }
 
     protected async _sendMessage(): Promise<void> {
+        if (this._messageIsSending) {
+            return;
+        }
+        this._messageIsSending = true;
+
         let textIsMeaningful: boolean = this._messageTextIsMeaningful();
         let hasFiles: boolean = this._hasFiles();
 
@@ -240,6 +246,8 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
             await requestToUpdateMessageFiles(message.id, this._clipInputEl.files);
             this._filesMapper.clear();
         }
+
+        this._messageIsSending = false;
     }
 
     protected _messageTextIsMeaningful(): boolean {
