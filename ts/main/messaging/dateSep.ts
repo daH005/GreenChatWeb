@@ -27,13 +27,14 @@ export class HTMLDateSep extends AbstractHTMLTemplatedElement {
     }
 
     public update(parentEl: HTMLElement, messageEl: HTMLElement, creatingDatetime: Date): void {
+        this._increaseMessageCount();
+
         if (creatingDatetime > this._creatingDatetime) {
             return;
         }
 
         parentEl.insertBefore(this._el, messageEl);
         this._creatingDatetime = creatingDatetime;
-        this._increaseMessageCount();
     }
 
     protected _increaseMessageCount(): void {
