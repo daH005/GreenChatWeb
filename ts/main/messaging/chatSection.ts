@@ -92,11 +92,7 @@ export class HTMLChatSection extends AbstractHTMLTemplatedElement {
     }
 
     public async loadNextTopMessages(): Promise<void> {
-        if (this._topOffset < this._topRequestedOffset) {
-            return;
-        }
-
-        if (!this._topIsEnd) {
+        if (!this._topIsEnd && !(this._topOffset < this._topRequestedOffset)) {
             this._topRequestedOffset += this._SIZE;
             let apiMessages: APIMessage[] = await this._requestMessages(this._topRequestedOffset);
             for (let apiMessage of apiMessages) {
@@ -116,11 +112,7 @@ export class HTMLChatSection extends AbstractHTMLTemplatedElement {
     }
 
     public async loadNextBottomMessages(): Promise<void> {
-        if (this._bottomOffset > this._bottomRequestedOffset) {
-            return;
-        }
-
-        if (!this._bottomIsEnd) {
+        if (!this._bottomIsEnd && !(this._bottomOffset > this._bottomRequestedOffset)) {
             this._bottomRequestedOffset -= this._SIZE;
             if (this._bottomRequestedOffset < 0) {
                 this._bottomRequestedOffset = 0;
