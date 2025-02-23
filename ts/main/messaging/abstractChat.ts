@@ -243,7 +243,9 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
         this._textareaEl.style.height = "";
 
         if (hasFiles) {
-            await requestToUpdateMessageFiles(message.id, this._clipInputEl.files);
+            try {
+                await requestToUpdateMessageFiles(message.id, this._clipInputEl.files);
+            } catch {}
             this._filesMapper.clear();
         }
 
