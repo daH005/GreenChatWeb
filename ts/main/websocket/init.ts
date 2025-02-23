@@ -10,4 +10,12 @@ export function initWebSocket(handlers): void {
         await handlers[message.type](message.data);
     }
 
+    websocket.onclose = async () => {
+        initWebSocket(handlers);
+    }
+
+    websocket.onerror = async () => {
+        initWebSocket(handlers);
+    }
+
 }
