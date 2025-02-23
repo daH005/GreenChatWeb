@@ -272,7 +272,9 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
         this._isOpened = true;
 
         if (!(this._firstOpeningWas)) {
+            this._textareaEl.disabled = true;
             await this._loadInitial();
+            this._textareaEl.disabled = false;
         }
         await this._read();
     }
