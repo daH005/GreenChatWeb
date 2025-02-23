@@ -175,7 +175,6 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
         }
 
         this._editModeClipInputEl = this._el.querySelector(".chat__edit-panel .chat__clip-input");
-        addDragUploadingForInput(this._editModeClipInputEl, this._el);
 
         this._editModeClipButtonEl = this._el.querySelector(".chat__edit-panel .chat__clip");
         this._editModeClipButtonEl.onclick = () => {
