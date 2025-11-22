@@ -8,7 +8,7 @@ COPY ./requirements.txt .
 RUN pip3 install -r requirements.txt
 
 RUN apt update
-RUN apt install -y nodejs=18.19.0+dfsg-6~deb12u2 npm=9.2.0~ds1-1
+RUN apt install -y nodejs npm
 RUN npm install -g -y typescript
 
 USER user
