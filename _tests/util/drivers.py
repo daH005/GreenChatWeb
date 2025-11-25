@@ -1,36 +1,23 @@
-from selenium.webdriver import Chrome, ChromeService, ChromeOptions
-from webdriver_manager.chrome import ChromeDriverManager
-from webdriver_manager.core.os_manager import ChromeType
+from selenium.webdriver import Firefox, FirefoxOptions, FirefoxService
+from typing import Final
+from pathlib import Path
 import os
 
-from config import CHROMEDRIVER_PATH
-
 __all__ = (
-    'new_chrome_driver',
+    'new_driver',
 )
 
-
-def new_chrome_driver() -> Chrome:
-    options: ChromeOptions = _make_chrome_options()
-
-    chrome_type: str = ChromeType.GOOGLE
-    if os.name == 'posix':
-        chrome_type = ChromeType.CHROMIUM
-
-    path: str
-    if CHROMEDRIVER_PATH:
-        path = CHROMEDRIVER_PATH
-    else:
-        path = ChromeDriverManager(chrome_type=chrome_type).install()
-
-    service: ChromeService = ChromeService(executable_path=path)
-    return Chrome(options=options, service=service)
+_PROFILE_PATH: Final[Path] = Path(__file__).resolve().parent.joinpath('test_profile')
 
 
-def _make_chrome_options() -> ChromeOptions:
-    options: ChromeOptions = ChromeOptions()
-    if os.name == 'posix':
-        options.add_argument('--remote-debugging-port=9222')
-    options.add_argument('--window-size=1600,1000')
+def new_driver() -> Firefox:
+    return Firefox(options=_make_options())
+
+
+def _make_options() -> FirefoxOptions:
+    options = FirefoxOptions()
+    options.add_argument('--profile')
+    options.add_argument(str(_PROFILE_PATH))
+    options.add_argument('--start-maximized')
     options.add_argument('--ignore-certificate-errors')
     return options

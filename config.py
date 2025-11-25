@@ -1,5 +1,5 @@
 from os import environ
-from dotenv import load_dotenv  # pip install python-dotenv
+from dotenv import load_dotenv
 from typing import Final
 from pathlib import Path
 
@@ -10,7 +10,6 @@ __all__ = (
     'PORT',
     'SSL_CERTFILE',
     'SSL_KEYFILE',
-    'CHROMEDRIVER_PATH',
 )
 
 load_dotenv()
@@ -25,4 +24,4 @@ PORT: Final[int] = int(environ['PORT'])
 SSL_CERTFILE: Final[Path] = Path(environ['SSL_CERTFILE'])
 SSL_KEYFILE: Final[Path] = Path(environ['SSL_KEYFILE'])
 
-CHROMEDRIVER_PATH: Final[str | None] = environ.get('CHROMEDRIVER_PATH')
+

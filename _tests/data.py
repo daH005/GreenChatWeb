@@ -1,6 +1,3 @@
-from config import PORT
-from urls import Url
-
 __all__ = (
     'Params',
     'SetForTest',
@@ -11,9 +8,9 @@ class Params:
 
     class FullUrls:
 
-        BASE = f'https://localhost:{PORT}'
-        MAIN = BASE + Url.MAIN
-        LOGIN = BASE + Url.LOGIN
+        BASE = f'https://localhost:2223'
+        MAIN = BASE + '/'
+        LOGIN = BASE + '/login'
 
     class Xpaths:
 
@@ -31,7 +28,7 @@ class Params:
         MAIN_SEARCH_INPUT = '//input[@id="js-search-input"]'
         MAIN_SEARCH_BUTTON = '//button[@id="js-search-button"]'
 
-        MAIN_CHAT_LINK_TEMP = '//div[@id="js-all-chats-links"]//div[@class="chat-link__chat-name"][text()="{}"]'
+        MAIN_CHAT_LINK_TEMP = '//div[@id="js-all-chats-links"]//div[@class="chat-link__chat-name"][contains(.,"{}")]'
         MAIN_CUR_CHAT = '//div[@class="chat" and not(@class="chat--hidden")]'
         MAIN_CUR_CHAT_INPUT_CONTAINER = './/div[@class="chat__main-panel"]'
         MAIN_CUR_CHAT_TEXTAREA = './/textarea'

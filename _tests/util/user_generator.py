@@ -1,7 +1,6 @@
+from time import time
 from typing import Self
 from dataclasses import dataclass
-
-from _tests.util.user_num_counter import UserNumCounter
 
 __all__ = (
     'User',
@@ -13,26 +12,24 @@ class User:
 
     email: str
     first_name: str
-    last_name: str = 'Шевелёв'
+    last_name: str = 'GreenChat'
     id: int = 0
-
-    _counter: UserNumCounter = UserNumCounter()
 
     @classmethod
     def new(cls) -> Self:
-        ob = cls(email=cls._make_email(),
-                 first_name=cls._make_first_name(),
+        now = str(int(time()))
+        ob = cls(email=cls._make_email(now),
+                 first_name=cls._make_first_name(now),
                  )
-        cls._counter.increase()
         return ob
 
     @classmethod
-    def _make_first_name(cls) -> str:
-        return 'Данил' + str(cls._counter.cur)
+    def _make_first_name(cls, identity: str) -> str:
+        return 'User' + identity
 
     @classmethod
-    def _make_email(cls) -> str:
-        return 'testEmail' + str(cls._counter.cur) + '@mail.ru'
+    def _make_email(cls, identity: str) -> str:
+        return 'user_email' + identity + '@mail.ru'
 
     @property
     def full_name(self) -> str:

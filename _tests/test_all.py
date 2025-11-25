@@ -1,12 +1,14 @@
 from selenium.webdriver.common.by import By
 from selenium.webdriver import Chrome
 from selenium.webdriver.remote.webelement import WebElement
-from selenium.common.exceptions import WebDriverException
+from selenium.common.exceptions import WebDriverException, NoSuchElementException
 from functools import partial
 from itertools import combinations
 from typing import Iterator
+from traceback import print_exc
+from time import sleep
 
-from _tests.util.drivers import new_chrome_driver
+from _tests.util.drivers import new_driver
 from _tests.util.user_generator import User
 from _tests.data import (
     Params,
@@ -16,7 +18,7 @@ from _tests.data import (
 
 class TestAll:
 
-    _driver: Chrome = new_chrome_driver()
+    _driver: Chrome = new_driver()
     _users: list[User] = []
     _users_pairs_with_histories: list[tuple[User, User, list[str]]] = []
     _iter_histories: Iterator[list[str]] = iter(SetForTest.HISTORIES)
@@ -145,8 +147,12 @@ class TestAll:
 
     @classmethod
     def _switch_to_chat_by_sidebar(cls, interlocutor_full_name: str) -> None:
-        cls._driver.find_element(By.XPATH, Params.Xpaths.MAIN_CHAT_LINK_TEMP.format(interlocutor_full_name)).click()
+        cls._try_to_execute_func(partial(cls._click_by_chat_link, interlocutor_full_name=interlocutor_full_name))
         cls._try_to_execute_func(cls._find_cur_chat_el)
+
+    @classmethod
+    def _click_by_chat_link(cls, interlocutor_full_name: str) -> None:
+        cls._driver.find_element(By.XPATH, Params.Xpaths.MAIN_CHAT_LINK_TEMP.format(interlocutor_full_name)).click()
 
     @classmethod
     def _find_cur_chat_el(cls) -> None:
@@ -177,8 +183,10 @@ class TestAll:
             new_user = second_user
         cls._close_cur_chat()
         cls._login(new_user)
-        cls._search_interlocutor(old_user.id)
-        cls._switch_to_chat_by_sidebar(old_user.full_name)
+        try:
+            cls._switch_to_chat_by_sidebar(old_user.full_name)
+        except NoSuchElementException:
+            cls._search_interlocutor(old_user.id)
 
     @classmethod
     def _close_cur_chat(cls) -> None:
@@ -196,6 +204,10 @@ class TestAll:
         while count:
             try:
                 return func()
-            except (WebDriverException, IndexError, AssertionError):
+            except:
+                sleep(1)
                 count -= 1
+                if count <= 0:
+                    print_exc()
         raise AssertionError
+
