@@ -730,6 +730,7 @@ a.chat__file:hover {
 .chat__delete-panel__confirm {
     background: var(--cancel-color);
     border-radius: 0 10px 10px 0;
+    padding: 18px 15px !important;
 }
 
 .avatar {
