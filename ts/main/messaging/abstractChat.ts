@@ -221,15 +221,15 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
         }
         this._messageIsSending = true;
 
-        let textIsMeaningful: boolean = this._messageTextIsMeaningful();
+        let textIsNotEmpty: boolean = this._textIsNotEmpty(this._textareaEl.value);
         let hasFiles: boolean = this._hasFiles();
 
-        if (!(textIsMeaningful || hasFiles)) {
+        if (!(textIsNotEmpty || hasFiles)) {
             return;
         }
 
         let text: string = this._textareaEl.value;
-        if (!textIsMeaningful) {
+        if (!textIsNotEmpty) {
             text = CURRENT_LABELS.files;
         }
 
@@ -249,10 +249,6 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
         }
 
         this._messageIsSending = false;
-    }
-
-    protected _messageTextIsMeaningful(): boolean {
-        return this._textareaEl.value.replaceAll("\n", "").replaceAll(" ", "") != "";
     }
 
     protected _hasFiles(): boolean {
@@ -444,7 +440,7 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
     }
 
     protected async _editSelectedMessage(): Promise<void> {
-        if (!this._messageTextIsMeaningful()) {
+        if (!this._textIsNotEmpty(this._editModeTextareaEl.value)) {
             return;
         }
 
@@ -468,6 +464,10 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
         }
 
         this._clearEditMode();
+    }
+
+    protected _textIsNotEmpty(text: string): boolean {
+        return text.replaceAll("\n", "").replaceAll(" ", "") != "";
     }
 
     protected _clearEditMode(): void {
