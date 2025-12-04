@@ -444,6 +444,10 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
     }
 
     protected async _editSelectedMessage(): Promise<void> {
+        if (!this._messageTextIsMeaningful()) {
+            return;
+        }
+
         if (this._editModeTextareaEl.value != this._editModeSelectedMessage.text) {
             await requestToEditMessage({
                 messageId: this._editModeSelectedMessage.id,
