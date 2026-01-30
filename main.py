@@ -17,17 +17,17 @@ app: Flask = Flask(__name__)
 
 
 @app.errorhandler(HTTPException)
-def handle_exception(exception: HTTPException) -> str:
-    return render_template(TemplateNames.ERROR, status=exception.code)
+def handle_exception(exception: HTTPException):
+    return render_template(TemplateNames.ERROR, status=exception.code), exception.code
 
 
 @app.route(Url.LOGIN, methods=[HTTPMethod.GET])
-def login() -> str:
+def login():
     return render_template(TemplateNames.LOGIN)
 
 
 @app.route(Url.MAIN, methods=[HTTPMethod.GET])
-def main() -> str:
+def main():
     return render_template(TemplateNames.MAIN)
 
 
