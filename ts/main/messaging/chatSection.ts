@@ -195,8 +195,9 @@ export class HTMLChatLastMessageSection extends HTMLChatSection {
     protected _bottomIsEnd = true;
 
     public async addMessage(apiMessage: APIMessage): Promise<HTMLMessage> {
-        return await this._addMessage(apiMessage, false);
+        let message: Promise<HTMLMessage> = this._addMessage(apiMessage, false);
         this._increaseAllOffsets();
+        return await message;
     }
 
     protected _increaseAllOffsets(): void {
