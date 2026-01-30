@@ -8,8 +8,6 @@ __all__ = (
     'DEBUG',
     'HOST',
     'PORT',
-    'SSL_CERTFILE',
-    'SSL_KEYFILE',
 )
 
 load_dotenv()
@@ -20,8 +18,3 @@ DEBUG: Final[bool] = False if environ['DEBUG'].lower() == 'false' else bool(envi
 
 HOST: Final[str] = environ['HOST']
 PORT: Final[int] = int(environ['PORT'])
-
-SSL_CERTFILE: Final[Path] = Path(environ['SSL_CERTFILE'])
-SSL_KEYFILE: Final[Path] = Path(environ['SSL_KEYFILE'])
-
-

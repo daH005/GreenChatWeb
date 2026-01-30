@@ -1,6 +1,6 @@
 var _HTTP_API_BASE_URL: string = "";  // <- HTTP_API_URL // Comment For Nginx
 if (!_HTTP_API_BASE_URL) {
-    _HTTP_API_BASE_URL = "https://localhost:5181";
+    _HTTP_API_BASE_URL = "http://localhost:5181";
 }
 
 export const HTTP_API_URLS = {
