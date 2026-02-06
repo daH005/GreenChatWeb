@@ -47,11 +47,11 @@ export const websocketHandlers = {
 
     [SignalType.MESSAGE_EDIT]: async (apiData: MessageId) => {
         let apiMessage: APIMessage = await requestMessage(apiData.messageId);
-        await HTMLMessage.byId(apiMessage.id).setText(apiMessage.text);
+        HTMLMessage.byId(apiMessage.id).setText(apiMessage.text);
     },
 
     [SignalType.MESSAGE_DELETE]: async (apiData: MessageId) => {
-        await HTMLMessage.byId(apiData.messageId).chat.deleteMessage(apiData.messageId);
+        HTMLMessage.byId(apiData.messageId).chat.deleteMessage(apiData.messageId);
     },
 
     [SignalType.FILES]: async (apiData: MessageId) => {
