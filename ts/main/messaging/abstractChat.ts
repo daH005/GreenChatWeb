@@ -92,7 +92,6 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
         this._messages = {};
         this._deleteModeSelectedMessages = [];
         this._sections = [];
-        AbstractHTMLChat._byIds[this._id] = this;
     }
 
     public static byId(id: number): AbstractHTMLChat | null {
@@ -106,6 +105,7 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
     public async init(prepend: boolean=false): Promise<void> {
         this._avatarURL = await this._makeAvatarURL();
         super.init(prepend);
+        AbstractHTMLChat._byIds[this._id] = this;
     }
 
     protected abstract _makeAvatarURL(): Promise<string>;
@@ -270,7 +270,7 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
 
         if (!(this._firstOpeningWas)) {
             this._buttonEl.disabled = true;
-            await this._loadInitial();
+            await this._loadInitialMessages();
             this._buttonEl.disabled = false;
         }
         await this._read();
@@ -285,20 +285,24 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
     }
 
     protected async _loadNextMessagesIfScrolled(): Promise<void> {
-        if (this._scrolledToTop()) {
+        if (!this._firstOpeningWas) {
+            return;
+        }
+
+        if (this.isScrolledToTop()) {
             await this._topSection.loadNextTopMessages();
-        } else if (this._scrolledToBottom()) {
+        } else if (this.isScrolledToBottom()) {
             await this._bottomSection.loadNextBottomMessages();
         }
     }
 
     public async addLastMessage(apiMessage: APIMessage, isNew: boolean = true): Promise<HTMLMessage> {
-        let scrolledToBottom: boolean = this._scrolledToBottom();
+        let isScrolledToBottom: boolean = this.isScrolledToBottom();
 
         let message: HTMLMessage = await this._lastMessageSection.addMessage(apiMessage);
-        if ((scrolledToBottom || message.fromThisUser) && isNew) {
+        if ((isScrolledToBottom || message.fromThisUser) && isNew) {
             await this._lastMessageSection.switch();
-            this._scrollToBottom();
+            this.scrollToBottom();
         }
 
         this._link.updateTextAndDate(
@@ -323,16 +327,12 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
         return userInWindow() && this._isOpened;
     }
 
-    protected _scrolledToTop(): boolean {
+    public isScrolledToTop(): boolean {
         return this._messagesEl.scrollTop < 100;
     }
 
-    protected _scrolledToBottom(): boolean {
+    public isScrolledToBottom(): boolean {
         return this._messagesEl.scrollHeight - this._messagesEl.scrollTop - this._messagesEl.clientHeight < 100;
-    }
-
-    protected _scrollToBottom(): void {
-        this._messagesEl.scrollTop = this._messagesEl.scrollHeight;
     }
 
     public setTopSection(section: HTMLChatSection): void {
@@ -349,14 +349,14 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
         }
     }
 
-    protected async _loadInitial(): Promise<void> {
+    protected async _loadInitialMessages(): Promise<void> {
         await this._historySection.switch();
+        this.scrollToBottom();
         this._firstOpeningWas = true;
-        this._scrollToInitial();
     }
 
-    protected _scrollToInitial(): void {
-        this._messagesEl.scrollTop = this._messagesEl.scrollHeight - 150;
+    public scrollToBottom(): void {
+        this._messagesEl.scrollTop = this._messagesEl.scrollHeight;
     }
 
     public async updateTyping(apiData: Typing): Promise<void> {
@@ -417,7 +417,9 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
 
     public setMessagesAsRead(messageIds: number[]): void {
         for (let id of messageIds) {
-            this._messages[id].setAsRead();
+            if (this._messages[id]) {  // The message may be not created in HTML yet in the current scrolling position.
+                this._messages[id].setAsRead();
+            }
         }
     }
 

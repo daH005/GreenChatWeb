@@ -151,8 +151,9 @@ export class HTMLChatSection extends AbstractHTMLTemplatedElement {
     }
 
     protected async _addMessage(apiMessage: APIMessage, prepend: boolean): Promise<HTMLMessage> {
-        if (this._commonMessageStorage[apiMessage.id]) {
-            return;
+        let alreadyExistedMessage: HTMLMessage | null = HTMLMessage.byId(apiMessage.id);
+        if (alreadyExistedMessage) {
+            return alreadyExistedMessage;
         }
 
         let fromThisUser: boolean = thisUser.id == apiMessage.userId;
@@ -174,9 +175,11 @@ export class HTMLChatSection extends AbstractHTMLTemplatedElement {
             apiMessage.isRead,
             creatingDatetime,
             await requestUser(apiMessage.userId),
-            apiMessage.hasFiles,
         );
         message.init(prepend);
+        if (apiMessage.hasFiles) {
+            await message.resetFiles();
+        }
 
         this._commonMessageStorage[message.id] = message;
         return message;
@@ -195,9 +198,9 @@ export class HTMLChatLastMessageSection extends HTMLChatSection {
     protected _bottomIsEnd = true;
 
     public async addMessage(apiMessage: APIMessage): Promise<HTMLMessage> {
-        let message: Promise<HTMLMessage> = this._addMessage(apiMessage, false);
+        let message: HTMLMessage = await this._addMessage(apiMessage, false);
         this._increaseAllOffsets();
-        return await message;
+        return message;
     }
 
     protected _increaseAllOffsets(): void {

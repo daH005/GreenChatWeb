@@ -41,40 +41,45 @@ export class HTMLChatList {
         }
 
         this._requestedOffset += this._SIZE;
-        let apiData: APIChat[] = await requestUserChats({
+        let apiChats: APIChat[] = await requestUserChats({
             offset: this._requestedOffset - this._SIZE,
             size: this._SIZE,
         });
 
-        for (let oneApiData of apiData) {
-            await this.addChat(oneApiData);
+        for (let apiChat of apiChats) {
+            await this.addChat(apiChat);
         }
     }
 
-    public async addChat(apiData: APIChat): Promise<AbstractHTMLChat> {
-        let chat: AbstractHTMLChat;
-        if (!apiData.isGroup) {
-            chat = await this._addPrivateChat(apiData);
-        } else {
-            // chat = await this._addGroupChat(apiData);
+    public async addChat(apiChat: APIChat): Promise<AbstractHTMLChat> {
+        let alreadyExistedChat: AbstractHTMLChat | null = AbstractHTMLChat.byId(apiChat.id);
+        if (alreadyExistedChat) {
+            return alreadyExistedChat;
         }
 
-        if (apiData.lastMessage) {
-            await chat.addLastMessage(apiData.lastMessage, false);
+        let chat: AbstractHTMLChat;
+        if (!apiChat.isGroup) {
+            chat = await this._addPrivateChat(apiChat);
+        } else {
+            // chat = await this._addGroupChat(apiChat);
+        }
+
+        if (apiChat.lastMessage) {
+            await chat.addLastMessage(apiChat.lastMessage, false);
         }
 
         this._currentOffset += 1;
         return chat;
     }
 
-    protected async _addPrivateChat(apiData: APIChat): Promise<HTMLPrivateChat> {
-        let chat: HTMLPrivateChat | null = HTMLPrivateChat.byInterlocutorId(apiData.interlocutorId);
+    protected async _addPrivateChat(apiChat: APIChat): Promise<HTMLPrivateChat> {
+        let chat: HTMLPrivateChat | null = HTMLPrivateChat.byInterlocutorId(apiChat.interlocutorId);
         if (!chat) {
-            let interlocutor: APIUser = await requestUser(apiData.interlocutorId);
-            chat = new HTMLPrivateChat(apiData.id, apiData.unreadCount, interlocutor);
+            let interlocutor: APIUser = await requestUser(apiChat.interlocutorId);
+            chat = new HTMLPrivateChat(apiChat.id, apiChat.unreadCount, interlocutor);
             await chat.init();
         } else {
-            chat.setId(apiData.id);
+            chat.setId(apiChat.id);
             await chat.setAsCreatedOnServer();
         }
         chat.showLink();
@@ -82,7 +87,7 @@ export class HTMLChatList {
         return chat;
     }
 
-    // protected async _addGroupChat(apiData: APIChat): {}  // Will be implemented in the future
+    // protected async _addGroupChat(apiChat: APIChat): {}  // Will be implemented in the future
 
 }
 

@@ -1,3 +1,4 @@
+import { sleep } from "../../common/sleep.js";
 import { requestChat,
          requestMessage,
          requestUnreadCount,
@@ -42,33 +43,56 @@ export const websocketHandlers = {
                 await requestChat(apiMessage.chatId),
             );
         }
+        apiMessage.hasFiles = false;  // Files of the new message are created by `FILES_UPDATE` signal.
         await chat.addLastMessage(apiMessage);
     },
 
     [SignalType.MESSAGE_EDIT]: async (apiData: MessageId) => {
         let apiMessage: APIMessage = await requestMessage(apiData.messageId);
-        HTMLMessage.byId(apiMessage.id).setText(apiMessage.text);
+        let message: HTMLMessage | null = HTMLMessage.byId(apiMessage.id);
+        if (message) {  // Message may be is not created in the current section.
+            message.setText(apiMessage.text);
+        }
     },
 
     [SignalType.MESSAGE_DELETE]: async (apiData: MessageId) => {
-        HTMLMessage.byId(apiData.messageId).chat.deleteMessage(apiData.messageId);
+        let message: HTMLMessage | null = HTMLMessage.byId(apiData.messageId);
+        if (message) {  // Message may be is not created in the current section.
+            message.chat.deleteMessage(apiData.messageId);
+        }
     },
 
     [SignalType.FILES]: async (apiData: MessageId) => {
-        await HTMLMessage.byId(apiData.messageId).resetFiles();
+        let message: HTMLMessage | null = HTMLMessage.byId(apiData.messageId);
+        if (message) {
+            await message.resetFiles();
+        } else {
+            // This signal may be received earlier than the message is created in HTML => wait for that.
+            await sleep(10);
+            await websocketHandlers[SignalType.FILES](apiData);
+        }
     },
 
     [SignalType.TYPING]: async (apiData: Typing) => {
-        AbstractHTMLChat.byId(apiData.chatId).updateTyping(apiData);
+        let chat: AbstractHTMLChat | null = AbstractHTMLChat.byId(apiData.chatId);
+        if (chat) {  // Chat may be is not created in the current scroll position in the sidebar.
+            await chat.updateTyping(apiData);
+        }
     },
 
     [SignalType.NEW_UNREAD_COUNT]: async (apiData: ChatId) => {
-        let unreadCount: number = await requestUnreadCount(apiData.chatId);
-        AbstractHTMLChat.byId(apiData.chatId).updateUnreadCount(unreadCount);
+        let chat: AbstractHTMLChat | null = AbstractHTMLChat.byId(apiData.chatId);
+        if (chat) {  // Chat may be is not created in the current scroll position in the sidebar.
+            let unreadCount: number = await requestUnreadCount(apiData.chatId);
+            chat.updateUnreadCount(unreadCount);
+        }
     },
 
     [SignalType.READ]: async (apiData: Read) => {
-        AbstractHTMLChat.byId(apiData.chatId).setMessagesAsRead(apiData.messageIds);
+        let chat: AbstractHTMLChat | null = AbstractHTMLChat.byId(apiData.chatId);
+        if (chat) {  // Chat may be is not created in the current scroll position in the sidebar.
+            chat.setMessagesAsRead(apiData.messageIds);
+        }
     },
 
 }

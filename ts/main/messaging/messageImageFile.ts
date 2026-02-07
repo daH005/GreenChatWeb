@@ -1,3 +1,4 @@
+import { sleep } from "../../common/sleep.js";
 import { HTMLMessageFile } from "./messageFile.js";
 
 export class HTMLMessageImageFile extends HTMLMessageFile {
@@ -15,6 +16,15 @@ export class HTMLMessageImageFile extends HTMLMessageFile {
 
         this._imageEl = this._el.querySelector("img");
         this._imageEl.src = this._url;
+    }
+
+    public async waitForImageLoading(): Promise<void> {
+        while (true) {
+            await sleep(10);
+            if (this._imageEl.complete && this._imageEl.naturalWidth !== 0) {
+                break;
+            }
+        }
     }
 
 }

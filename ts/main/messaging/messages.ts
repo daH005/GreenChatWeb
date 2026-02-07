@@ -40,6 +40,7 @@ export class HTMLMessage extends AbstractHTMLTemplatedElement {
     protected _urlsByFilenames: Record<string, string>;
     protected _isSelectedToDelete: boolean = false;
     protected _dateSep: HTMLDateSep;
+    protected _imageFileVersion: number = 0;  // I add this in end of url of image file to browser to update image.
 
     public constructor(chat: AbstractHTMLChat,
                        section: HTMLChatSection,
@@ -49,7 +50,6 @@ export class HTMLMessage extends AbstractHTMLTemplatedElement {
                        isRead: boolean,
                        creatingDatetime: Date,
                        user: APIUser,
-                       hasFiles: boolean,
                       ) {
         super(parentEl);
         this._chat = chat;
@@ -59,10 +59,8 @@ export class HTMLMessage extends AbstractHTMLTemplatedElement {
         this._isRead = isRead;
         this._creatingDatetime = creatingDatetime;
         this._user = user;
-        this._hasFiles = hasFiles;
         this._filenames = [];
         this._urlsByFilenames = {};
-        HTMLMessage._byIds[this._id] = this;
     }
 
     public static byId(id: number): HTMLMessage | null {
@@ -72,6 +70,7 @@ export class HTMLMessage extends AbstractHTMLTemplatedElement {
     public init(prepend: boolean=false): void {
         super.init(prepend);
         this._updateDateSep();
+        HTMLMessage._byIds[this._id] = this;
     }
 
     protected _updateDateSep(): void {
@@ -102,10 +101,6 @@ export class HTMLMessage extends AbstractHTMLTemplatedElement {
         this._filesEl = this._el.querySelector(".chat__message__files");
         this._imageFilesEl = this._el.querySelector(".chat__message__image-files");
 
-        if (this._hasFiles) {
-            this.resetFiles();
-        }
-
         this._deleteModeButton = this._el.querySelector(".chat__message__function--delete");
         this._deleteModeButton.onclick = () => {
             this._chat.toDeleteMode();
@@ -129,33 +124,37 @@ export class HTMLMessage extends AbstractHTMLTemplatedElement {
     }
 
     public async resetFiles(): Promise<void> {
-        let filenames: string[] = await requestMessageFilenames(this._id) ?? [];
-        let filesWereNotChanged = filenames == this._filenames;
-        this._filenames = filenames;
+        let chatIsScrolledToBottom: boolean = this._chat.isScrolledToBottom();
 
-        if (filesWereNotChanged) {
-            return;
-        }
-
+        this._filenames = await requestMessageFilenames(this._id) ?? [];
         this._imageFilesEl.innerHTML = "";
         this._filesEl.innerHTML = "";
         for (let filename of this._filenames) {
-            this._addFile(filename);
+            await this._addFile(filename);
+        }
+        this._imageFileVersion += 1;
+
+        if (chatIsScrolledToBottom) {
+            this._chat.scrollToBottom();
         }
     }
 
-    protected _addFile(filename: string): void {
+    protected async _addFile(filename: string): Promise<void> {
         let extension: string = filename.slice(filename.lastIndexOf('.')).toLowerCase();
         let url: string = this._makeFileUrl(filename);
         this._urlsByFilenames[filename] = url;
 
+        let isImage: boolean = HTMLMessage._IMAGE_FILE_EXTENSIONS.includes(extension);
         let file: HTMLMessageFile | HTMLMessageImageFile;
-        if (HTMLMessage._IMAGE_FILE_EXTENSIONS.includes(extension)) {
+        if (isImage) {
             file = new HTMLMessageImageFile(this._imageFilesEl, filename, url);
         } else {
             file = new HTMLMessageFile(this._filesEl, filename, url);
         }
         file.init();
+        if (isImage) {
+            await (file as HTMLMessageImageFile).waitForImageLoading();
+        }
     }
 
     protected _formattedMessageTextHtml(html: string): string {
@@ -169,7 +168,7 @@ export class HTMLMessage extends AbstractHTMLTemplatedElement {
     }
 
     protected _makeFileUrl(filename: string): string {
-        return makeUrlWithParams(HTTP_API_URLS.MESSAGE_FILES_GET, {messageId: this._id, filename});
+        return makeUrlWithParams(HTTP_API_URLS.MESSAGE_FILES_GET, {messageId: this._id, filename}) + "#" + String(this._imageFileVersion);
     }
 
     public get id(): number {
