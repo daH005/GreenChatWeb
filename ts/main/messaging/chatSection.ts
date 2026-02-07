@@ -19,6 +19,7 @@ export class HTMLChatSection extends AbstractHTMLTemplatedElement {
     protected _bottomNextOffset: number;
     protected _topIsEnd: boolean = false;
     protected _bottomIsEnd: boolean = false;
+    protected _initialLoadingWas: boolean = false;
 
     public constructor(chat: AbstractHTMLChat,
                        all: HTMLChatSection[],
@@ -75,8 +76,12 @@ export class HTMLChatSection extends AbstractHTMLTemplatedElement {
         this._chat.setBottomSection(this);
         this._chat.hideSections();
         this.show();
-        await this.loadNextTopMessages();
-        await this.loadNextBottomMessages();
+
+        if (!this._initialLoadingWas) {
+            await this.loadNextTopMessages();
+            await this.loadNextBottomMessages();
+            this._initialLoadingWas = true;
+        }
     }
 
     public show(): void {
