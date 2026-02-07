@@ -12,12 +12,11 @@ export class HTMLChatSection extends AbstractHTMLTemplatedElement {
 
     protected _templateEl = <HTMLTemplateElement>document.getElementById("js-chat-section-temp");
     protected _chat: AbstractHTMLChat;
-    protected _all: HTMLChatSection[] = [];
-    protected _commonMessageStorage: Record<number, HTMLMessage>;
-    protected _topOffset: number;
-    protected _topRequestedOffset: number;
-    protected _bottomOffset: number;
-    protected _bottomRequestedOffset: number;
+    protected _all: HTMLChatSection[];
+    protected _topCurrentOffset: number;
+    protected _topNextOffset: number;
+    protected _bottomCurrentOffset: number;
+    protected _bottomNextOffset: number;
     protected _topIsEnd: boolean = false;
     protected _bottomIsEnd: boolean = false;
 
@@ -25,21 +24,19 @@ export class HTMLChatSection extends AbstractHTMLTemplatedElement {
                        all: HTMLChatSection[],
                        parentEl: HTMLElement,
                        startOffset: number,
-                       commonMessageStorage: Record<number, HTMLMessage>,
                        ) {
         super(parentEl);
         this._chat = chat;
         this._all = all;
-        this._commonMessageStorage = commonMessageStorage;
 
-        this._topOffset = startOffset - this._SIZE;
-        if (this._topOffset < 0) {
-            this._topOffset = 0;
+        this._topCurrentOffset = startOffset;
+        this._topNextOffset = startOffset;
+
+        this._bottomCurrentOffset = startOffset - this._SIZE;
+        if (this._bottomCurrentOffset < 0) {
+            this._bottomCurrentOffset = 0;
         }
-        this._topRequestedOffset = this._topOffset;
-
-        this._bottomOffset = startOffset;
-        this._bottomRequestedOffset = this._bottomOffset;
+        this._bottomNextOffset = this._bottomCurrentOffset;
     }
 
     public init(): void {
@@ -53,7 +50,7 @@ export class HTMLChatSection extends AbstractHTMLTemplatedElement {
         for (let i in this._all) {
             index = Number(i);
             section = this._all[index];
-            if (this._bottomOffset >= section.topOffset) {
+            if (this._bottomCurrentOffset >= section.topCurrentOffset) {
                 section.insertSiblingBefore(this._el);
                 this._all.splice(index, 0, this);
                 return;
@@ -62,12 +59,12 @@ export class HTMLChatSection extends AbstractHTMLTemplatedElement {
         this._all.push(this);
     }
 
-    public get topOffset(): number {
-        return this._topOffset;
+    public get topCurrentOffset(): number {
+        return this._topCurrentOffset;
     }
 
-    public get bottomOffset(): number {
-        return this._bottomOffset;
+    public get bottomCurrentOffset(): number {
+        return this._bottomCurrentOffset;
     }
 
     public insertSiblingBefore(el: HTMLElement): void {
@@ -92,51 +89,48 @@ export class HTMLChatSection extends AbstractHTMLTemplatedElement {
     }
 
     public async loadNextTopMessages(): Promise<void> {
-        if (!this._topIsEnd && !(this._topOffset < this._topRequestedOffset)) {
-            this._topRequestedOffset += this._SIZE;
-            let apiMessages: APIMessage[] = await this._requestMessages(this._topRequestedOffset);
+        if (!this._topIsEnd && this._topCurrentOffset >= this._topNextOffset) {
+            this._topNextOffset += this._SIZE;
+            let apiMessages: APIMessage[] = await this._requestMessages(this._topCurrentOffset);
             for (let apiMessage of apiMessages) {
                 await this._addMessage(apiMessage, true);
-                this._topOffset += 1;
+                this._topCurrentOffset += 1;
             }
         }
 
         let topSibling: HTMLChatSection | null = this._all[this._currentIndex() - 1];
-        if (!topSibling || topSibling.bottomOffset > this._topOffset) {
+        if (!topSibling) {
             return;
         }
 
-        this._chat.setTopSection(topSibling);
-        topSibling.show();
-        this._topIsEnd = true;
+        if (topSibling.bottomCurrentOffset + this._SIZE <= this._topCurrentOffset) {
+            this._chat.setTopSection(topSibling);
+            topSibling.show();
+            this._topIsEnd = true;
+        }
     }
 
     public async loadNextBottomMessages(): Promise<void> {
-        if (!this._bottomIsEnd && !(this._bottomOffset > this._bottomRequestedOffset)) {
-            this._bottomRequestedOffset -= this._SIZE;
-            if (this._bottomRequestedOffset < 0) {
-                this._bottomRequestedOffset = 0;
-            }
-            let apiMessages: APIMessage[] = await this._requestMessages(this._bottomRequestedOffset);
+        if (!this._bottomIsEnd && this._bottomCurrentOffset <= this._bottomNextOffset) {
+            this._bottomNextOffset -= this._SIZE;
+            let apiMessages: APIMessage[] = await this._requestMessages(this._bottomCurrentOffset);
             apiMessages = apiMessages.reverse();
             for (let apiMessage of apiMessages) {
                 await this._addMessage(apiMessage, false);
-                this._bottomOffset -= 1;
-            }
-
-            if (this._bottomOffset < 0) {
-                this._bottomOffset = 0;
+                this._bottomCurrentOffset -= 1;
             }
         }
 
         let bottomSibling: HTMLChatSection | null = this._all[this._currentIndex() + 1];
-        if (!bottomSibling || bottomSibling.topOffset < this._bottomOffset) {
+        if (!bottomSibling) {
             return;
         }
 
-        this._chat.setBottomSection(bottomSibling);
-        bottomSibling.show();
-        this._bottomIsEnd = true;
+        if (bottomSibling.topCurrentOffset >= this._bottomCurrentOffset + this._SIZE) {
+            this._chat.setBottomSection(bottomSibling);
+            bottomSibling.show();
+            this._bottomIsEnd = true;
+        }
     }
 
     protected _currentIndex(): number {
@@ -181,15 +175,15 @@ export class HTMLChatSection extends AbstractHTMLTemplatedElement {
             await message.resetFiles();
         }
 
-        this._commonMessageStorage[message.id] = message;
+        this._chat.addMessageId(apiMessage.id);
         return message;
     }
 
     public increaseOffsets(): void {
-        this._topOffset += 1;
-        this._topRequestedOffset += 1;
-        this._bottomOffset += 1;
-        this._bottomRequestedOffset += 1;
+        this._topCurrentOffset += 1;
+        this._topNextOffset += 1;
+        this._bottomCurrentOffset += 1;
+        this._bottomNextOffset += 1;
     }
 
 }
@@ -204,6 +198,7 @@ export class HTMLChatLastMessageSection extends HTMLChatSection {
     }
 
     protected _increaseAllOffsets(): void {
+        // We have to raise all offsets of all sections to up because of the new message.
         for (let section of this._all) {
             section.increaseOffsets();
         }

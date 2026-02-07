@@ -11,7 +11,7 @@ export class HTMLChatList {
     protected _el: HTMLElement = document.getElementById("js-all-chats-links");
     protected readonly _SIZE: number = 20;
     protected _currentOffset: number = 0;
-    protected _requestedOffset: number = 0;
+    protected _nextOffset: number = 0;
 
     public constructor() {
         HTMLChatLink.setParentEl(this._el);
@@ -36,13 +36,13 @@ export class HTMLChatList {
     }
 
     protected async _loadNext(): Promise<void> {
-        if (this._currentOffset < this._requestedOffset) {
+        if (this._currentOffset < this._nextOffset) {
             return;
         }
 
-        this._requestedOffset += this._SIZE;
+        this._nextOffset += this._SIZE;
         let apiChats: APIChat[] = await requestUserChats({
-            offset: this._requestedOffset - this._SIZE,
+            offset: this._currentOffset,
             size: this._SIZE,
         });
 

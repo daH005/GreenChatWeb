@@ -53,6 +53,7 @@ export async function requestToLogout() {
     });
 }
 
+// null key stores the current user.
 let __userCashes = {};
 export async function requestUser(userId: number | null = null): Promise<APIUser> {
     if (__userCashes[userId]) {
@@ -60,7 +61,7 @@ export async function requestUser(userId: number | null = null): Promise<APIUser
     }
 
     let requestData;
-    if (userId) {
+    if (userId != null) {
         requestData = {userId};
     } else {
         requestData = {};

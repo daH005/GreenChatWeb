@@ -64,16 +64,15 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
     protected _filesMapper: NoOverwriteInputFilesMapper;
     protected _isOpened: boolean = false;
     protected _avatarURL: string;
-    protected _messages: Record<number, HTMLMessage>;
     protected _firstOpeningWas: boolean = false;
     protected _link: HTMLChatLink;
     protected _topDateStr: string | null = null;
     protected _bottomDateStr: string | null = null;
     protected _typingTimeoutId: number | null = null;
     protected _messageIsSending: boolean = false;
-    protected _lastReadMessageId: number = -Infinity;
     protected _lastMessageSection: HTMLChatLastMessageSection;
     protected _historySection: HTMLChatSection;
+    protected _sortedMessageIds: number[];
 
     protected _topSection: HTMLChatSection;
     protected _bottomSection: HTMLChatSection;
@@ -89,9 +88,9 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
         this._name = name;
         this._unreadCount = unreadCount;
 
-        this._messages = {};
         this._deleteModeSelectedMessages = [];
         this._sections = [];
+        this._sortedMessageIds = [];
     }
 
     public static byId(id: number): AbstractHTMLChat | null {
@@ -126,6 +125,9 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
 
         this._messagesEl = this._el.querySelector(".chat__messages");
         this._messagesEl.addEventListener("scroll", async () => {
+            if (!this._firstOpeningWas) {
+                return;
+            }
             await this._loadNextMessagesIfScrolled();
             await this._read();
         });
@@ -157,10 +159,10 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
         this._link.init();
         this._link.updateUnreadCount(this._unreadCount);
 
-        this._lastMessageSection = new HTMLChatLastMessageSection(this, this._sections, this._messagesEl, 0, this._messages);
+        this._lastMessageSection = new HTMLChatLastMessageSection(this, this._sections, this._messagesEl, 0);
         this._lastMessageSection.init();
 
-        this._historySection = new HTMLChatSection(this, this._sections, this._messagesEl, this._unreadCount, this._messages);
+        this._historySection = new HTMLChatSection(this, this._sections, this._messagesEl, this._unreadCount);
         this._historySection.init();
 
         this._initEditModeEls();
@@ -273,7 +275,6 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
             await this._loadInitialMessages();
             this._buttonEl.disabled = false;
         }
-        await this._read();
     }
 
     public close(): void {
@@ -285,10 +286,6 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
     }
 
     protected async _loadNextMessagesIfScrolled(): Promise<void> {
-        if (!this._firstOpeningWas) {
-            return;
-        }
-
         if (this.isScrolledToTop()) {
             await this._topSection.loadNextTopMessages();
         } else if (this.isScrolledToBottom()) {
@@ -300,11 +297,6 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
         let isScrolledToBottom: boolean = this.isScrolledToBottom();
 
         let message: HTMLMessage = await this._lastMessageSection.addMessage(apiMessage);
-        if ((isScrolledToBottom || message.fromThisUser) && isNew) {
-            await this._lastMessageSection.switch();
-            this.scrollToBottom();
-        }
-
         this._link.updateTextAndDate(
             message.text,
             message.creatingDatetime,
@@ -315,10 +307,19 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
             return;
         }
 
-        if (this._focused()) {
-            await this._read();
-        } else {
-            newMessageSound.play();
+        if (message.fromThisUser) {
+            await this._lastMessageSection.switch();
+        }
+        if (message.fromThisUser || isScrolledToBottom) {
+            this.scrollToBottom();
+        }
+
+        if (!message.fromThisUser) {
+            if (this._focused()) {
+                await this._read();
+            } else {
+                newMessageSound.play();
+            }
         }
         this._link.pushUp();
     }
@@ -362,7 +363,7 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
     public async updateTyping(apiData: Typing): Promise<void> {
         let user: APIUser = await requestUser(apiData.userId);
 
-        if (this._typingTimeoutId) {
+        if (this._typingTimeoutId != null) {
             clearTimeout(this._typingTimeoutId);
         }
 
@@ -375,52 +376,51 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
     }
 
     protected async _read(): Promise<void> {
-        let message: HTMLMessage | null = this._lastVisibleMessage();
-        if (!message) {
+        if (!this._sortedMessageIds.length || !this._unreadCount) {
             return;
         }
 
-        if (message.id > this._lastReadMessageId) {
-            await requestToReadMessage(message.id);
-            this._lastReadMessageId = message.id;
-        }
-    }
+        let firstUnreadMessageIndex: number = Math.max(0, this._sortedMessageIds.length - this._unreadCount);
+        let chatBottomY: number = this._messagesEl.getBoundingClientRect().bottom;
+        let lastVisibleUnreadMessageId: number | null = null;
+        let currentUnreadMessage: HTMLMessage;
+        for (let i = firstUnreadMessageIndex; i < this._sortedMessageIds.length; i++) {
+            currentUnreadMessage = HTMLMessage.byId(this._sortedMessageIds[i]);
 
-    protected _lastVisibleMessage(): HTMLMessage {
-        let lineAbsY = this._messagesLineBottomAbsY();
-
-        let ids = this._sortedMessageIds();
-        let message: HTMLMessage | null = null;
-        for (let id of ids) {
-            let messageBottomY = this._messages[id].getBoundingClientRect().bottom;
-            if (messageBottomY <= lineAbsY) {
-                message = this._messages[id];
+            if (currentUnreadMessage.getBoundingClientRect().bottom <= chatBottomY) {
+                lastVisibleUnreadMessageId = this._sortedMessageIds[i];
             } else {
                 break;
             }
         }
 
-        return message;
-    }
-
-    protected _messagesLineBottomAbsY(): number {
-        return this._messagesEl.getBoundingClientRect().bottom;
-    }
-
-    protected _sortedMessageIds(): number[] {
-        let ids: number[] = Object.keys(this._messages).map(Number);
-        ids.sort((a, b) => {
-            return a - b;
-        });
-        return ids;
+        if (lastVisibleUnreadMessageId != null) {
+            await requestToReadMessage(lastVisibleUnreadMessageId);
+        }
     }
 
     public setMessagesAsRead(messageIds: number[]): void {
-        for (let id of messageIds) {
-            if (this._messages[id]) {  // The message may be not created in HTML yet in the current scrolling position.
-                this._messages[id].setAsRead();
+        for (let messageId of messageIds) {
+            let message: HTMLMessage | null = HTMLMessage.byId(messageId);
+            if (message) {  // The message may be not created in HTML yet in the current scrolling position.
+                message.setAsRead();
             }
         }
+    }
+
+    public addMessageId(messageId: number): void {
+        let left = 0;
+        let right = this._sortedMessageIds.length;
+
+        while (left < right) {
+            const mid = Math.floor((left + right) / 2);
+            if (this._sortedMessageIds[mid] < messageId) {
+              left = mid + 1;
+            } else {
+              right = mid;
+            }
+        }
+        this._sortedMessageIds.splice(left, 0, messageId);
     }
 
     public updateUnreadCount(count: number): void {
@@ -521,8 +521,8 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
     }
 
     public deleteMessage(messageId: number): void {
-        this._messages[messageId].delete();
-        delete this._messages[messageId];
+        HTMLMessage.byId(messageId).delete();
+        this._sortedMessageIds.splice(this._sortedMessageIds.indexOf(messageId), 1);
     }
 
 }

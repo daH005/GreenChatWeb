@@ -8,7 +8,7 @@ export function notify(text: string): void {
 
     notificationEl.textContent = text;
 
-    if (timeoutId) {
+    if (timeoutId != null) {
         clearTimeout(timeoutId);
     }
     timeoutId = setTimeout(() => {
