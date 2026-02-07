@@ -32,10 +32,8 @@ export class HTMLChatSection extends AbstractHTMLTemplatedElement {
         this._topCurrentOffset = startOffset;
         this._topNextOffset = startOffset;
 
+        // May be negative, this is normal behavior.
         this._bottomCurrentOffset = startOffset - this._SIZE;
-        if (this._bottomCurrentOffset < 0) {
-            this._bottomCurrentOffset = 0;
-        }
         this._bottomNextOffset = this._bottomCurrentOffset;
     }
 
@@ -50,7 +48,7 @@ export class HTMLChatSection extends AbstractHTMLTemplatedElement {
         for (let i in this._all) {
             index = Number(i);
             section = this._all[index];
-            if (this._bottomCurrentOffset >= section.topCurrentOffset) {
+            if (this._topCurrentOffset >= section.topCurrentOffset) {
                 section.insertSiblingBefore(this._el);
                 this._all.splice(index, 0, this);
                 return;
@@ -63,6 +61,7 @@ export class HTMLChatSection extends AbstractHTMLTemplatedElement {
         return this._topCurrentOffset;
     }
 
+    // You have to add `this._SIZE` to check the collision correctly.
     public get bottomCurrentOffset(): number {
         return this._bottomCurrentOffset;
     }
@@ -138,6 +137,9 @@ export class HTMLChatSection extends AbstractHTMLTemplatedElement {
     }
 
     protected async _requestMessages(offset: number): Promise<APIMessage[]> {
+        if (offset < 0) {
+            offset = 0;
+        }
         return await requestMessages(this._chat.id, {
             offset,
             size: this._SIZE,
