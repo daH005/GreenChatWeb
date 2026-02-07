@@ -26,10 +26,13 @@ async function searchUserAndSwitchToChat(): Promise<void> {
     try {
         await requestChatByInterlocutor(interlocutorId);
     } catch {
-        let chat: HTMLPrivateChat = HTMLPrivateChat.new(
-            await requestUser(interlocutorId),
-        );
-        await chat.init();
+        let chat: HTMLPrivateChat | null = HTMLPrivateChat.byInterlocutorId(interlocutorId);
+        if (!chat) {
+            chat = HTMLPrivateChat.new(
+                await requestUser(interlocutorId),
+            );
+            await chat.init();
+        }
         await chat.open();
         return;
     }
