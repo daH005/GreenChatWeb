@@ -297,7 +297,7 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
         let isScrolledToBottom: boolean = this.isScrolledToBottom();
 
         let message: HTMLMessage = await this._lastMessageSection.addMessage(apiMessage);
-        this._link.updateTextAndDate(
+        this._link.updateTextWithDateAndMark(
             message.text,
             message.creatingDatetime,
             message.fromThisUser,
@@ -481,6 +481,13 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
         this._editModeFilesMapper.clear();
     }
 
+    public updateMessageText(messageId: number, text: string): void {
+        HTMLMessage.byId(messageId).updateText(text);
+        if (messageId == this._sortedMessageIds[this._sortedMessageIds.length - 1]) {
+            this._link.updateText(text);
+        }
+    }
+
     public toDeleteMode(): void {
         this._el.classList.add("chat--delete-mode");
         this._deleteModeSelectedCountEl.textContent = "0";
@@ -520,9 +527,42 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
         this._deleteModeSelectedMessages = [];
     }
 
-    public deleteMessage(messageId: number): void {
+    public async deleteMessage(messageId: number): Promise<void> {
         HTMLMessage.byId(messageId).delete();
         this._sortedMessageIds.splice(this._sortedMessageIds.indexOf(messageId), 1);
+        this._decreaseAllSectionOffsets();
+
+        try {
+            this._tryToGetLastMessageAndUpdateLink();
+        } catch {
+            await this._lastMessageSection.loadNextTopMessages();
+            try {
+                this._tryToGetLastMessageAndUpdateLink();
+            } catch {
+                this._link.clearTextWithDateAndMark();
+            }
+        }
+    }
+
+    protected _decreaseAllSectionOffsets(): void {
+        // We have to lower all offsets of all sections to down because of the deleted message.
+        for (let section of this._sections) {
+            section.decreaseOffsets();
+        }
+    }
+
+    protected _tryToGetLastMessageAndUpdateLink(): void {
+        let lastMessageId: number | null = this._sortedMessageIds[this._sortedMessageIds.length - 1];
+        if (lastMessageId != null) {
+            let message: HTMLMessage = HTMLMessage.byId(lastMessageId);
+            this._link.updateTextWithDateAndMark(
+                message.text,
+                message.creatingDatetime,
+                message.fromThisUser,
+            );
+        } else {
+            throw "No last message";
+        }
     }
 
 }

@@ -64,13 +64,27 @@ export class HTMLChatLink extends AbstractHTMLTemplatedElement {
         this._parentEl.prepend(this._el);
     }
 
-    public updateTextAndDate(text: string, date: Date, fromThisUser: boolean): void {
-        this._lastMessageTextEl.textContent = text;
-        this._lastMessageDateEl.textContent = dateToDateStr(date);
-        this._updateLastMessageFromThisUserMark(fromThisUser);
+    public updateTextWithDateAndMark(text: string, date: Date, fromThisUser: boolean): void {
+        this.updateText(text);
+        this.updateDate(date);
+        this.updateLastMessageFromThisUserMark(fromThisUser);
     }
 
-    protected _updateLastMessageFromThisUserMark(fromThisUser: boolean): void {
+    public updateText(text: string): void {
+        this._lastMessageTextEl.textContent = text;
+    }
+
+    public updateDate(date: Date): void {
+        this._lastMessageDateEl.textContent = dateToDateStr(date);
+    }
+
+    public clearTextWithDateAndMark(): void {
+         this._lastMessageTextEl.textContent = "";
+         this._lastMessageDateEl.textContent = "";
+         this._lastMessageFromThisUserMarkEl.textContent = "";
+    }
+
+    public updateLastMessageFromThisUserMark(fromThisUser: boolean): void {
         let value: string;
         if (fromThisUser) {
             value = CURRENT_LABELS.you;

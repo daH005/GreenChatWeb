@@ -51,14 +51,14 @@ export const websocketHandlers = {
         let apiMessage: APIMessage = await requestMessage(apiData.messageId);
         let message: HTMLMessage | null = HTMLMessage.byId(apiMessage.id);
         if (message) {  // Message may be is not created in the current section.
-            message.setText(apiMessage.text);
+            message.chat.updateMessageText(apiMessage.id, apiMessage.text);
         }
     },
 
     [SignalType.MESSAGE_DELETE]: async (apiData: MessageId) => {
         let message: HTMLMessage | null = HTMLMessage.byId(apiData.messageId);
         if (message) {  // Message may be is not created in the current section.
-            message.chat.deleteMessage(apiData.messageId);
+            await message.chat.deleteMessage(apiData.messageId);
         }
     },
 

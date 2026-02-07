@@ -93,7 +93,7 @@ export class HTMLMessage extends AbstractHTMLTemplatedElement {
         this._userNameEl.textContent = this._user.firstName;
 
         this._textEl = this._el.querySelector(".chat__message__text");
-        this.setText(this._text);
+        this.updateText(this._text);
 
         this._timeEl = this._el.querySelector(".chat__message__time");
         this._timeEl.textContent = this._timeStr();
@@ -117,7 +117,7 @@ export class HTMLMessage extends AbstractHTMLTemplatedElement {
         }
     }
 
-    public setText(text: string): void {
+    public updateText(text: string): void {
         this._text = text;
         this._textEl.textContent = this._text;
         this._textEl.innerHTML = this._formattedMessageTextHtml(this._textEl.innerHTML);

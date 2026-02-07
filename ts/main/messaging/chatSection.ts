@@ -188,6 +188,13 @@ export class HTMLChatSection extends AbstractHTMLTemplatedElement {
         this._bottomNextOffset += 1;
     }
 
+    public decreaseOffsets(): void {
+        this._topCurrentOffset -= 1;
+        this._topNextOffset -= 1;
+        this._bottomCurrentOffset -= 1;
+        this._bottomNextOffset -= 1;
+    }
+
 }
 
 export class HTMLChatLastMessageSection extends HTMLChatSection {
