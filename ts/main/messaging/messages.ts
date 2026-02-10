@@ -2,7 +2,7 @@ import { APIUser } from "../../common/apiDataInterfaces.js";
 import { HTTP_API_URLS } from "../../common/http/apiUrls.js";
 import { makeUrlWithParams } from "../../common/http/base.js";
 import { requestToReadMessage, requestMessageFilenames } from "../../common/http/functions.js";
-import { dateToTimeStr }  from "../datetime.js";
+import { dateToTimeStr, dateToDateStr }  from "../datetime.js";
 import { makeHyperlinks, makeHighlights } from "../messageTextHighlighting.js";
 import { AbstractHTMLTemplatedElement } from "./abstractTemplatedElement.js";
 import { HTMLDateSep } from "./dateSep.js";
@@ -87,7 +87,9 @@ export class HTMLMessage extends AbstractHTMLTemplatedElement {
     }
 
     protected _makeDateSepId(): string {
-        return String(this._chat.id) + "_" + this._creatingDatetime.toISOString().split("T")[0];
+        // `Date.toISOString` doesn't consider the timezone, that's why i prefered `dateToDateStr` function.
+        // Was the bug with this.
+        return String(this._chat.id) + "_" + dateToDateStr(this._creatingDatetime);
     }
 
     protected _initChildEls(): void {
