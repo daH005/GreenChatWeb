@@ -9,6 +9,7 @@ import { requestUser,
          requestNewMessage,
          requestMessages,
          requestTyping,
+         requestUnreadCount,
          requestToReadMessage,
          requestToEditMessage,
          requestToDeleteMessage,
@@ -16,7 +17,6 @@ import { requestUser,
          requestToDeleteMessageFiles,
        } from "../../common/http/functions.js";
 import { CURRENT_LABELS } from "../../common/languages/labels.js";
-import { Typing } from "../websocket/signalInterfaces.js";
 import { HTMLChatLink } from "./chatLink.js";
 import { HTMLMessage, HTMLMessageFromThisUser } from "./messages.js";
 import { HTMLChatSection, HTMLChatLastMessageSection } from "./chatSection.js";
@@ -338,6 +338,7 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
     public async updateLastMessageWithLink(): Promise<void> {
         let message: HTMLMessage | null = await this._lastMessageSection.loadLastBottomMessage();
         if (message == null) {
+            this._link.clearTextWithDateAndMark();
             return;
         }
         this._link.updateTextWithDateAndMark(
@@ -377,8 +378,8 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
         this._messagesEl.scrollTop = this._messagesEl.scrollHeight;
     }
 
-    public async updateTyping(apiData: Typing): Promise<void> {
-        let user: APIUser = await requestUser(apiData.userId);
+    public async updateTyping(userId: number): Promise<void> {
+        let user: APIUser = await requestUser(userId);
 
         if (this._typingTimeoutId != null) {
             clearTimeout(this._typingTimeoutId);
@@ -400,9 +401,13 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
         let firstUnreadMessageIndex: number = this._sortedMessageIds.indexOf(this._firstUnreadMessageId);
         let chatBottomY: number = this._messagesEl.getBoundingClientRect().bottom;
         let lastVisibleUnreadMessageId: number | null = null;
-        let currentUnreadMessage: HTMLMessage;
+        let currentUnreadMessage: HTMLMessage | null;
+        // `currentUnreadMessage` may be null if the message with `firstUnreadMessageIndex` index was deleted.
         for (let i = firstUnreadMessageIndex; i < this._sortedMessageIds.length; i++) {
             currentUnreadMessage = HTMLMessage.byId(this._sortedMessageIds[i]);
+            if (currentUnreadMessage == null) {
+                continue;
+            }
 
             if (currentUnreadMessage.getBoundingClientRect().bottom <= chatBottomY) {
                 lastVisibleUnreadMessageId = this._sortedMessageIds[i];
@@ -441,9 +446,9 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
         this._sortedMessageIds.splice(left, 0, messageId);
     }
 
-    public updateUnreadCount(count: number): void {
-        this._unreadCount = count;
-        this._link.updateUnreadCount(count);
+    public async updateUnreadCount(): Promise<void> {
+        this._unreadCount = await requestUnreadCount(this._id);
+        this._link.updateUnreadCount(this._unreadCount);
     }
 
     public toEditMode(message: HTMLMessageFromThisUser): void {

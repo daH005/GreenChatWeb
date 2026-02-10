@@ -41,6 +41,8 @@ export class HTMLMessage extends AbstractHTMLTemplatedElement {
     protected _isSelectedToDelete: boolean = false;
     protected _dateSep: HTMLDateSep;
     protected _imageFileVersion: number = 0;  // I add this in end of url of image file to browser to update image.
+    // This flag helps when at the same the client reveive "FILES" and "NEW_MESSAGE" (and the message already have True "hasFiles" field) signals.
+    protected _filesIsUpdatingNow: boolean = false;
 
     public constructor(chat: AbstractHTMLChat,
                        section: HTMLChatSection,
@@ -124,6 +126,10 @@ export class HTMLMessage extends AbstractHTMLTemplatedElement {
     }
 
     public async resetFiles(): Promise<void> {
+        if (this._filesIsUpdatingNow) {
+            return;
+        }
+        this._filesIsUpdatingNow = true;
         let chatIsScrolledToBottom: boolean = this._chat.isScrolledToBottom();
 
         this._filenames = await requestMessageFilenames(this._id) ?? [];
@@ -137,6 +143,7 @@ export class HTMLMessage extends AbstractHTMLTemplatedElement {
         if (chatIsScrolledToBottom) {
             this._chat.scrollToBottom();
         }
+        this._filesIsUpdatingNow = false;
     }
 
     protected async _addFile(filename: string): Promise<void> {

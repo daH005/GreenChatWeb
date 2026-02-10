@@ -1,24 +1,24 @@
 import { APIUser } from "../../common/apiDataInterfaces.js";
 
-export interface ChatId {
+export interface ChatSignal {
     chatId: number,
 }
 
-export interface MessageId {
+export interface MessageSignal {
+    chatId: number,
     messageId: number,
 }
 
-export interface Typing {
+export interface TypingSignal {
     chatId: number,
     userId: number,
-    user?: APIUser,
 }
 
-export interface Read {
+export interface ReadSignal {
     chatId: number,
     messageIds: number[],
 }
 
-export interface OnlineStatuses {
+export interface OnlineStatusesSignal {
     [interlocutorId: number]: boolean,
 }
