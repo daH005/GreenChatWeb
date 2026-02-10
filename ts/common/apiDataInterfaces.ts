@@ -10,7 +10,6 @@ export interface APIChat {
     id: number,
     name: string,
     isGroup: boolean,
-    lastMessage: APIMessage | null,
     unreadCount: number,
     userIds: number[],
     interlocutorId: number | null,

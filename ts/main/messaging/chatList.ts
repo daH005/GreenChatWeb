@@ -63,10 +63,7 @@ export class HTMLChatList {
         } else {
             // chat = await this._addGroupChat(apiChat);
         }
-
-        if (apiChat.lastMessage) {
-            await chat.addLastMessage(apiChat.lastMessage, false);
-        }
+        await chat.updateLastMessageWithLink();
 
         this._currentOffset += 1;
         return chat;

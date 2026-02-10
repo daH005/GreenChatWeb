@@ -43,8 +43,7 @@ export const websocketHandlers = {
                 await requestChat(apiMessage.chatId),
             );
         }
-        apiMessage.hasFiles = false;  // Files of the new message are created by `FILES_UPDATE` signal.
-        await chat.addLastMessage(apiMessage);
+        await chat.updateLastMessageAsNew();
     },
 
     [SignalType.MESSAGE_EDIT]: async (apiData: MessageId) => {

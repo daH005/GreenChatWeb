@@ -64,7 +64,7 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
     protected _filesMapper: NoOverwriteInputFilesMapper;
     protected _isOpened: boolean = false;
     protected _avatarURL: string;
-    protected _firstOpeningWas: boolean = false;
+    protected _initialLoadingWas: boolean = false;
     protected _link: HTMLChatLink;
     protected _topDateStr: string | null = null;
     protected _bottomDateStr: string | null = null;
@@ -73,6 +73,9 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
     protected _lastMessageSection: HTMLChatLastMessageSection;
     protected _historySection: HTMLChatSection;
     protected _sortedMessageIds: number[];
+    protected _firstUnreadMessageId: number;
+    // I don't want register the scroll when the sections is hiding or showing, but it seemes not to save me:
+    protected _reactionOnScrollEnabled: boolean = true;
 
     protected _topSection: HTMLChatSection;
     protected _bottomSection: HTMLChatSection;
@@ -125,7 +128,10 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
 
         this._messagesEl = this._el.querySelector(".chat__messages");
         this._messagesEl.addEventListener("scroll", async () => {
-            if (!this._firstOpeningWas) {
+            if (!this._reactionOnScrollEnabled) {
+                return;
+            }
+            if (!this._initialLoadingWas) {
                 return;
             }
             await this._loadNextMessagesIfScrolled();
@@ -270,11 +276,22 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
         }
         this._isOpened = true;
 
-        if (!(this._firstOpeningWas)) {
+        if (!(this._initialLoadingWas)) {
             this._buttonEl.disabled = true;
             await this._loadInitialMessages();
             this._buttonEl.disabled = false;
         }
+    }
+
+    protected async _loadInitialMessages(): Promise<void> {
+        this._reactionOnScrollEnabled = false;
+        await this._historySection.switch();
+        this.scrollToBottom();
+        this._initialLoadingWas = true;
+        if (this._sortedMessageIds.length) {
+            this._firstUnreadMessageId = this._sortedMessageIds[0];
+        }
+        this._reactionOnScrollEnabled = true;
     }
 
     public close(): void {
@@ -293,20 +310,13 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
         }
     }
 
-    public async addLastMessage(apiMessage: APIMessage, isNew: boolean = true): Promise<HTMLMessage> {
+    public async updateLastMessageAsNew(): Promise<void> {
+        this._reactionOnScrollEnabled = false;
         let isScrolledToBottom: boolean = this.isScrolledToBottom();
 
-        let message: HTMLMessage = await this._lastMessageSection.addMessage(apiMessage);
-        this._link.updateTextWithDateAndMark(
-            message.text,
-            message.creatingDatetime,
-            message.fromThisUser,
-        );
-
-        if (!isNew) {
-            return;
-        }
-
+        await this.updateLastMessageWithLink();
+        let message: HTMLMessage = HTMLMessage.byId(this._sortedMessageIds[this._sortedMessageIds.length - 1]);
+        this._increaseAllSectionOffsets();
         if (message.fromThisUser) {
             await this._lastMessageSection.switch();
         }
@@ -321,7 +331,20 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
                 newMessageSound.play();
             }
         }
-        this._link.pushUp();
+        this._link.pushUp();  
+        this._reactionOnScrollEnabled = true;
+    }
+
+    public async updateLastMessageWithLink(): Promise<void> {
+        let message: HTMLMessage | null = await this._lastMessageSection.loadLastBottomMessage();
+        if (message == null) {
+            return;
+        }
+        this._link.updateTextWithDateAndMark(
+            message.text,
+            message.creatingDatetime,
+            message.fromThisUser,
+        );
     }
 
     protected _focused(): boolean {
@@ -350,12 +373,6 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
         }
     }
 
-    protected async _loadInitialMessages(): Promise<void> {
-        await this._historySection.switch();
-        this.scrollToBottom();
-        this._firstOpeningWas = true;
-    }
-
     public scrollToBottom(): void {
         this._messagesEl.scrollTop = this._messagesEl.scrollHeight;
     }
@@ -380,7 +397,7 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
             return;
         }
 
-        let firstUnreadMessageIndex: number = Math.max(0, this._sortedMessageIds.length - this._unreadCount);
+        let firstUnreadMessageIndex: number = this._sortedMessageIds.indexOf(this._firstUnreadMessageId);
         let chatBottomY: number = this._messagesEl.getBoundingClientRect().bottom;
         let lastVisibleUnreadMessageId: number | null = null;
         let currentUnreadMessage: HTMLMessage;
@@ -396,6 +413,7 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
 
         if (lastVisibleUnreadMessageId != null) {
             await requestToReadMessage(lastVisibleUnreadMessageId);
+            this._firstUnreadMessageId = lastVisibleUnreadMessageId;
         }
     }
 
@@ -531,16 +549,13 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
         HTMLMessage.byId(messageId).delete();
         this._sortedMessageIds.splice(this._sortedMessageIds.indexOf(messageId), 1);
         this._decreaseAllSectionOffsets();
+        await this.updateLastMessageWithLink();
+    }
 
-        try {
-            this._tryToGetLastMessageAndUpdateLink();
-        } catch {
-            await this._lastMessageSection.loadNextTopMessages();
-            try {
-                this._tryToGetLastMessageAndUpdateLink();
-            } catch {
-                this._link.clearTextWithDateAndMark();
-            }
+    protected _increaseAllSectionOffsets(): void {
+        // We have to raise all offsets of all sections to up because of the new message.
+        for (let section of this._sections) {
+            section.increaseOffsets();
         }
     }
 
@@ -548,20 +563,6 @@ export abstract class AbstractHTMLChat extends AbstractHTMLTemplatedElement {
         // We have to lower all offsets of all sections to down because of the deleted message.
         for (let section of this._sections) {
             section.decreaseOffsets();
-        }
-    }
-
-    protected _tryToGetLastMessageAndUpdateLink(): void {
-        let lastMessageId: number | null = this._sortedMessageIds[this._sortedMessageIds.length - 1];
-        if (lastMessageId != null) {
-            let message: HTMLMessage = HTMLMessage.byId(lastMessageId);
-            this._link.updateTextWithDateAndMark(
-                message.text,
-                message.creatingDatetime,
-                message.fromThisUser,
-            );
-        } else {
-            throw "No last message";
         }
     }
 

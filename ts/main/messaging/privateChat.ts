@@ -25,7 +25,7 @@ export class HTMLPrivateChat extends AbstractHTMLChat {
 
         if (id == HTMLPrivateChat._NEW_CHAT_TEMP_ID) {
             this._isNotCreatedOnServer = true;
-            this._firstOpeningWas = true;
+            this._initialLoadingWas = true;
         } else {
             this._isNotCreatedOnServer = false;
         }
