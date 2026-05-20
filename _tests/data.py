@@ -8,7 +8,7 @@ class Params:
 
     class FullUrls:
 
-        BASE = f'https://localhost:2223'
+        BASE = f'http://localhost:5182'
         MAIN = BASE + '/'
         LOGIN = BASE + '/login'
 
